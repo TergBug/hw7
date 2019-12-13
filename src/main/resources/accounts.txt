@@ -1,1 +1,1 @@
-<{*1*}{Fred}{ACTIVE}><{*2*}{Ded}{ACTIVE}><{*4*}{Hof}{DELETED}><{*3*}{Ford}{BANNED}>
+<{*1*}{Fred}{ACTIVE}><{*2*}{Ded}{ACTIVE}><{*4*}{Pof}{BANNED}><{*3*}{Tred}{ACTIVE}>

@@ -44,8 +44,8 @@ public class SkillView {
         }
         try {
             List<Skill> skillsToView = new SkillController().request(requestStr);
-            skillsToView.sort(Comparator.comparingLong(Skill::getID));
-            skillsToView.forEach(el -> System.out.println(el.getID()+" "+el.getSkillName()));
+            skillsToView.sort(Comparator.comparingLong(Skill::getId));
+            skillsToView.forEach(el -> System.out.println(el.getId()+" "+el.getName()));
         } catch (IncorrectRequestException e) {
             System.out.println(e.toString());
         }

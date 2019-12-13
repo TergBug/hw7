@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface GenericRepository<T, ID> {
     void create(T model) throws InvalidRepoFileException, NotUniquePrimaryKeyException;
-    T read(ID readID) throws InvalidRepoFileException, NoSuchEntryException, NotUniquePrimaryKeyException;
+    T getById(ID readID) throws InvalidRepoFileException, NoSuchEntryException, NotUniquePrimaryKeyException;
     void update(T updatedModel) throws InvalidRepoFileException, NoSuchEntryException;
     void delete(ID deletedEntry) throws InvalidRepoFileException, NoSuchEntryException;
     List<T> getAll() throws InvalidRepoFileException;

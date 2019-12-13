@@ -3,23 +3,23 @@ package org.mycode.model;
 import java.util.Set;
 
 public class Developer {
-    private long ID;
+    private Long id;
     private String firstName;
     private String lastName;
     private Set<Skill> skills;
     private Account account;
-    public Developer(long ID, String firstName, String lastName, Set<Skill> skills, Account account) {
-        this.ID = ID;
+    public Developer(Long id, String firstName, String lastName, Set<Skill> skills, Account account) {
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.skills = skills;
         this.account = account;
     }
-    public long getID() {
-        return ID;
+    public Long getId() {
+        return id;
     }
-    public void setID(long ID) {
-        this.ID = ID;
+    public void setId(Long id) {
+        this.id = id;
     }
     public String getFirstName() {
         return firstName;

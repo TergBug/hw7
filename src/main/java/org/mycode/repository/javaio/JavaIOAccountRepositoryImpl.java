@@ -43,63 +43,81 @@ public class JavaIOAccountRepositoryImpl implements AccountRepository {
                 repo.createNewFile();
             } catch (IOException e) { e.printStackTrace(); }
         }
-        if(model.getID()<1) {
-            model.setID(1);
-            List<Account> accounts = getAll();
-            accounts.sort(Comparator.comparingLong(Account::getID));
-            int index = 0;
-            while (model.getID()==accounts.get((index==accounts.size()-1) ? index : index++).getID()) model.setID(model.getID()+1);
+        if(model.getId()==null || model.getId()<1) {
+            model.setId(generateAutoIncrId());
         }
-        else if(getAll().stream().anyMatch(el->el.getID()==model.getID())) throw new NotUniquePrimaryKeyException("Creating of entry is failed");
-        String entry = patternOfEntry.replace("-1-", String.valueOf(model.getID())).replace("-2-", model.getAccountName()).
+        else if(getAll().stream().anyMatch(el-> el.getId().equals(model.getId()))){
+            throw new NotUniquePrimaryKeyException("Creating of entry is failed");
+        }
+        String entry = patternOfEntry.replace("-1-", String.valueOf(model.getId())).
+                replace("-2-", model.getName()).
                 replace("-3-", model.getStatus().toString());
         try (FileWriter fw = new FileWriter(repo, true)){
             fw.append(entry);
             fw.flush();
         } catch (IOException e) { e.printStackTrace(); }
     }
+    private Long generateAutoIncrId() throws InvalidRepoFileException {
+        Long id = 1L;
+        List<Account> accounts = getAll();
+        accounts.sort(Comparator.comparingLong(Account::getId));
+        int index = 0;
+        while (id.equals(accounts.get((index == accounts.size() - 1) ? index : index++).getId())){
+            id++;
+        }
+        return id;
+    }
     @Override
-    public Account read(Long readID) throws InvalidRepoFileException, NoSuchEntryException, NotUniquePrimaryKeyException {
-        List<Account> listOfAccounts = getAll();
-        listOfAccounts = listOfAccounts.stream().filter(el->el.getID()==readID).collect(Collectors.toList());
-        if(listOfAccounts.size()==0) throw new NoSuchEntryException("Reading of entry is failed");
-        if(listOfAccounts.size()>1) throw new NotUniquePrimaryKeyException("Reading of entry is failed");
-        return listOfAccounts.get(0);
+    public Account getById(Long readID) throws InvalidRepoFileException, NoSuchEntryException, NotUniquePrimaryKeyException {
+        List<Account> listOfReadAccounts = getAll().stream().filter(el-> el.getId().equals(readID)).collect(Collectors.toList());
+        if(listOfReadAccounts.size()==0){
+            throw new NoSuchEntryException("Reading of entry is failed");
+        }
+        else if(listOfReadAccounts.size()>1){
+            throw new NotUniquePrimaryKeyException("Reading of entry is failed");
+        }
+        return listOfReadAccounts.get(0);
     }
     @Override
     public void update(Account updatedModel) throws InvalidRepoFileException, NoSuchEntryException {
         List<Account> listOfAccounts = getAll();
         boolean isExist = false;
         for (int i = 0; i < listOfAccounts.size(); i++) {
-            if(listOfAccounts.get(i).getID()==updatedModel.getID()){
+            if(listOfAccounts.get(i).getId().equals(updatedModel.getId())){
                 isExist = true;
                 listOfAccounts.set(i, updatedModel);
             }
         }
-        if(!isExist) throw new NoSuchEntryException("Updating of entry is failed");
+        if(!isExist){
+            throw new NoSuchEntryException("Updating of entry is failed");
+        }
         setAll(listOfAccounts);
     }
     @Override
     public void delete(Long deletedID) throws NoSuchEntryException, InvalidRepoFileException {
         List<Account> listOfAccounts = getAll();
-        if(!listOfAccounts.removeIf(el->el.getID()==deletedID)) throw new NoSuchEntryException("Deleting of entry is failed");
+        if(!listOfAccounts.removeIf(el -> el.getId().equals(deletedID))){
+            throw new NoSuchEntryException("Deleting of entry is failed");
+        }
         setAll(listOfAccounts);
     }
     @Override
     public List<Account> getAll() throws InvalidRepoFileException {
         String content = getContentFromFile(repo, validationPattern);
-        if(content==null) throw new InvalidRepoFileException("Extracting of content from file is failed");
+        if(content==null){
+            throw new InvalidRepoFileException("Extracting of content from file is failed");
+        }
         Matcher outerMatcher = Pattern.compile("<\\{\\*\\d+?\\*}\\{.*?}\\{((ACTIVE)|(BANNED)|(DELETED))}>").matcher(content);
         Matcher innerMatcher;
-        ArrayList<String[]> entriesList = new ArrayList<>();
+        List<Account> accounts = new ArrayList<>();
         while (outerMatcher.find()){
-            entriesList.add(new String[3]);
             innerMatcher = Pattern.compile("\\{.*?}").matcher(outerMatcher.group());
-            entriesList.get(entriesList.size()-1)[0] = findInMatcherByIndex(innerMatcher, 1).group().replaceAll("[{*}]", "");
-            entriesList.get(entriesList.size()-1)[1] = findInMatcherByIndex(innerMatcher, 2).group().replaceAll("[{}]", "");
-            entriesList.get(entriesList.size()-1)[2] = findInMatcherByIndex(innerMatcher, 3).group().replaceAll("[{}]", "");
+            Long id = Long.parseLong(findInMatcherByIndex(innerMatcher, 1).group().replaceAll("[{*}]", ""));
+            String name = findInMatcherByIndex(innerMatcher, 2).group().replaceAll("[{}]", "");
+            AccountStatus status = AccountStatus.valueOf(findInMatcherByIndex(innerMatcher, 3).group().replaceAll("[{}]", ""));
+            accounts.add(new Account(id, name, status));
         }
-        return entriesList.stream().map(el->new Account(Long.parseLong(el[0]), el[1], AccountStatus.valueOf(el[2]))).collect(Collectors.toList());
+        return accounts;
     }
     private Matcher findInMatcherByIndex(Matcher matcher, int index){
         matcher.reset();
@@ -108,10 +126,11 @@ public class JavaIOAccountRepositoryImpl implements AccountRepository {
     }
     private void setAll(List<Account> listOfAccounts){
         StringBuilder content = new StringBuilder();
-        for (int i = 0; i < listOfAccounts.size(); i++)
-            content.append(patternOfEntry.replace("-1-", String.valueOf(listOfAccounts.get(i).getID())).
-                    replace("-2-", listOfAccounts.get(i).getAccountName()).
-                    replace("-3-", listOfAccounts.get(i).getStatus().toString()));
+        for (Account listOfAccount : listOfAccounts) {
+            content.append(patternOfEntry.replace("-1-", String.valueOf(listOfAccount.getId())).
+                    replace("-2-", listOfAccount.getName()).
+                    replace("-3-", listOfAccount.getStatus().toString()));
+        }
         try (FileWriter fw = new FileWriter(repo, false)){
             fw.append(content.toString());
             fw.flush();

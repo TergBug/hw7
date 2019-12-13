@@ -6,6 +6,7 @@ import org.mycode.exceptions.NoSuchEntryException;
 import org.mycode.exceptions.NotUniquePrimaryKeyException;
 import org.mycode.model.Account;
 import org.mycode.model.AccountStatus;
+import org.mycode.repository.AccountRepository;
 import org.mycode.repository.javaio.JavaIOAccountRepositoryImpl;
 
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import java.util.List;
 
 public class AccountController {
     private final String patternOfRequest = "(c\\|\\d+\\|[^|]*\\|((a)|(b)|(d)))|(r\\|\\d+)|(u\\|\\d+\\|[^|]*\\|((a)|(b)|(d)))|(d\\|\\d+)|(g)";
-    private JavaIOAccountRepositoryImpl repo = new JavaIOAccountRepositoryImpl();
+    private AccountRepository repo = new JavaIOAccountRepositoryImpl();
     public List<Account> request(String requestStr) throws IncorrectRequestException {
         if(!requestStr.matches(patternOfRequest)) throw new IncorrectRequestException();
         String[] req = requestStr.split("\\|");
@@ -24,7 +25,7 @@ public class AccountController {
                     repo.create(new Account(Long.parseLong(req[1]), req[2], acronymToEnumStatus(req[3])));
                     break;
                 case "r":
-                    accounts.add(repo.read(Long.parseLong(req[1])));
+                    accounts.add(repo.getById(Long.parseLong(req[1])));
                     break;
                 case "u":
                     repo.update(new Account(Long.parseLong(req[1]), req[2], acronymToEnumStatus(req[3])));

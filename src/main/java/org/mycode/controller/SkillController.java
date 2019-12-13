@@ -5,6 +5,7 @@ import org.mycode.exceptions.InvalidRepoFileException;
 import org.mycode.exceptions.NoSuchEntryException;
 import org.mycode.exceptions.NotUniquePrimaryKeyException;
 import org.mycode.model.Skill;
+import org.mycode.repository.SkillRepository;
 import org.mycode.repository.javaio.JavaIOSkillRepositoryImpl;
 
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ import java.util.List;
 
 public class SkillController {
     private final String patternOfRequest = "(c\\|\\d+\\|[^|]*)|(r\\|\\d+)|(u\\|\\d+\\|[^|]*)|(d\\|\\d+)|(g)";
-    private JavaIOSkillRepositoryImpl repo = new JavaIOSkillRepositoryImpl();
+    private SkillRepository repo = new JavaIOSkillRepositoryImpl();
     public List<Skill> request(String requestStr) throws IncorrectRequestException {
         if(!requestStr.matches(patternOfRequest)) throw new IncorrectRequestException();
         String[] req = requestStr.split("\\|");
@@ -23,7 +24,7 @@ public class SkillController {
                     repo.create(new Skill(Long.parseLong(req[1]), req[2]));
                     break;
                 case "r":
-                    skills.add(repo.read(Long.parseLong(req[1])));
+                    skills.add(repo.getById(Long.parseLong(req[1])));
                     break;
                 case "u":
                     repo.update(new Skill(Long.parseLong(req[1]), req[2]));

@@ -42,61 +42,78 @@ public class JavaIOSkillRepositoryImpl implements SkillRepository {
                 repo.createNewFile();
             } catch (IOException e) { e.printStackTrace(); }
         }
-        if(model.getID()<1) {
-            model.setID(1);
-            List<Skill> skills = getAll();
-            skills.sort(Comparator.comparingLong(Skill::getID));
-            int index = 0;
-            while (model.getID()==skills.get((index==skills.size()-1) ? index : index++).getID()) model.setID(model.getID()+1);
+        if(model.getId()==null || model.getId()<1) {
+            model.setId(generateAutoIncrId());
         }
-        else if(getAll().stream().anyMatch(el->el.getID()==model.getID())) throw new NotUniquePrimaryKeyException("Creating of entry is failed");
-        String entry = patternOfEntry.replace("-1-", String.valueOf(model.getID())).replace("-2-", model.getSkillName());
+        else if(getAll().stream().anyMatch(el-> el.getId().equals(model.getId()))){
+            throw new NotUniquePrimaryKeyException("Creating of entry is failed");
+        }
+        String entry = patternOfEntry.replace("-1-", String.valueOf(model.getId())).replace("-2-", model.getName());
         try (FileWriter fw = new FileWriter(repo, true)){
             fw.append(entry);
             fw.flush();
         } catch (IOException e) { e.printStackTrace(); }
     }
+    private Long generateAutoIncrId() throws InvalidRepoFileException {
+        Long id = 1L;
+        List<Skill> skills = getAll();
+        skills.sort(Comparator.comparingLong(Skill::getId));
+        int index = 0;
+        while (id.equals(skills.get((index == skills.size() - 1) ? index : index++).getId())){
+            id++;
+        }
+        return id;
+    }
     @Override
-    public Skill read(Long readID) throws InvalidRepoFileException, NoSuchEntryException, NotUniquePrimaryKeyException {
-        List<Skill> listOfSkills = getAll();
-        listOfSkills = listOfSkills.stream().filter(el->el.getID()==readID).collect(Collectors.toList());
-        if(listOfSkills.size()==0) throw new NoSuchEntryException("Reading of entry is failed");
-        if(listOfSkills.size()>1) throw new NotUniquePrimaryKeyException("Reading of entry is failed");
-        return listOfSkills.get(0);
+    public Skill getById(Long readID) throws InvalidRepoFileException, NoSuchEntryException, NotUniquePrimaryKeyException {
+        List<Skill> listOfReadSkills = getAll().stream().filter(el-> el.getId().equals(readID)).collect(Collectors.toList());
+        if(listOfReadSkills.size()==0){
+            throw new NoSuchEntryException("Reading of entry is failed");
+        }
+        else if(listOfReadSkills.size()>1){
+            throw new NotUniquePrimaryKeyException("Reading of entry is failed");
+        }
+        return listOfReadSkills.get(0);
     }
     @Override
     public void update(Skill updatedModel) throws InvalidRepoFileException, NoSuchEntryException {
         List<Skill> listOfSkills = getAll();
         boolean isExist = false;
         for (int i = 0; i < listOfSkills.size(); i++) {
-            if(listOfSkills.get(i).getID()==updatedModel.getID()){
+            if(listOfSkills.get(i).getId().equals(updatedModel.getId())){
                 isExist = true;
                 listOfSkills.set(i, updatedModel);
             }
         }
-        if(!isExist) throw new NoSuchEntryException("Updating of entry is failed");
+        if(!isExist){
+            throw new NoSuchEntryException("Updating of entry is failed");
+        }
         setAll(listOfSkills);
     }
     @Override
     public void delete(Long deletedID) throws NoSuchEntryException, InvalidRepoFileException {
         List<Skill> listOfSkills = getAll();
-        if(!listOfSkills.removeIf(el->el.getID()==deletedID)) throw new NoSuchEntryException("Deleting of entry is failed");
+        if(!listOfSkills.removeIf(el -> el.getId().equals(deletedID))){
+            throw new NoSuchEntryException("Deleting of entry is failed");
+        }
         setAll(listOfSkills);
     }
     @Override
     public List<Skill> getAll() throws InvalidRepoFileException {
         String content = getContentFromFile(repo, validationPattern);
-        if(content==null) throw new InvalidRepoFileException("Extracting of content from file is failed");
+        if(content==null){
+            throw new InvalidRepoFileException("Extracting of content from file is failed");
+        }
         Matcher outerMatcher = Pattern.compile("<\\{\\*\\d+?\\*}\\{.*?}>").matcher(content);
         Matcher innerMatcher;
-        ArrayList<String[]> entriesList = new ArrayList<>();
+        List<Skill> skills = new ArrayList<>();
         while (outerMatcher.find()){
-            entriesList.add(new String[2]);
             innerMatcher = Pattern.compile("\\{.*?}").matcher(outerMatcher.group());
-            entriesList.get(entriesList.size()-1)[0] = findInMatcherByIndex(innerMatcher, 1).group().replaceAll("[{*}]", "");
-            entriesList.get(entriesList.size()-1)[1] = findInMatcherByIndex(innerMatcher, 2).group().replaceAll("[{}]", "");
+            Long id = Long.parseLong(findInMatcherByIndex(innerMatcher, 1).group().replaceAll("[{*}]", ""));
+            String name = findInMatcherByIndex(innerMatcher, 2).group().replaceAll("[{}]", "");
+            skills.add(new Skill(id, name));
         }
-        return entriesList.stream().map(el->new Skill(Long.parseLong(el[0]), el[1])).collect(Collectors.toList());
+        return skills;
     }
     private Matcher findInMatcherByIndex(Matcher matcher, int index){
         matcher.reset();
@@ -105,8 +122,10 @@ public class JavaIOSkillRepositoryImpl implements SkillRepository {
     }
     private void setAll(List<Skill> listOfSkills){
         StringBuilder content = new StringBuilder();
-        for (int i = 0; i < listOfSkills.size(); i++)
-            content.append(patternOfEntry.replace("-1-", String.valueOf(listOfSkills.get(i).getID())).replace("-2-", listOfSkills.get(i).getSkillName()));
+        for (Skill listOfSkill : listOfSkills) {
+            content.append(patternOfEntry.replace("-1-", String.valueOf(listOfSkill.getId())).
+                    replace("-2-", listOfSkill.getName()));
+        }
         try (FileWriter fw = new FileWriter(repo, false)){
             fw.append(content.toString());
             fw.flush();

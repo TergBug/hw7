@@ -1,25 +1,25 @@
 package org.mycode.model;
 
 public class Account {
-    private long ID;
-    private String accountName;
+    private Long id;
+    private String name;
     private AccountStatus status;
-    public Account(long ID, String accountName, AccountStatus status) {
-        this.ID = ID;
-        this.accountName = accountName;
+    public Account(Long id, String name, AccountStatus status) {
+        this.id = id;
+        this.name = name;
         this.status = status;
     }
-    public long getID() {
-        return ID;
+    public Long getId() {
+        return id;
     }
-    public void setID(long ID) {
-        this.ID = ID;
+    public void setId(Long id) {
+        this.id = id;
     }
-    public String getAccountName() {
-        return accountName;
+    public String getName() {
+        return name;
     }
-    public void setAccountName(String accountName) {
-        this.accountName = accountName;
+    public void setName(String name) {
+        this.name = name;
     }
     public AccountStatus getStatus() {
         return status;

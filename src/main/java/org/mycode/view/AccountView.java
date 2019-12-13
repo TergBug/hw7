@@ -48,8 +48,8 @@ public class AccountView {
         }
         try {
             List<Account> accountToView = new AccountController().request(requestStr);
-            accountToView.sort(Comparator.comparingLong(Account::getID));
-            accountToView.forEach(el -> System.out.println(el.getID()+" "+el.getAccountName()+" "+el.getStatus().toString()));
+            accountToView.sort(Comparator.comparingLong(Account::getId));
+            accountToView.forEach(el -> System.out.println(el.getId()+" "+el.getName()+" "+el.getStatus().toString()));
         } catch (IncorrectRequestException e) {
             System.out.println(e.toString());
         }
