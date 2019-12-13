@@ -57,10 +57,12 @@ public class JavaIOSkillRepositoryImpl implements SkillRepository {
     private Long generateAutoIncrId() throws InvalidRepoFileException {
         Long id = 1L;
         List<Skill> skills = getAll();
-        skills.sort(Comparator.comparingLong(Skill::getId));
-        int index = 0;
-        while (id.equals(skills.get((index == skills.size() - 1) ? index : index++).getId())){
-            id++;
+        if(skills.size()!=0){
+            skills.sort(Comparator.comparingLong(Skill::getId));
+            int index = 0;
+            while (id.equals(skills.get((index == skills.size() - 1) ? index : index++).getId())){
+                id++;
+            }
         }
         return id;
     }

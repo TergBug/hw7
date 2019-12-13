@@ -60,10 +60,12 @@ public class JavaIOAccountRepositoryImpl implements AccountRepository {
     private Long generateAutoIncrId() throws InvalidRepoFileException {
         Long id = 1L;
         List<Account> accounts = getAll();
-        accounts.sort(Comparator.comparingLong(Account::getId));
-        int index = 0;
-        while (id.equals(accounts.get((index == accounts.size() - 1) ? index : index++).getId())){
-            id++;
+        if(accounts.size()!=0){
+            accounts.sort(Comparator.comparingLong(Account::getId));
+            int index = 0;
+            while (id.equals(accounts.get((index == accounts.size() - 1) ? index : index++).getId())){
+                id++;
+            }
         }
         return id;
     }
