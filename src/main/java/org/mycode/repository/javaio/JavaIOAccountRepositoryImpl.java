@@ -128,10 +128,10 @@ public class JavaIOAccountRepositoryImpl implements AccountRepository {
     }
     private void setAll(List<Account> listOfAccounts){
         StringBuilder content = new StringBuilder();
-        for (Account listOfAccount : listOfAccounts) {
-            content.append(patternOfEntry.replace("-1-", String.valueOf(listOfAccount.getId())).
-                    replace("-2-", listOfAccount.getName()).
-                    replace("-3-", listOfAccount.getStatus().toString()));
+        for (Account account : listOfAccounts) {
+            content.append(patternOfEntry.replace("-1-", String.valueOf(account.getId())).
+                    replace("-2-", account.getName()).
+                    replace("-3-", account.getStatus().toString()));
         }
         try (FileWriter fw = new FileWriter(repo, false)){
             fw.append(content.toString());

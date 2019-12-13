@@ -124,9 +124,9 @@ public class JavaIOSkillRepositoryImpl implements SkillRepository {
     }
     private void setAll(List<Skill> listOfSkills){
         StringBuilder content = new StringBuilder();
-        for (Skill listOfSkill : listOfSkills) {
-            content.append(patternOfEntry.replace("-1-", String.valueOf(listOfSkill.getId())).
-                    replace("-2-", listOfSkill.getName()));
+        for (Skill skill : listOfSkills) {
+            content.append(patternOfEntry.replace("-1-", String.valueOf(skill.getId())).
+                    replace("-2-", skill.getName()));
         }
         try (FileWriter fw = new FileWriter(repo, false)){
             fw.append(content.toString());
