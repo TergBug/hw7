@@ -27,4 +27,8 @@ public class Account {
     public void setStatus(AccountStatus status) {
         this.status = status;
     }
+    @Override
+    public String toString() {
+        return id+" "+name+" "+status.toString();
+    }
 }

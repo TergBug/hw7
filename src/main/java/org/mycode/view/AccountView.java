@@ -18,7 +18,7 @@ public class AccountView {
     private final String patternOfMenuChoice = "[012345]";
     private final String patternOfStatusChoice = "[123]";
     private final String patternOfID = "\\d+";
-    public boolean viewSkillMenu(){
+    public boolean viewAccountMenu(){
         System.out.println(messageMenu);
         String requestStr = "";
         switch (AppView.validationInt(patternOfMenuChoice, messageChoose, messageWrongEntering)){
@@ -49,7 +49,7 @@ public class AccountView {
         try {
             List<Account> accountToView = new AccountController().request(requestStr);
             accountToView.sort(Comparator.comparingLong(Account::getId));
-            accountToView.forEach(el -> System.out.println(el.getId()+" "+el.getName()+" "+el.getStatus().toString()));
+            accountToView.forEach(el -> System.out.println(el.toString()));
         } catch (IncorrectRequestException e) {
             System.out.println(e.toString());
         }

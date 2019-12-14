@@ -14,6 +14,8 @@ public class AppView {
                 case 0:
                     System.exit(0);
                 case 1:
+                    DeveloperView developerView = new DeveloperView();
+                    while (!developerView.viewDeveloperMenu());
                     break;
                 case 2:
                     SkillView skillView = new SkillView();
@@ -21,7 +23,7 @@ public class AppView {
                     break;
                 case 3:
                     AccountView accountView = new AccountView();
-                    while (!accountView.viewSkillMenu());
+                    while (!accountView.viewAccountMenu());
                     break;
             }
         }while (true);
