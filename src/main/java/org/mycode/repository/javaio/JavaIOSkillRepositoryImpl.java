@@ -19,21 +19,40 @@ import java.util.stream.Collectors;
 
 public class JavaIOSkillRepositoryImpl implements SkillRepository {
     private final String patternOfEntry = "<{*-1-*}{-2-}>";
-    private final String validationPattern = "(<\\{\\*\\d+\\*}\\{.*?}>.*)*";
+    private final String validationPattern = "<\\{\\*\\d+\\*}\\{.*?}>";
     private final String linkToFile = "./src/main/resources/skills.txt";
     private File repo;
     public JavaIOSkillRepositoryImpl(){
         repo = new File(linkToFile);
     }
-    private String getContentFromFile(File file, String validPattern){
-        if(!file.exists()) return null;
+    private List<String[]> getContentFromFile(File file, String validPattern) throws InvalidRepoFileException {
+        if(!file.exists()){
+            throw  new InvalidRepoFileException("Extracting of content from file is failed");
+        }
         StringBuilder content = new StringBuilder();
         try (FileReader fr = new FileReader(file)){
             int c;
             while ((c=fr.read()) != -1) content.append((char) c);
         } catch (IOException e) { e.printStackTrace(); }
-        String outContent = content.toString().replaceAll("(\\r\\n)|(\\r)|(\\n)", "");
-        return outContent.matches(validPattern) ? outContent : null;
+        List<String[]> contentTable = new ArrayList<>();
+        Matcher outerMatcher = Pattern.compile(validPattern).matcher(content);
+        Matcher innerMatcher;
+        while (outerMatcher.find()){
+            innerMatcher = Pattern.compile("\\{.*?}").matcher(outerMatcher.group());
+            contentTable.add(new String[2]);
+            contentTable.get(contentTable.size()-1)[0] = findInMatcherByIndex(innerMatcher, 1).group().replaceAll("[{*}]", "");
+            contentTable.get(contentTable.size()-1)[1] = findInMatcherByIndex(innerMatcher, 2).group().replaceAll("[{}]", "");
+        }
+        if(contentTable.size()==0 && content.length()>0){
+            throw  new InvalidRepoFileException("Extracting of content from file is failed");
+        }
+        return contentTable;
+    }
+    private Skill strMasToSkill(String[] mas){
+        return new Skill(Long.parseLong(mas[0]), mas[1]);
+    }
+    private String[] skillToStrMas(Skill skill){
+        return new String[]{skill.getId().toString(), skill.getName()};
     }
     @Override
     public void create(Skill model) throws InvalidRepoFileException, NotUniquePrimaryKeyException {
@@ -45,7 +64,7 @@ public class JavaIOSkillRepositoryImpl implements SkillRepository {
         if(model.getId()==null || model.getId()<1) {
             model.setId(generateAutoIncrId());
         }
-        else if(getAll().stream().anyMatch(el-> el.getId().equals(model.getId()))){
+        else if(getContentFromFile(repo, validationPattern).stream().anyMatch(el -> el[0].equals(model.getId().toString()))){
             throw new NotUniquePrimaryKeyException("Creating of entry is failed");
         }
         String entry = patternOfEntry.replace("-1-", String.valueOf(model.getId())).replace("-2-", model.getName());
@@ -55,78 +74,65 @@ public class JavaIOSkillRepositoryImpl implements SkillRepository {
         } catch (IOException e) { e.printStackTrace(); }
     }
     private Long generateAutoIncrId() throws InvalidRepoFileException {
-        Long id = 1L;
-        List<Skill> skills = getAll();
-        if(skills.size()!=0){
-            skills.sort(Comparator.comparingLong(Skill::getId));
-            int index = 0;
-            while (id.equals(skills.get((index == skills.size() - 1) ? index : index++).getId())){
-                id++;
-            }
+        List<String[]> content = getContentFromFile(repo, validationPattern);
+        long id = 1L;
+        if (content.size()!=0){
+            content.sort(Comparator.comparing(el -> el[0]));
+            id = Long.parseLong(content.get(content.size()-1)[0])+1;
         }
         return id;
     }
     @Override
     public Skill getById(Long readID) throws InvalidRepoFileException, NoSuchEntryException, NotUniquePrimaryKeyException {
-        List<Skill> listOfReadSkills = getAll().stream().filter(el-> el.getId().equals(readID)).collect(Collectors.toList());
-        if(listOfReadSkills.size()==0){
+        List<String[]> content = getContentFromFile(repo, validationPattern).stream().
+                filter(el -> el[0].equals(readID.toString())).
+                collect(Collectors.toList());
+        if(content.size()==0){
             throw new NoSuchEntryException("Reading of entry is failed");
         }
-        else if(listOfReadSkills.size()>1){
+        else if(content.size()>1){
             throw new NotUniquePrimaryKeyException("Reading of entry is failed");
         }
-        return listOfReadSkills.get(0);
+        return strMasToSkill(content.get(0));
     }
     @Override
     public void update(Skill updatedModel) throws InvalidRepoFileException, NoSuchEntryException {
-        List<Skill> listOfSkills = getAll();
+        List<String[]> content = getContentFromFile(repo, validationPattern);
         boolean isExist = false;
-        for (int i = 0; i < listOfSkills.size(); i++) {
-            if(listOfSkills.get(i).getId().equals(updatedModel.getId())){
+        for (int i = 0; i < content.size(); i++) {
+            if(content.get(i)[0].equals(updatedModel.getId().toString())){
                 isExist = true;
-                listOfSkills.set(i, updatedModel);
+                content.set(i, skillToStrMas(updatedModel));
             }
         }
         if(!isExist){
             throw new NoSuchEntryException("Updating of entry is failed");
         }
-        setAll(listOfSkills);
+        setAll(content);
     }
     @Override
     public void delete(Long deletedID) throws NoSuchEntryException, InvalidRepoFileException {
-        List<Skill> listOfSkills = getAll();
-        if(!listOfSkills.removeIf(el -> el.getId().equals(deletedID))){
+        List<String[]> content = getContentFromFile(repo, validationPattern);
+        if(!content.removeIf(el -> el[0].equals(deletedID.toString()))){
             throw new NoSuchEntryException("Deleting of entry is failed");
         }
-        setAll(listOfSkills);
+        setAll(content);
     }
     @Override
     public List<Skill> getAll() throws InvalidRepoFileException {
-        String content = getContentFromFile(repo, validationPattern);
-        if(content==null){
-            throw new InvalidRepoFileException("Extracting of content from file is failed");
-        }
-        Matcher outerMatcher = Pattern.compile("<\\{\\*\\d+?\\*}\\{.*?}>").matcher(content);
-        Matcher innerMatcher;
-        List<Skill> skills = new ArrayList<>();
-        while (outerMatcher.find()){
-            innerMatcher = Pattern.compile("\\{.*?}").matcher(outerMatcher.group());
-            Long id = Long.parseLong(findInMatcherByIndex(innerMatcher, 1).group().replaceAll("[{*}]", ""));
-            String name = findInMatcherByIndex(innerMatcher, 2).group().replaceAll("[{}]", "");
-            skills.add(new Skill(id, name));
-        }
-        return skills;
+        List<String[]> content = getContentFromFile(repo, validationPattern);
+        return content.stream().map(this::strMasToSkill).collect(Collectors.toList());
     }
     private Matcher findInMatcherByIndex(Matcher matcher, int index){
         matcher.reset();
         for (int i = 0; i < index && matcher.find(); i++);
         return matcher;
     }
-    private void setAll(List<Skill> listOfSkills){
+    private void setAll(List<String[]> listOfSkillsInStrMas){
         StringBuilder content = new StringBuilder();
-        for (Skill skill : listOfSkills) {
-            content.append(patternOfEntry.replace("-1-", String.valueOf(skill.getId())).
-                    replace("-2-", skill.getName()));
+        for (String[] skillStrMas : listOfSkillsInStrMas) {
+            content.append(patternOfEntry.replace("-1-", skillStrMas[0]).
+                    replace("-2-", skillStrMas[1]));
         }
         try (FileWriter fw = new FileWriter(repo, false)){
             fw.append(content.toString());
