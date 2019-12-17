@@ -95,11 +95,11 @@ public class JavaIODeveloperRepositoryImpl implements DeveloperRepository {
             skillForeignKeys.append("["+skillRepo.getById(skill.getId()).getId()+"]");
         }
         String accountForeignKey = "["+accountRepo.getById(model.getAccount().getId()).getId()+"]";
-        String entry = patternOfEntry.replace("-1-", String.valueOf(model.getId())).
-                replace("-2-", model.getFirstName()).
-                replace("-3-", model.getLastName()).
-                replace("-4-", skillForeignKeys.toString()).
-                replace("-5-", accountForeignKey);
+        String entry = patternOfEntry.replace("-1-", String.valueOf(model.getId()))
+                .replace("-2-", model.getFirstName())
+                .replace("-3-", model.getLastName())
+                .replace("-4-", skillForeignKeys.toString())
+                .replace("-5-", accountForeignKey);
         try (FileWriter fw = new FileWriter(repo, true)){
             fw.append(entry);
             fw.flush();
@@ -116,9 +116,9 @@ public class JavaIODeveloperRepositoryImpl implements DeveloperRepository {
     }
     @Override
     public Developer getById(Long readID) throws InvalidRepoFileException, NoSuchEntryException, NotUniquePrimaryKeyException {
-        List<String[]> content = getContentFromFile(repo, validationPattern).stream().
-                filter(el -> el[0].equals(readID.toString())).
-                collect(Collectors.toList());
+        List<String[]> content = getContentFromFile(repo, validationPattern).stream()
+                .filter(el -> el[0].equals(readID.toString()))
+                .collect(Collectors.toList());
         if(content.size()==0){
             throw new NoSuchEntryException("Reading of entry is failed");
         }
@@ -169,11 +169,11 @@ public class JavaIODeveloperRepositoryImpl implements DeveloperRepository {
         for (String[] developerStrMas : listOfDevelopersInStrMas){
             String skillForeignKeys = "["+developerStrMas[3].replaceAll("\\s", "][")+"]";
             String accountForeignKey = "["+developerStrMas[4]+"]";
-            content.append(patternOfEntry.replace("-1-", String.valueOf(developerStrMas[0])).
-                    replace("-2-", developerStrMas[1]).
-                    replace("-3-", developerStrMas[2]).
-                    replace("-4-", skillForeignKeys).
-                    replace("-5-", accountForeignKey));
+            content.append(patternOfEntry.replace("-1-", String.valueOf(developerStrMas[0]))
+                    .replace("-2-", developerStrMas[1])
+                    .replace("-3-", developerStrMas[2])
+                    .replace("-4-", skillForeignKeys)
+                    .replace("-5-", accountForeignKey));
         }
         try (FileWriter fw = new FileWriter(repo, false)){
             fw.append(content.toString());
