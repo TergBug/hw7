@@ -105,7 +105,7 @@ public class JavaIODeveloperRepositoryImpl implements DeveloperRepository {
             fw.flush();
         } catch (IOException e) { e.printStackTrace(); }
     }
-    private Long generateAutoIncrId() throws InvalidRepoFileException, NoSuchEntryException, NotUniquePrimaryKeyException {
+    private Long generateAutoIncrId() throws InvalidRepoFileException {
         List<String[]> content = getContentFromFile(repo, validationPattern);
         long id = 1L;
         if (content.size()!=0){
@@ -143,7 +143,7 @@ public class JavaIODeveloperRepositoryImpl implements DeveloperRepository {
         setAll(content);
     }
     @Override
-    public void delete(Long deletedID) throws InvalidRepoFileException, NoSuchEntryException, NotUniquePrimaryKeyException {
+    public void delete(Long deletedID) throws InvalidRepoFileException, NoSuchEntryException {
         List<String[]> content = getContentFromFile(repo, validationPattern);
         if(!content.removeIf(el -> el[0].equals(deletedID.toString()))){
             throw new NoSuchEntryException("Deleting of entry is failed");
