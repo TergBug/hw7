@@ -3,7 +3,6 @@ package org.mycode.repository.javaio;
 import org.mycode.exceptions.InvalidRepoFileException;
 import org.mycode.exceptions.NoSuchEntryException;
 import org.mycode.exceptions.NotUniquePrimaryKeyException;
-import org.mycode.model.Account;
 import org.mycode.model.Developer;
 import org.mycode.model.Skill;
 import org.mycode.repository.AccountRepository;
@@ -21,21 +20,60 @@ import java.util.stream.Collectors;
 
 public class JavaIODeveloperRepositoryImpl implements DeveloperRepository {
     private final String patternOfEntry = "<{*-1-*}{-2-}{-3-}{-4-}{-5-}>";
-    private final String validationPattern = "(<\\{\\*\\d+\\*}\\{.*?}\\{.*?}\\{(\\[\\d+\\])*}\\{\\[\\d+\\]}>.*)*";
+    private final String validationPattern = "<\\{\\*\\d+\\*}\\{.*?}\\{.*?}\\{(\\[\\d+\\])*}\\{\\[\\d+\\]}>";
     private final String linkToFile = "./src/main/resources/developers.txt";
     private File repo;
     public JavaIODeveloperRepositoryImpl(){
         repo = new File(linkToFile);
     }
-    private String getContentFromFile(File file, String validPattern){
-        if(!file.exists()) return null;
+    private List<String[]> getContentFromFile(File file, String validPattern) throws InvalidRepoFileException {
+        if(!file.exists()){
+            throw new InvalidRepoFileException("Extracting of content from file is failed");
+        }
         StringBuilder content = new StringBuilder();
         try (FileReader fr = new FileReader(file)){
             int c;
             while ((c=fr.read()) != -1) content.append((char) c);
         } catch (IOException e) { e.printStackTrace(); }
-        String outContent = content.toString().replaceAll("(\\r\\n)|(\\r)|(\\n)", "");
-        return outContent.matches(validPattern) ? outContent : null;
+        List<String[]> contentTable = new ArrayList<>();
+        Matcher outerMatcher = Pattern.compile(validPattern).matcher(content);
+        Matcher innerMatcher;
+        SkillRepository skillRepo = new JavaIOSkillRepositoryImpl();
+        AccountRepository accountRepo = new JavaIOAccountRepositoryImpl();
+        while (outerMatcher.find()){
+            innerMatcher = Pattern.compile("\\{.*?}").matcher(outerMatcher.group());
+            contentTable.add(new String[5]);
+            contentTable.get(contentTable.size()-1)[0] = findInMatcherByIndex(innerMatcher, 1).group().replaceAll("[{*}]", "");
+            contentTable.get(contentTable.size()-1)[1] = findInMatcherByIndex(innerMatcher, 2).group().replaceAll("[{}]", "");
+            contentTable.get(contentTable.size()-1)[2] = findInMatcherByIndex(innerMatcher, 3).group().replaceAll("[{}]", "");
+            contentTable.get(contentTable.size()-1)[3] = findInMatcherByIndex(innerMatcher, 4).group().replaceAll("]\\[", " ").replaceAll("[{\\[\\]}]", "");
+            contentTable.get(contentTable.size()-1)[4] = findInMatcherByIndex(innerMatcher, 5).group().replaceAll("[{\\[\\]}]", "");
+        }
+        if(contentTable.size()==0 && content.length()>0){
+            throw new InvalidRepoFileException("Extracting of content from file is failed");
+        }
+        return contentTable;
+    }
+    private Developer strMasToDeveloper(String[] mas) throws InvalidRepoFileException, NotUniquePrimaryKeyException, NoSuchEntryException {
+        SkillRepository skillRepository = new JavaIOSkillRepositoryImpl();
+        Set<Skill> skills = new HashSet<>();
+        String[] skillsFK = mas[3].split("\\s");
+        for (String oneSkillFK : skillsFK) {
+            skills.add(skillRepository.getById(Long.parseLong(oneSkillFK)));
+        }
+        AccountRepository accountRepository = new JavaIOAccountRepositoryImpl();
+        return new Developer(Long.parseLong(mas[0]), mas[1], mas[2], skills, accountRepository.getById(Long.parseLong(mas[4])));
+    }
+    private String[] developerToStrMas(Developer developer) throws InvalidRepoFileException, NotUniquePrimaryKeyException, NoSuchEntryException {
+        SkillRepository skillRepository = new JavaIOSkillRepositoryImpl();
+        StringBuilder skillsStr = new StringBuilder();
+        for (Skill skill : developer.getSkills()) {
+            skillsStr.append(skillRepository.getById(skill.getId()).getId() + " ");
+        }
+        skillsStr.deleteCharAt(skillsStr.length()-1);
+        AccountRepository accountRepository = new JavaIOAccountRepositoryImpl();
+        String accountStr = accountRepository.getById(developer.getAccount().getId()).getId().toString();
+        return new String[]{developer.getId().toString(), developer.getFirstName(), developer.getLastName(), skillsStr.toString(), accountStr};
     }
     @Override
     public void create(Developer model) throws InvalidRepoFileException, NotUniquePrimaryKeyException, NoSuchEntryException {
@@ -47,7 +85,7 @@ public class JavaIODeveloperRepositoryImpl implements DeveloperRepository {
         if(model.getId()==null || model.getId()<1) {
             model.setId(generateAutoIncrId());
         }
-        else if(getAll().stream().anyMatch(el-> el.getId().equals(model.getId()))){
+        else if(getContentFromFile(repo, validationPattern).stream().anyMatch(el -> el[0].equals(model.getId().toString()))){
             throw new NotUniquePrimaryKeyException("Creating of entry is failed");
         }
         SkillRepository skillRepo = new JavaIOSkillRepositoryImpl();
@@ -68,74 +106,56 @@ public class JavaIODeveloperRepositoryImpl implements DeveloperRepository {
         } catch (IOException e) { e.printStackTrace(); }
     }
     private Long generateAutoIncrId() throws InvalidRepoFileException, NoSuchEntryException, NotUniquePrimaryKeyException {
-        Long id = 1L;
-        List<Developer> developers = getAll();
-        if(developers.size()!=0){
-            developers.sort(Comparator.comparingLong(Developer::getId));
-            int index = 0;
-            while (id.equals(developers.get((index == developers.size() - 1) ? index : index++).getId())){
-                id++;
-            }
+        List<String[]> content = getContentFromFile(repo, validationPattern);
+        long id = 1L;
+        if (content.size()!=0){
+            content.sort(Comparator.comparing(el -> el[0]));
+            id = Long.parseLong(content.get(content.size()-1)[0])+1;
         }
         return id;
     }
     @Override
     public Developer getById(Long readID) throws InvalidRepoFileException, NoSuchEntryException, NotUniquePrimaryKeyException {
-        List<Developer> listOfReadDevelopers = getAll().stream().filter(el -> el.getId().equals(readID)).collect(Collectors.toList());
-        if(listOfReadDevelopers.size()==0){
+        List<String[]> content = getContentFromFile(repo, validationPattern).stream().
+                filter(el -> el[0].equals(readID.toString())).
+                collect(Collectors.toList());
+        if(content.size()==0){
             throw new NoSuchEntryException("Reading of entry is failed");
         }
-        if(listOfReadDevelopers.size()>1){
+        else if(content.size()>1){
             throw new NotUniquePrimaryKeyException("Reading of entry is failed");
         }
-        return listOfReadDevelopers.get(0);
+        return strMasToDeveloper(content.get(0));
     }
     @Override
     public void update(Developer updatedModel) throws InvalidRepoFileException, NoSuchEntryException, NotUniquePrimaryKeyException {
-        List<Developer> listOfDevelopers = getAll();
+        List<String[]> content = getContentFromFile(repo, validationPattern);
         boolean isExist = false;
-        for (int i = 0; i < listOfDevelopers.size(); i++) {
-            if(listOfDevelopers.get(i).getId().equals(updatedModel.getId())){
+        for (int i = 0; i < content.size(); i++) {
+            if(content.get(i)[0].equals(updatedModel.getId().toString())){
                 isExist = true;
-                listOfDevelopers.set(i, updatedModel);
+                content.set(i, developerToStrMas(updatedModel));
             }
         }
         if(!isExist){
             throw new NoSuchEntryException("Updating of entry is failed");
         }
-        setAll(listOfDevelopers);
+        setAll(content);
     }
     @Override
     public void delete(Long deletedID) throws InvalidRepoFileException, NoSuchEntryException, NotUniquePrimaryKeyException {
-        List<Developer> listOfDevelopers = getAll();
-        if(!listOfDevelopers.removeIf(el-> el.getId().equals(deletedID))){
+        List<String[]> content = getContentFromFile(repo, validationPattern);
+        if(!content.removeIf(el -> el[0].equals(deletedID.toString()))){
             throw new NoSuchEntryException("Deleting of entry is failed");
         }
-        setAll(listOfDevelopers);
+        setAll(content);
     }
     @Override
     public List<Developer> getAll() throws InvalidRepoFileException, NoSuchEntryException, NotUniquePrimaryKeyException {
-        String content = getContentFromFile(repo, validationPattern);
-        if(content==null){
-            throw new InvalidRepoFileException("Extracting of content from file is failed");
-        }
-        Matcher outerMatcher = Pattern.compile("<\\{\\*\\d+\\*}\\{.*?}\\{.*?}\\{(\\[\\d+])*}\\{\\[\\d+]}>").matcher(content);
-        Matcher innerMatcher;
+        List<String[]> content = getContentFromFile(repo, validationPattern);
         List<Developer> developers = new ArrayList<>();
-        SkillRepository skillRepo = new JavaIOSkillRepositoryImpl();
-        AccountRepository accountRepo = new JavaIOAccountRepositoryImpl();
-        while (outerMatcher.find()){
-            innerMatcher = Pattern.compile("\\{.*?}").matcher(outerMatcher.group());
-            Long id = Long.parseLong(findInMatcherByIndex(innerMatcher, 1).group().replaceAll("[{*}]", ""));
-            String firstName = findInMatcherByIndex(innerMatcher, 2).group().replaceAll("[{}]", "");
-            String lastName = findInMatcherByIndex(innerMatcher, 3).group().replaceAll("[{}]", "");
-            Account account = accountRepo.getById(Long.parseLong(findInMatcherByIndex(innerMatcher, 5).group().replaceAll("[{\\[\\]}]", "")));
-            Set<Skill> skills = new HashSet<>();
-            innerMatcher = Pattern.compile("\\[\\d+]").matcher(findInMatcherByIndex(innerMatcher, 4).group());
-            while (innerMatcher.find()){
-                skills.add(skillRepo.getById(Long.parseLong(innerMatcher.group().replaceAll("[\\[\\]]", ""))));
-            }
-            developers.add(new Developer(id, firstName, lastName, skills, account));
+        for (String[] strings : content) {
+            developers.add(strMasToDeveloper(strings));
         }
         return developers;
     }
@@ -144,16 +164,15 @@ public class JavaIODeveloperRepositoryImpl implements DeveloperRepository {
         for (int i = 0; i < index && matcher.find(); i++);
         return matcher;
     }
-    private void setAll(List<Developer> listOfDevelopers){
+    private void setAll(List<String[]> listOfDevelopersInStrMas){
         StringBuilder content = new StringBuilder();
-        for (Developer developer : listOfDevelopers){
-            StringBuilder skillForeignKeys = new StringBuilder();
-            developer.getSkills().forEach(el -> skillForeignKeys.append("["+el.getId()+"]"));
-            String accountForeignKey = "["+developer.getAccount().getId()+"]";
-            content.append(patternOfEntry.replace("-1-", String.valueOf(developer.getId())).
-                    replace("-2-", developer.getFirstName()).
-                    replace("-3-", developer.getLastName()).
-                    replace("-4-", skillForeignKeys.toString()).
+        for (String[] developerStrMas : listOfDevelopersInStrMas){
+            String skillForeignKeys = "["+developerStrMas[3].replaceAll("\\s", "][")+"]";
+            String accountForeignKey = "["+developerStrMas[4]+"]";
+            content.append(patternOfEntry.replace("-1-", String.valueOf(developerStrMas[0])).
+                    replace("-2-", developerStrMas[1]).
+                    replace("-3-", developerStrMas[2]).
+                    replace("-4-", skillForeignKeys).
                     replace("-5-", accountForeignKey));
         }
         try (FileWriter fw = new FileWriter(repo, false)){
