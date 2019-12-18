@@ -30,26 +30,19 @@ public class JavaIOSkillRepositoryImplTest {
     private Skill updatedNotExistSkill = new Skill(4L, "DB");
     private ArrayList<Skill> getAllSkills = new ArrayList<>();
     @Before
-    public void setupBefore(){
-        try (FileReader fr = new FileReader(repo)){
-            int c;
-            while ((c=fr.read()) != -1) oldInfoInFile+=(char) c;
-        } catch (IOException e) { e.printStackTrace(); }
-        try (FileWriter fw = new FileWriter(repo, false)){
-            fw.write("");
-            fw.flush();
-        } catch (IOException e) { e.printStackTrace(); }
-        Collections.addAll(baseCreatedSkills, new Skill(0L, "Java"), new Skill(0L, "C#"), new Skill(0L, "JDBC"));
+    public void clearFileBefore(){
+        oldInfoInFile = readFileContent();
+        fillFile("");
     }
     @After
     public void backOldInfo(){
-        try (FileWriter fw = new FileWriter(repo, false)){
-            fw.write(oldInfoInFile);
-            fw.flush();
-        } catch (IOException e) { e.printStackTrace(); }
+        fillFile(oldInfoInFile);
     }
     @Test
     public void shouldCreate() {
+        Collections.addAll(baseCreatedSkills, new Skill(0L, "Java"),
+                new Skill(0L, "C#"),
+                new Skill(0L, "JDBC"));
         String exceptionStr = "";
         try {
             for (Skill skill : baseCreatedSkills) {
@@ -64,7 +57,7 @@ public class JavaIOSkillRepositoryImplTest {
     }
     @Test
     public void shouldRead() {
-        fillFile();
+        fillFile(newInfoInFile);
         String exceptionStr = "";
         try {
             assertEquals(readSkill, testedSkillRepo.getById(1L));
@@ -76,7 +69,7 @@ public class JavaIOSkillRepositoryImplTest {
     }
     @Test
     public void shouldUpdate() {
-        fillFile();
+        fillFile(newInfoInFile);
         String exceptionStr = "";
         try {
             testedSkillRepo.update(updatedSkill);
@@ -84,12 +77,12 @@ public class JavaIOSkillRepositoryImplTest {
         } catch (InvalidRepoFileException | NoSuchEntryException e) {
             exceptionStr = e.toString();
         }
-        assertEquals(newInfoInFile.replace("C#", "DB"), readFileContent());
+        assertEquals(newInfoInFile.replace("{*2*}{C#}", "{*2*}{DB}"), readFileContent());
         assertEquals(noSuchEntryExceptionStr.replace("#", "Updating"), exceptionStr);
     }
     @Test
     public void shouldDelete() {
-        fillFile();
+        fillFile(newInfoInFile);
         String exceptionStr = "";
         try {
             testedSkillRepo.delete(2L);
@@ -102,7 +95,7 @@ public class JavaIOSkillRepositoryImplTest {
     }
     @Test
     public void shouldGetAll() {
-        fillFile();
+        fillFile(newInfoInFile);
         Collections.addAll(getAllSkills, new Skill(1L, "Java"), new Skill(2L, "C#"), new Skill(3L, "JDBC"));
         try {
             assertEquals(getAllSkills, testedSkillRepo.getAll());
@@ -110,9 +103,9 @@ public class JavaIOSkillRepositoryImplTest {
             e.printStackTrace();
         }
     }
-    private void fillFile(){
+    private void fillFile(String infoToWrite){
         try (FileWriter fw = new FileWriter(repo, false)){
-            fw.write(newInfoInFile);
+            fw.write(infoToWrite);
             fw.flush();
         } catch (IOException e) { e.printStackTrace(); }
     }

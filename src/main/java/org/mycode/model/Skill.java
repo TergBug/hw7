@@ -5,6 +5,9 @@ import java.util.Objects;
 public class Skill {
     private Long id;
     private String name;
+    public Skill(Long id) {
+        this.id = id;
+    }
     public Skill(Long id, String name) {
         this.id = id;
         this.name = name;

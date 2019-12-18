@@ -24,15 +24,15 @@ public class DeveloperController {
         try {
             switch (req[0]){
                 case "c":
-                    skillSet = Arrays.stream(req[4].split(",")).map(el -> new Skill(Long.parseLong(el), null)).collect(Collectors.toSet());
-                    repo.create(new Developer(Long.parseLong(req[1]), req[2], req[3], skillSet, new Account(Long.parseLong(req[5]), null, null)));
+                    skillSet = Arrays.stream(req[4].split(",")).map(el -> new Skill(Long.parseLong(el))).collect(Collectors.toSet());
+                    repo.create(new Developer(Long.parseLong(req[1]), req[2], req[3], skillSet, new Account(Long.parseLong(req[5]))));
                     break;
                 case "r":
                     developers.add(repo.getById(Long.parseLong(req[1])));
                     break;
                 case "u":
-                    skillSet = Arrays.stream(req[4].split(",")).map(el -> new Skill(Long.parseLong(el), null)).collect(Collectors.toSet());
-                    repo.update(new Developer(Long.parseLong(req[1]), req[2], req[3], skillSet, new Account(Long.parseLong(req[5]), null, null)));
+                    skillSet = Arrays.stream(req[4].split(",")).map(el -> new Skill(Long.parseLong(el))).collect(Collectors.toSet());
+                    repo.update(new Developer(Long.parseLong(req[1]), req[2], req[3], skillSet, new Account(Long.parseLong(req[5]))));
                     break;
                 case "d":
                     repo.delete(Long.parseLong(req[1]));
