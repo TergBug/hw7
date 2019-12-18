@@ -1,20 +1,22 @@
+# **Developer CRUD application**
+
 I have implemented console CRUD application that has next entities:
-Developer
-Skill
-Account
+Developer,
+Skill,
+Account.
 
 Developer:
-String firstName
-String lastName
-Set<Skill> skills
-Account account
+String firstName;
+String lastName;
+Set<Skill> skills;
+Account account.
 
 Skill:
-String name
+String name.
 
 Account:
-String name
-AccountStatus (enum ACTIVE, BANNED, DELETED) status
+String name;
+AccountStatus (enum ACTIVE, BANNED, DELETED) status.
 
 It use text files as a storage (in resources repository):
 developers.txt, skills.txt, accounts.txt
