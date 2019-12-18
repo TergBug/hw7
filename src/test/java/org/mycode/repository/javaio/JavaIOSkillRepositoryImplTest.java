@@ -96,7 +96,9 @@ public class JavaIOSkillRepositoryImplTest {
     @Test
     public void shouldGetAll() {
         fillFile(newInfoInFile);
-        Collections.addAll(getAllSkills, new Skill(1L, "Java"), new Skill(2L, "C#"), new Skill(3L, "JDBC"));
+        Collections.addAll(getAllSkills, new Skill(1L, "Java"),
+                new Skill(2L, "C#"),
+                new Skill(3L, "JDBC"));
         try {
             assertEquals(getAllSkills, testedSkillRepo.getAll());
         } catch (InvalidRepoFileException e) {
