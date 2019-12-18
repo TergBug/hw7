@@ -1,5 +1,5 @@
 # **Developer CRUD application**
-![Build Status](https://api.travis-ci.com/TergBug/hw7.svg?branch=master)
+[![Build Status](https://api.travis-ci.com/TergBug/hw7.svg?branch=master)](https://travis-ci.com/TergBug/hw7)
 
 I have implemented console CRUD application that has next entities:
 Developer,
