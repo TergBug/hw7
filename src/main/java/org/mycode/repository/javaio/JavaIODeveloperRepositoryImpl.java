@@ -23,6 +23,8 @@ public class JavaIODeveloperRepositoryImpl implements DeveloperRepository {
     private final String validationPattern = "<\\{\\*\\d+\\*}\\{.*?}\\{.*?}\\{(\\[\\d+\\])*}\\{\\[\\d+\\]}>";
     private final String linkToFile = "./src/main/resources/developers.txt";
     private File repo;
+    private SkillRepository skillRepo = new JavaIOSkillRepositoryImpl();
+    private AccountRepository accountRepo = new JavaIOAccountRepositoryImpl();
     public JavaIODeveloperRepositoryImpl(){
         repo = new File(linkToFile);
     }
@@ -38,8 +40,6 @@ public class JavaIODeveloperRepositoryImpl implements DeveloperRepository {
         List<String[]> contentTable = new ArrayList<>();
         Matcher outerMatcher = Pattern.compile(validPattern).matcher(content);
         Matcher innerMatcher;
-        SkillRepository skillRepo = new JavaIOSkillRepositoryImpl();
-        AccountRepository accountRepo = new JavaIOAccountRepositoryImpl();
         while (outerMatcher.find()){
             innerMatcher = Pattern.compile("\\{.*?}").matcher(outerMatcher.group());
             contentTable.add(new String[5]);
@@ -55,24 +55,21 @@ public class JavaIODeveloperRepositoryImpl implements DeveloperRepository {
         return contentTable;
     }
     private Developer strMasToDeveloper(String[] mas) throws InvalidRepoFileException, NotUniquePrimaryKeyException, NoSuchEntryException {
-        SkillRepository skillRepository = new JavaIOSkillRepositoryImpl();
         Set<Skill> skills = new HashSet<>();
         String[] skillsFK = mas[3].split("\\s");
         for (String oneSkillFK : skillsFK) {
-            skills.add(skillRepository.getById(Long.parseLong(oneSkillFK)));
+            skills.add(skillRepo.getById(Long.parseLong(oneSkillFK)));
         }
         AccountRepository accountRepository = new JavaIOAccountRepositoryImpl();
         return new Developer(Long.parseLong(mas[0]), mas[1], mas[2], skills, accountRepository.getById(Long.parseLong(mas[4])));
     }
     private String[] developerToStrMas(Developer developer) throws InvalidRepoFileException, NotUniquePrimaryKeyException, NoSuchEntryException {
-        SkillRepository skillRepository = new JavaIOSkillRepositoryImpl();
         StringBuilder skillsStr = new StringBuilder();
         for (Skill skill : developer.getSkills()) {
-            skillsStr.append(skillRepository.getById(skill.getId()).getId() + " ");
+            skillsStr.append(skillRepo.getById(skill.getId()).getId() + " ");
         }
         skillsStr.deleteCharAt(skillsStr.length()-1);
-        AccountRepository accountRepository = new JavaIOAccountRepositoryImpl();
-        String accountStr = accountRepository.getById(developer.getAccount().getId()).getId().toString();
+        String accountStr = accountRepo.getById(developer.getAccount().getId()).getId().toString();
         return new String[]{developer.getId().toString(), developer.getFirstName(), developer.getLastName(), skillsStr.toString(), accountStr};
     }
     @Override
@@ -88,8 +85,6 @@ public class JavaIODeveloperRepositoryImpl implements DeveloperRepository {
         else if(getContentFromFile(repo, validationPattern).stream().anyMatch(el -> el[0].equals(model.getId().toString()))){
             throw new NotUniquePrimaryKeyException("Creating of entry is failed");
         }
-        SkillRepository skillRepo = new JavaIOSkillRepositoryImpl();
-        AccountRepository accountRepo = new JavaIOAccountRepositoryImpl();
         StringBuilder skillForeignKeys = new StringBuilder();
         for (Skill skill : model.getSkills()) {
             skillForeignKeys.append("["+skillRepo.getById(skill.getId()).getId()+"]");
