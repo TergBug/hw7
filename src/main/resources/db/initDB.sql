@@ -1,5 +1,5 @@
-create database if not exists JavaIONIO;
-use javaionio;
+create database if not exists developerCRUD;
+use developerCRUD;
 drop table if exists developer_skill;
 drop table if exists developers;
 drop table if exists skills;

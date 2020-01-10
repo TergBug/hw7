@@ -1,4 +1,4 @@
-use javaionio;
+use developerCRUD;
 insert into skills(name) values ('Java');
 insert into skills(name) values ('C#');
 insert into skills(name) values ('JDBC');
