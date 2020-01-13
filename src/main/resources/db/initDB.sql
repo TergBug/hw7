@@ -23,7 +23,7 @@ create table if not exists developers(
 create table if not exists developer_skill(
     developer_id int not null,
     skill_id int not null,
-    primary key (developer_id, skill_id),
+    unique (developer_id, skill_id),
     foreign key (developer_id) references developers(id),
     foreign key (skill_id) references skills(id)
 );
