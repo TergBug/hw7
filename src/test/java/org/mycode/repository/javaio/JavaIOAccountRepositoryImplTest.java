@@ -20,7 +20,7 @@ import static org.junit.Assert.*;
 
 public class JavaIOAccountRepositoryImplTest {
     private JavaIOAccountRepositoryImpl testedAccRepo = new JavaIOAccountRepositoryImpl();
-    private File repo = new File("./src/main/resources/accounts.txt");
+    private File repo = new File("./src/main/resources/filestxt/accounts.txt");
     private String noSuchEntryExceptionStr = "org.mycode.exceptions.NoSuchEntryException: # of entry is failed";
     private String notUniquePrimaryKeyExceptionStr = "org.mycode.exceptions.NotUniquePrimaryKeyException: # of entry is failed";
     private String newInfoInFile = "<{*1*}{LiXiao}{ACTIVE}><{*2*}{Din}{DELETED}><{*3*}{Geek}{BANNED}>";

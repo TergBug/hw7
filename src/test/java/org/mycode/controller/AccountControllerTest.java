@@ -19,7 +19,7 @@ import static org.junit.Assert.*;
 public class AccountControllerTest {
     private AccountController testedAccController = new AccountController();
     private String incorrectRequestExceptionStr = "org.mycode.exceptions.IncorrectRequestException";
-    private File repo = new File("./src/main/resources/accounts.txt");
+    private File repo = new File("./src/main/resources/filestxt/accounts.txt");
     private String newInfoInFile = "<{*1*}{LiXiao}{ACTIVE}><{*2*}{Din}{DELETED}><{*3*}{Geek}{BANNED}>";
     private String oldInfoInFile = "";
     private String createRequest = "c|0|Root|ACTIVE";

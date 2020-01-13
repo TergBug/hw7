@@ -18,7 +18,7 @@ import java.util.Collections;
 
 public class JavaIOSkillRepositoryImplTest {
     private JavaIOSkillRepositoryImpl testedSkillRepo = new JavaIOSkillRepositoryImpl();
-    private File repo = new File("./src/main/resources/skills.txt");
+    private File repo = new File("./src/main/resources/filestxt/skills.txt");
     private String noSuchEntryExceptionStr = "org.mycode.exceptions.NoSuchEntryException: # of entry is failed";
     private String notUniquePrimaryKeyExceptionStr = "org.mycode.exceptions.NotUniquePrimaryKeyException: # of entry is failed";
     private String newInfoInFile = "<{*1*}{Java}><{*2*}{C#}><{*3*}{JDBC}>";

@@ -23,9 +23,9 @@ import static org.junit.Assert.*;
 public class DeveloperControllerTest {
     private DeveloperController testedDeveloperController = new DeveloperController();
     private String incorrectRequestExceptionStr = "org.mycode.exceptions.IncorrectRequestException";
-    private File repoSkill = new File("./src/main/resources/skills.txt");
-    private File repoAccount = new File("./src/main/resources/accounts.txt");
-    private File repoDeveloper = new File("./src/main/resources/developers.txt");
+    private File repoSkill = new File("./src/main/resources/filestxt/skills.txt");
+    private File repoAccount = new File("./src/main/resources/filestxt/accounts.txt");
+    private File repoDeveloper = new File("./src/main/resources/filestxt/developers.txt");
     private String newInfoInFileSkills = "<{*1*}{Java}><{*2*}{C#}><{*3*}{JDBC}>";
     private String newInfoInFileAccounts = "<{*1*}{LiXiao}{ACTIVE}><{*2*}{Din}{DELETED}><{*3*}{Geek}{BANNED}>";
     private String newInfoInFileDevelopers = "<{*1*}{Din}{Ford}{[1][3]}{[2]}><{*2*}{Xiaoming}{Li}{[2]}{[1]}><{*3*}{Gird}{Long}{[1][2]}{[3]}>";

@@ -18,7 +18,7 @@ import static org.junit.Assert.*;
 public class SkillControllerTest {
     private SkillController testedSkillController = new SkillController();
     private String incorrectRequestExceptionStr = "org.mycode.exceptions.IncorrectRequestException";
-    private File repo = new File("./src/main/resources/skills.txt");
+    private File repo = new File("./src/main/resources/filestxt/skills.txt");
     private String newInfoInFile = "<{*1*}{Java}><{*2*}{C#}><{*3*}{JDBC}>";
     private String oldInfoInFile = "";
     private String createRequest = "c|0|Python";
