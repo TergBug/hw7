@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 public class JavaIOSkillRepositoryImpl implements SkillRepository {
     private final String patternOfEntry = "<{*-1-*}{-2-}>";
     private final String validationPattern = "<\\{\\*\\d+\\*}\\{.*?}>";
-    private final String linkToFile = "./src/main/resources/skills.txt";
+    private final String linkToFile = "./src/main/resources/filestxt/skills.txt";
     private File repo;
     public JavaIOSkillRepositoryImpl(){
         repo = new File(linkToFile);

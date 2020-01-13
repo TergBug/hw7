@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class JavaIODeveloperRepositoryImpl implements DeveloperRepository {
     private final String patternOfEntry = "<{*-1-*}{-2-}{-3-}{-4-}{-5-}>";
     private final String validationPattern = "<\\{\\*\\d+\\*}\\{.*?}\\{.*?}\\{(\\[\\d+\\])*}\\{\\[\\d+\\]}>";
-    private final String linkToFile = "./src/main/resources/developers.txt";
+    private final String linkToFile = "./src/main/resources/filestxt/developers.txt";
     private File repo;
     private SkillRepository skillRepo = new JavaIOSkillRepositoryImpl();
     private AccountRepository accountRepo = new JavaIOAccountRepositoryImpl();

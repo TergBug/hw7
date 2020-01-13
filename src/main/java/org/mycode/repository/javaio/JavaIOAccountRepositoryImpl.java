@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class JavaIOAccountRepositoryImpl implements AccountRepository {
     private final String patternOfEntry = "<{*-1-*}{-2-}{-3-}>";
     private final String validationPattern = "<\\{\\*\\d+?\\*}\\{.*?}\\{((ACTIVE)|(BANNED)|(DELETED))}>";
-    private final String linkToFile = "./src/main/resources/accounts.txt";
+    private final String linkToFile = "./src/main/resources/filestxt/accounts.txt";
     private File repo;
     public JavaIOAccountRepositoryImpl(){
         repo = new File(linkToFile);
