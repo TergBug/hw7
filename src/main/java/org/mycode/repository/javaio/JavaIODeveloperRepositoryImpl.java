@@ -1,6 +1,6 @@
 package org.mycode.repository.javaio;
 
-import org.mycode.exceptions.InvalidRepoFileException;
+import org.mycode.exceptions.RepoStorageException;
 import org.mycode.exceptions.NoSuchEntryException;
 import org.mycode.exceptions.NotUniquePrimaryKeyException;
 import org.mycode.model.Developer;
@@ -28,9 +28,9 @@ public class JavaIODeveloperRepositoryImpl implements DeveloperRepository {
     public JavaIODeveloperRepositoryImpl(){
         repo = new File(linkToFile);
     }
-    private List<String[]> getContentFromFile(File file, String validPattern) throws InvalidRepoFileException {
+    private List<String[]> getContentFromFile(File file, String validPattern) throws RepoStorageException {
         if(!file.exists()){
-            throw new InvalidRepoFileException("Extracting of content from file is failed");
+            throw new RepoStorageException("Extracting of content from file is failed");
         }
         StringBuilder content = new StringBuilder();
         try (FileReader fr = new FileReader(file)){
@@ -50,11 +50,11 @@ public class JavaIODeveloperRepositoryImpl implements DeveloperRepository {
             contentTable.get(contentTable.size()-1)[4] = findInMatcherByIndex(innerMatcher, 5).group().replaceAll("[{\\[\\]}]", "");
         }
         if(contentTable.size()==0 && content.length()>0){
-            throw new InvalidRepoFileException("Extracting of content from file is failed");
+            throw new RepoStorageException("Extracting of content from file is failed");
         }
         return contentTable;
     }
-    private Developer strMasToDeveloper(String[] mas) throws InvalidRepoFileException, NotUniquePrimaryKeyException, NoSuchEntryException {
+    private Developer strMasToDeveloper(String[] mas) throws RepoStorageException, NotUniquePrimaryKeyException, NoSuchEntryException {
         Set<Skill> skills = new HashSet<>();
         String[] skillsFK = mas[3].split("\\s");
         for (String oneSkillFK : skillsFK) {
@@ -63,7 +63,7 @@ public class JavaIODeveloperRepositoryImpl implements DeveloperRepository {
         AccountRepository accountRepository = new JavaIOAccountRepositoryImpl();
         return new Developer(Long.parseLong(mas[0]), mas[1], mas[2], skills, accountRepository.getById(Long.parseLong(mas[4])));
     }
-    private String[] developerToStrMas(Developer developer) throws InvalidRepoFileException, NotUniquePrimaryKeyException, NoSuchEntryException {
+    private String[] developerToStrMas(Developer developer) throws RepoStorageException, NotUniquePrimaryKeyException, NoSuchEntryException {
         StringBuilder skillsStr = new StringBuilder();
         for (Skill skill : developer.getSkills()) {
             skillsStr.append(skillRepo.getById(skill.getId()).getId() + " ");
@@ -73,7 +73,7 @@ public class JavaIODeveloperRepositoryImpl implements DeveloperRepository {
         return new String[]{developer.getId().toString(), developer.getFirstName(), developer.getLastName(), skillsStr.toString(), accountStr};
     }
     @Override
-    public void create(Developer model) throws InvalidRepoFileException, NotUniquePrimaryKeyException, NoSuchEntryException {
+    public void create(Developer model) throws RepoStorageException, NotUniquePrimaryKeyException, NoSuchEntryException {
         if(!repo.exists()) {
             try {
                 repo.createNewFile();
@@ -100,7 +100,7 @@ public class JavaIODeveloperRepositoryImpl implements DeveloperRepository {
             fw.flush();
         } catch (IOException e) { e.printStackTrace(); }
     }
-    private Long generateAutoIncrId() throws InvalidRepoFileException {
+    private Long generateAutoIncrId() throws RepoStorageException {
         List<String[]> content = getContentFromFile(repo, validationPattern);
         long id = 1L;
         if (content.size()!=0){
@@ -110,7 +110,7 @@ public class JavaIODeveloperRepositoryImpl implements DeveloperRepository {
         return id;
     }
     @Override
-    public Developer getById(Long readID) throws InvalidRepoFileException, NoSuchEntryException, NotUniquePrimaryKeyException {
+    public Developer getById(Long readID) throws RepoStorageException, NoSuchEntryException, NotUniquePrimaryKeyException {
         List<String[]> content = getContentFromFile(repo, validationPattern).stream()
                 .filter(el -> el[0].equals(readID.toString()))
                 .collect(Collectors.toList());
@@ -123,7 +123,7 @@ public class JavaIODeveloperRepositoryImpl implements DeveloperRepository {
         return strMasToDeveloper(content.get(0));
     }
     @Override
-    public void update(Developer updatedModel) throws InvalidRepoFileException, NoSuchEntryException, NotUniquePrimaryKeyException {
+    public void update(Developer updatedModel) throws RepoStorageException, NoSuchEntryException, NotUniquePrimaryKeyException {
         List<String[]> content = getContentFromFile(repo, validationPattern);
         boolean isExist = false;
         for (int i = 0; i < content.size(); i++) {
@@ -138,7 +138,7 @@ public class JavaIODeveloperRepositoryImpl implements DeveloperRepository {
         setAll(content);
     }
     @Override
-    public void delete(Long deletedID) throws InvalidRepoFileException, NoSuchEntryException {
+    public void delete(Long deletedID) throws RepoStorageException, NoSuchEntryException {
         List<String[]> content = getContentFromFile(repo, validationPattern);
         if(!content.removeIf(el -> el[0].equals(deletedID.toString()))){
             throw new NoSuchEntryException("Deleting of entry is failed");
@@ -146,7 +146,7 @@ public class JavaIODeveloperRepositoryImpl implements DeveloperRepository {
         setAll(content);
     }
     @Override
-    public List<Developer> getAll() throws InvalidRepoFileException, NoSuchEntryException, NotUniquePrimaryKeyException {
+    public List<Developer> getAll() throws RepoStorageException, NoSuchEntryException, NotUniquePrimaryKeyException {
         List<String[]> content = getContentFromFile(repo, validationPattern);
         List<Developer> developers = new ArrayList<>();
         for (String[] strings : content) {

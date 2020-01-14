@@ -1,6 +1,6 @@
 package org.mycode.repository.javaio;
 
-import org.mycode.exceptions.InvalidRepoFileException;
+import org.mycode.exceptions.RepoStorageException;
 import org.mycode.exceptions.NoSuchEntryException;
 import org.mycode.exceptions.NotUniquePrimaryKeyException;
 import org.mycode.model.Account;
@@ -26,9 +26,9 @@ public class JavaIOAccountRepositoryImpl implements AccountRepository {
     public JavaIOAccountRepositoryImpl(){
         repo = new File(linkToFile);
     }
-    private List<String[]> getContentFromFile(File file, String validPattern) throws InvalidRepoFileException {
+    private List<String[]> getContentFromFile(File file, String validPattern) throws RepoStorageException {
         if(!file.exists()){
-            throw  new InvalidRepoFileException("Extracting of content from file is failed");
+            throw  new RepoStorageException("Extracting of content from file is failed");
         }
         StringBuilder content = new StringBuilder();
         try (FileReader fr = new FileReader(file)){
@@ -46,7 +46,7 @@ public class JavaIOAccountRepositoryImpl implements AccountRepository {
             contentTable.get(contentTable.size()-1)[2] = findInMatcherByIndex(innerMatcher, 3).group().replaceAll("[{}]", "");
         }
         if(contentTable.size()==0 && content.length()>0){
-            throw  new InvalidRepoFileException("Extracting of content from file is failed");
+            throw  new RepoStorageException("Extracting of content from file is failed");
         }
         return contentTable;
     }
@@ -57,7 +57,7 @@ public class JavaIOAccountRepositoryImpl implements AccountRepository {
         return new String[]{account.getId().toString(), account.getName(), account.getStatus().toString()};
     }
     @Override
-    public void create(Account model) throws InvalidRepoFileException, NotUniquePrimaryKeyException {
+    public void create(Account model) throws RepoStorageException, NotUniquePrimaryKeyException {
         if(!repo.exists()) {
             try {
                 repo.createNewFile();
@@ -77,7 +77,7 @@ public class JavaIOAccountRepositoryImpl implements AccountRepository {
             fw.flush();
         } catch (IOException e) { e.printStackTrace(); }
     }
-    private Long generateAutoIncrId() throws InvalidRepoFileException {
+    private Long generateAutoIncrId() throws RepoStorageException {
         List<String[]> content = getContentFromFile(repo, validationPattern);
         long id = 1L;
         if (content.size()!=0){
@@ -87,7 +87,7 @@ public class JavaIOAccountRepositoryImpl implements AccountRepository {
         return id;
     }
     @Override
-    public Account getById(Long readID) throws InvalidRepoFileException, NoSuchEntryException, NotUniquePrimaryKeyException {
+    public Account getById(Long readID) throws RepoStorageException, NoSuchEntryException, NotUniquePrimaryKeyException {
         List<String[]> content = getContentFromFile(repo, validationPattern).stream().
                 filter(el -> el[0].equals(readID.toString())).
                 collect(Collectors.toList());
@@ -100,7 +100,7 @@ public class JavaIOAccountRepositoryImpl implements AccountRepository {
         return strMasToAccount(content.get(0));
     }
     @Override
-    public void update(Account updatedModel) throws InvalidRepoFileException, NoSuchEntryException {
+    public void update(Account updatedModel) throws RepoStorageException, NoSuchEntryException {
         List<String[]> content = getContentFromFile(repo, validationPattern);
         boolean isExist = false;
         for (int i = 0; i < content.size(); i++) {
@@ -115,7 +115,7 @@ public class JavaIOAccountRepositoryImpl implements AccountRepository {
         setAll(content);
     }
     @Override
-    public void delete(Long deletedID) throws NoSuchEntryException, InvalidRepoFileException {
+    public void delete(Long deletedID) throws NoSuchEntryException, RepoStorageException {
         List<String[]> content = getContentFromFile(repo, validationPattern);
         if(!content.removeIf(el -> el[0].equals(deletedID.toString()))){
             throw new NoSuchEntryException("Deleting of entry is failed");
@@ -123,7 +123,7 @@ public class JavaIOAccountRepositoryImpl implements AccountRepository {
         setAll(content);
     }
     @Override
-    public List<Account> getAll() throws InvalidRepoFileException {
+    public List<Account> getAll() throws RepoStorageException {
         List<String[]> content = getContentFromFile(repo, validationPattern);
         return content.stream().map(this::strMasToAccount).collect(Collectors.toList());
     }

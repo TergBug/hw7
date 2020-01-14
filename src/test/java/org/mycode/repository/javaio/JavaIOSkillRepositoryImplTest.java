@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mycode.exceptions.InvalidRepoFileException;
+import org.mycode.exceptions.RepoStorageException;
 import org.mycode.exceptions.NoSuchEntryException;
 import org.mycode.exceptions.NotUniquePrimaryKeyException;
 import org.mycode.model.Skill;
@@ -49,7 +49,7 @@ public class JavaIOSkillRepositoryImplTest {
                 testedSkillRepo.create(skill);
             }
             testedSkillRepo.create(createdNotUniqueSkill);
-        } catch (InvalidRepoFileException | NotUniquePrimaryKeyException e) {
+        } catch (RepoStorageException | NotUniquePrimaryKeyException e) {
             exceptionStr = e.toString();
         }
         assertEquals(newInfoInFile, readFileContent());
@@ -62,7 +62,7 @@ public class JavaIOSkillRepositoryImplTest {
         try {
             assertEquals(readSkill, testedSkillRepo.getById(1L));
             testedSkillRepo.getById(4L);
-        } catch (InvalidRepoFileException | NoSuchEntryException | NotUniquePrimaryKeyException e) {
+        } catch (RepoStorageException | NoSuchEntryException | NotUniquePrimaryKeyException e) {
             exceptionStr = e.toString();
         }
         assertEquals(noSuchEntryExceptionStr.replace("#", "Reading"), exceptionStr);
@@ -74,7 +74,7 @@ public class JavaIOSkillRepositoryImplTest {
         try {
             testedSkillRepo.update(updatedSkill);
             testedSkillRepo.update(updatedNotExistSkill);
-        } catch (InvalidRepoFileException | NoSuchEntryException e) {
+        } catch (RepoStorageException | NoSuchEntryException e) {
             exceptionStr = e.toString();
         }
         assertEquals(newInfoInFile.replace("{*2*}{C#}", "{*2*}{DB}"), readFileContent());
@@ -87,7 +87,7 @@ public class JavaIOSkillRepositoryImplTest {
         try {
             testedSkillRepo.delete(2L);
             testedSkillRepo.delete(4L);
-        } catch (InvalidRepoFileException | NoSuchEntryException e) {
+        } catch (RepoStorageException | NoSuchEntryException e) {
             exceptionStr = e.toString();
         }
         assertEquals(newInfoInFile.replace("<{*2*}{C#}>", ""), readFileContent());
@@ -101,7 +101,7 @@ public class JavaIOSkillRepositoryImplTest {
                 new Skill(3L, "JDBC"));
         try {
             assertEquals(getAllSkills, testedSkillRepo.getAll());
-        } catch (InvalidRepoFileException e) {
+        } catch (RepoStorageException e) {
             e.printStackTrace();
         }
     }

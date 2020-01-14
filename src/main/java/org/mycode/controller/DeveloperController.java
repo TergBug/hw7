@@ -1,7 +1,7 @@
 package org.mycode.controller;
 
 import org.mycode.exceptions.IncorrectRequestException;
-import org.mycode.exceptions.InvalidRepoFileException;
+import org.mycode.exceptions.RepoStorageException;
 import org.mycode.exceptions.NoSuchEntryException;
 import org.mycode.exceptions.NotUniquePrimaryKeyException;
 import org.mycode.model.Account;
@@ -41,7 +41,7 @@ public class DeveloperController {
                     developers = repo.getAll();
                     break;
             }
-        } catch (InvalidRepoFileException | NotUniquePrimaryKeyException | NoSuchEntryException e) {
+        } catch (RepoStorageException | NotUniquePrimaryKeyException | NoSuchEntryException e) {
             System.out.println(e.toString());
         }
         return developers;

@@ -3,7 +3,7 @@ package org.mycode.repository.javaio;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mycode.exceptions.InvalidRepoFileException;
+import org.mycode.exceptions.RepoStorageException;
 import org.mycode.exceptions.NoSuchEntryException;
 import org.mycode.exceptions.NotUniquePrimaryKeyException;
 import org.mycode.model.Account;
@@ -51,7 +51,7 @@ public class JavaIOAccountRepositoryImplTest {
                 testedAccRepo.create(account);
             }
             testedAccRepo.create(createdNotUniqueAccount);
-        } catch (InvalidRepoFileException | NotUniquePrimaryKeyException e) {
+        } catch (RepoStorageException | NotUniquePrimaryKeyException e) {
             exceptionStr = e.toString();
         }
         assertEquals(newInfoInFile, readFileContent());
@@ -64,7 +64,7 @@ public class JavaIOAccountRepositoryImplTest {
         try {
             assertEquals(readAccount, testedAccRepo.getById(1L));
             testedAccRepo.getById(4L);
-        } catch (InvalidRepoFileException | NoSuchEntryException | NotUniquePrimaryKeyException e) {
+        } catch (RepoStorageException | NoSuchEntryException | NotUniquePrimaryKeyException e) {
             exceptionStr = e.toString();
         }
         assertEquals(noSuchEntryExceptionStr.replace("#", "Reading"), exceptionStr);
@@ -76,7 +76,7 @@ public class JavaIOAccountRepositoryImplTest {
         try {
             testedAccRepo.update(updatedAccount);
             testedAccRepo.update(updatedNotExistAccount);
-        } catch (InvalidRepoFileException | NoSuchEntryException e) {
+        } catch (RepoStorageException | NoSuchEntryException e) {
             exceptionStr = e.toString();
         }
         assertEquals(newInfoInFile.replace("{*2*}{Din}{DELETED}", "{*2*}{Dorfling}{BANNED}"), readFileContent());
@@ -89,7 +89,7 @@ public class JavaIOAccountRepositoryImplTest {
         try {
             testedAccRepo.delete(2L);
             testedAccRepo.delete(4L);
-        } catch (InvalidRepoFileException | NoSuchEntryException e) {
+        } catch (RepoStorageException | NoSuchEntryException e) {
             exceptionStr = e.toString();
         }
         assertEquals(newInfoInFile.replace("<{*2*}{Din}{DELETED}>", ""), readFileContent());
@@ -103,7 +103,7 @@ public class JavaIOAccountRepositoryImplTest {
                 new Account(3L, "Geek", AccountStatus.BANNED));
         try {
             assertEquals(getAllAccounts, testedAccRepo.getAll());
-        } catch (InvalidRepoFileException e) {
+        } catch (RepoStorageException e) {
             e.printStackTrace();
         }
     }

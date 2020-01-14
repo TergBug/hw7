@@ -3,7 +3,7 @@ package org.mycode.repository.javaio;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mycode.exceptions.InvalidRepoFileException;
+import org.mycode.exceptions.RepoStorageException;
 import org.mycode.exceptions.NoSuchEntryException;
 import org.mycode.exceptions.NotUniquePrimaryKeyException;
 import org.mycode.model.Account;
@@ -77,7 +77,7 @@ public class JavaIODeveloperRepositoryImplTest {
                 testedDeveloperRepo.create(developer);
             }
             testedDeveloperRepo.create(createdNotUniqueDeveloper);
-        } catch (InvalidRepoFileException | NotUniquePrimaryKeyException | NoSuchEntryException e) {
+        } catch (RepoStorageException | NotUniquePrimaryKeyException | NoSuchEntryException e) {
             exceptionStr = e.toString();
         }
         assertEquals(newInfoInFileDevelopers, readFileContent(repoDeveloper));
@@ -90,7 +90,7 @@ public class JavaIODeveloperRepositoryImplTest {
         try {
             assertEquals(readDeveloper, testedDeveloperRepo.getById(1L));
             testedDeveloperRepo.getById(4L);
-        } catch (InvalidRepoFileException | NoSuchEntryException | NotUniquePrimaryKeyException e) {
+        } catch (RepoStorageException | NoSuchEntryException | NotUniquePrimaryKeyException e) {
             exceptionStr = e.toString();
         }
         assertEquals(noSuchEntryExceptionStr.replace("#", "Reading"), exceptionStr);
@@ -103,7 +103,7 @@ public class JavaIODeveloperRepositoryImplTest {
         try {
             testedDeveloperRepo.update(updatedDeveloper);
             testedDeveloperRepo.update(updatedNotExistDeveloper);
-        } catch (InvalidRepoFileException | NoSuchEntryException | NotUniquePrimaryKeyException e) {
+        } catch (RepoStorageException | NoSuchEntryException | NotUniquePrimaryKeyException e) {
             exceptionStr = e.toString();
         }
         assertEquals(newInfoInFileDevelopers.replace("{*2*}{Xiaoming}{Li}{[2]}{[1]}", "{*2*}{Dorf}{Ford}{[1][3]}{[3]}"), readFileContent(repoDeveloper));
@@ -116,7 +116,7 @@ public class JavaIODeveloperRepositoryImplTest {
         try {
             testedDeveloperRepo.delete(2L);
             testedDeveloperRepo.delete(4L);
-        } catch (InvalidRepoFileException | NoSuchEntryException e) {
+        } catch (RepoStorageException | NoSuchEntryException e) {
             exceptionStr = e.toString();
         }
         assertEquals(newInfoInFileDevelopers.replace("<{*2*}{Xiaoming}{Li}{[2]}{[1]}>", ""), readFileContent(repoDeveloper));
@@ -137,7 +137,7 @@ public class JavaIODeveloperRepositoryImplTest {
                         new Account(3L, "Geek", AccountStatus.BANNED)));
         try {
             assertEquals(getAllDevelopers, testedDeveloperRepo.getAll());
-        } catch (InvalidRepoFileException | NotUniquePrimaryKeyException | NoSuchEntryException e) {
+        } catch (RepoStorageException | NotUniquePrimaryKeyException | NoSuchEntryException e) {
             e.printStackTrace();
         }
     }
