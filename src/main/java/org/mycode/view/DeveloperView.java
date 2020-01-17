@@ -4,6 +4,7 @@ import org.mycode.controller.AccountController;
 import org.mycode.controller.DeveloperController;
 import org.mycode.controller.SkillController;
 import org.mycode.exceptions.IncorrectRequestException;
+import org.mycode.exceptions.RepoStorageException;
 import org.mycode.model.Account;
 import org.mycode.model.Developer;
 import org.mycode.model.Skill;
@@ -28,15 +29,13 @@ public class DeveloperView {
         StringBuilder skills = new StringBuilder("0 No more skill\n");
         StringBuilder accounts = new StringBuilder();
         try {
-            SkillController skillController = new SkillController();
-            List<Skill> skillList = skillController.request("g");
+            List<Skill> skillList = SkillController.getInstance().request("g");
             skillList.sort(Comparator.comparingLong(Skill::getId));
             skillList.forEach(el -> skills.append(el.toString()+"\n"));
-            AccountController accountController = new AccountController();
-            List<Account> accountList = accountController.request("g");
+            List<Account> accountList = AccountController.getInstance().request("g");
             accountList.sort(Comparator.comparingLong(Account::getId));
             accountList.forEach(el -> accounts.append(el.toString()+"\n"));
-        } catch (IncorrectRequestException e) {
+        } catch (IncorrectRequestException | RepoStorageException e) {
             e.printStackTrace();
         }
         String messageChooseSkill = this.messageChooseSkill.replace("#", skills.toString());
@@ -73,10 +72,10 @@ public class DeveloperView {
                 break;
         }
         try {
-            List<Developer> developerToView = new DeveloperController().request(requestStr);
+            List<Developer> developerToView = DeveloperController.getInstance().request(requestStr);
             developerToView.sort(Comparator.comparingLong(Developer::getId));
             developerToView.forEach(el -> System.out.println(el.toString()));
-        } catch (IncorrectRequestException e) {
+        } catch (IncorrectRequestException | RepoStorageException e) {
             System.out.println(e.toString());
         }
         System.out.println("------------");

@@ -4,6 +4,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mycode.exceptions.IncorrectRequestException;
+import org.mycode.exceptions.RepoStorageException;
 import org.mycode.model.Account;
 import org.mycode.model.AccountStatus;
 
@@ -17,7 +18,7 @@ import java.util.Collections;
 import static org.junit.Assert.*;
 
 public class AccountControllerTest {
-    private AccountController testedAccController = new AccountController();
+    private AccountController testedAccController = AccountController.getInstance();
     private String incorrectRequestExceptionStr = "org.mycode.exceptions.IncorrectRequestException";
     private File repo = new File("./src/main/resources/filestxt/accounts.txt");
     private String newInfoInFile = "<{*1*}{LiXiao}{ACTIVE}><{*2*}{Din}{DELETED}><{*3*}{Geek}{BANNED}>";
@@ -30,6 +31,7 @@ public class AccountControllerTest {
     private String wrongRequest = "p";
     private Account readAccount = new Account(1L, "LiXiao", AccountStatus.ACTIVE);
     private ArrayList<Account> allAccounts = new ArrayList<>();
+    public AccountControllerTest() throws RepoStorageException { }
     @Before
     public void loadFileBefore(){
         Collections.addAll(allAccounts, new Account(1L, "LiXiao", AccountStatus.ACTIVE),

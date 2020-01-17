@@ -2,6 +2,7 @@ package org.mycode.view;
 
 import org.mycode.controller.AccountController;
 import org.mycode.exceptions.IncorrectRequestException;
+import org.mycode.exceptions.RepoStorageException;
 import org.mycode.model.Account;
 
 import java.util.Comparator;
@@ -47,10 +48,10 @@ public class AccountView {
                 break;
         }
         try {
-            List<Account> accountToView = new AccountController().request(requestStr);
+            List<Account> accountToView = AccountController.getInstance().request(requestStr);
             accountToView.sort(Comparator.comparingLong(Account::getId));
             accountToView.forEach(el -> System.out.println(el.toString()));
-        } catch (IncorrectRequestException e) {
+        } catch (IncorrectRequestException | RepoStorageException e) {
             System.out.println(e.toString());
         }
         System.out.println("------------");

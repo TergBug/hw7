@@ -5,9 +5,8 @@ import org.mycode.exceptions.NoSuchEntryException;
 import org.mycode.exceptions.NotUniquePrimaryKeyException;
 import org.mycode.model.Developer;
 import org.mycode.model.Skill;
-import org.mycode.repository.AccountRepository;
 import org.mycode.repository.DeveloperRepository;
-import org.mycode.repository.SkillRepository;
+import org.mycode.util.JavaIOUtils;
 
 import java.io.File;
 import java.io.FileReader;
@@ -19,14 +18,13 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class JavaIODeveloperRepositoryImpl implements DeveloperRepository {
-    private final String patternOfEntry = "<{*-1-*}{-2-}{-3-}{-4-}{-5-}>";
-    private final String validationPattern = "<\\{\\*\\d+\\*}\\{.*?}\\{.*?}\\{(\\[\\d+\\])*}\\{\\[\\d+\\]}>";
-    private final String linkToFile = "./src/main/resources/filestxt/developers.txt";
+    private final String PATTERN_OF_ENTRY = "<{*-1-*}{-2-}{-3-}{-4-}{-5-}>";
+    private final String VALIDATION_PATTERN = "<\\{\\*\\d+\\*}\\{.*?}\\{.*?}\\{(\\[\\d+\\])*}\\{\\[\\d+\\]}>";
+    private JavaIOSkillRepositoryImpl skillRepo = new JavaIOSkillRepositoryImpl();
+    private JavaIOAccountRepositoryImpl accountRepo = new JavaIOAccountRepositoryImpl();
     private File repo;
-    private SkillRepository skillRepo = new JavaIOSkillRepositoryImpl();
-    private AccountRepository accountRepo = new JavaIOAccountRepositoryImpl();
     public JavaIODeveloperRepositoryImpl(){
-        repo = new File(linkToFile);
+        repo = JavaIOUtils.getDeveloperRepo();
     }
     private List<String[]> getContentFromFile(File file, String validPattern) throws RepoStorageException {
         if(!file.exists()){
@@ -60,8 +58,7 @@ public class JavaIODeveloperRepositoryImpl implements DeveloperRepository {
         for (String oneSkillFK : skillsFK) {
             skills.add(skillRepo.getById(Long.parseLong(oneSkillFK)));
         }
-        AccountRepository accountRepository = new JavaIOAccountRepositoryImpl();
-        return new Developer(Long.parseLong(mas[0]), mas[1], mas[2], skills, accountRepository.getById(Long.parseLong(mas[4])));
+        return new Developer(Long.parseLong(mas[0]), mas[1], mas[2], skills, accountRepo.getById(Long.parseLong(mas[4])));
     }
     private String[] developerToStrMas(Developer developer) throws RepoStorageException, NotUniquePrimaryKeyException, NoSuchEntryException {
         StringBuilder skillsStr = new StringBuilder();
@@ -82,7 +79,7 @@ public class JavaIODeveloperRepositoryImpl implements DeveloperRepository {
         if(model.getId()==null || model.getId()<1) {
             model.setId(generateAutoIncrId());
         }
-        else if(getContentFromFile(repo, validationPattern).stream().anyMatch(el -> el[0].equals(model.getId().toString()))){
+        else if(getContentFromFile(repo, VALIDATION_PATTERN).stream().anyMatch(el -> el[0].equals(model.getId().toString()))){
             throw new NotUniquePrimaryKeyException("Creating of entry is failed");
         }
         StringBuilder skillForeignKeys = new StringBuilder();
@@ -90,7 +87,7 @@ public class JavaIODeveloperRepositoryImpl implements DeveloperRepository {
             skillForeignKeys.append("["+skillRepo.getById(skill.getId()).getId()+"]");
         }
         String accountForeignKey = "["+accountRepo.getById(model.getAccount().getId()).getId()+"]";
-        String entry = patternOfEntry.replace("-1-", String.valueOf(model.getId()))
+        String entry = PATTERN_OF_ENTRY.replace("-1-", String.valueOf(model.getId()))
                 .replace("-2-", model.getFirstName())
                 .replace("-3-", model.getLastName())
                 .replace("-4-", skillForeignKeys.toString())
@@ -101,7 +98,7 @@ public class JavaIODeveloperRepositoryImpl implements DeveloperRepository {
         } catch (IOException e) { e.printStackTrace(); }
     }
     private Long generateAutoIncrId() throws RepoStorageException {
-        List<String[]> content = getContentFromFile(repo, validationPattern);
+        List<String[]> content = getContentFromFile(repo, VALIDATION_PATTERN);
         long id = 1L;
         if (content.size()!=0){
             content.sort(Comparator.comparing(el -> el[0]));
@@ -111,7 +108,7 @@ public class JavaIODeveloperRepositoryImpl implements DeveloperRepository {
     }
     @Override
     public Developer getById(Long readID) throws RepoStorageException, NoSuchEntryException, NotUniquePrimaryKeyException {
-        List<String[]> content = getContentFromFile(repo, validationPattern).stream()
+        List<String[]> content = getContentFromFile(repo, VALIDATION_PATTERN).stream()
                 .filter(el -> el[0].equals(readID.toString()))
                 .collect(Collectors.toList());
         if(content.size()==0){
@@ -124,7 +121,7 @@ public class JavaIODeveloperRepositoryImpl implements DeveloperRepository {
     }
     @Override
     public void update(Developer updatedModel) throws RepoStorageException, NoSuchEntryException, NotUniquePrimaryKeyException {
-        List<String[]> content = getContentFromFile(repo, validationPattern);
+        List<String[]> content = getContentFromFile(repo, VALIDATION_PATTERN);
         boolean isExist = false;
         for (int i = 0; i < content.size(); i++) {
             if(content.get(i)[0].equals(updatedModel.getId().toString())){
@@ -139,7 +136,7 @@ public class JavaIODeveloperRepositoryImpl implements DeveloperRepository {
     }
     @Override
     public void delete(Long deletedID) throws RepoStorageException, NoSuchEntryException {
-        List<String[]> content = getContentFromFile(repo, validationPattern);
+        List<String[]> content = getContentFromFile(repo, VALIDATION_PATTERN);
         if(!content.removeIf(el -> el[0].equals(deletedID.toString()))){
             throw new NoSuchEntryException("Deleting of entry is failed");
         }
@@ -147,7 +144,7 @@ public class JavaIODeveloperRepositoryImpl implements DeveloperRepository {
     }
     @Override
     public List<Developer> getAll() throws RepoStorageException, NoSuchEntryException, NotUniquePrimaryKeyException {
-        List<String[]> content = getContentFromFile(repo, validationPattern);
+        List<String[]> content = getContentFromFile(repo, VALIDATION_PATTERN);
         List<Developer> developers = new ArrayList<>();
         for (String[] strings : content) {
             developers.add(strMasToDeveloper(strings));
@@ -164,7 +161,7 @@ public class JavaIODeveloperRepositoryImpl implements DeveloperRepository {
         for (String[] developerStrMas : listOfDevelopersInStrMas){
             String skillForeignKeys = "["+developerStrMas[3].replaceAll("\\s", "][")+"]";
             String accountForeignKey = "["+developerStrMas[4]+"]";
-            content.append(patternOfEntry.replace("-1-", String.valueOf(developerStrMas[0]))
+            content.append(PATTERN_OF_ENTRY.replace("-1-", String.valueOf(developerStrMas[0]))
                     .replace("-2-", developerStrMas[1])
                     .replace("-3-", developerStrMas[2])
                     .replace("-4-", skillForeignKeys)

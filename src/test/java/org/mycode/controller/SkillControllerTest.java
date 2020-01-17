@@ -4,6 +4,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mycode.exceptions.IncorrectRequestException;
+import org.mycode.exceptions.RepoStorageException;
 import org.mycode.model.Skill;
 
 import java.io.File;
@@ -16,7 +17,7 @@ import java.util.Collections;
 import static org.junit.Assert.*;
 
 public class SkillControllerTest {
-    private SkillController testedSkillController = new SkillController();
+    private SkillController testedSkillController = SkillController.getInstance();
     private String incorrectRequestExceptionStr = "org.mycode.exceptions.IncorrectRequestException";
     private File repo = new File("./src/main/resources/filestxt/skills.txt");
     private String newInfoInFile = "<{*1*}{Java}><{*2*}{C#}><{*3*}{JDBC}>";
@@ -29,6 +30,7 @@ public class SkillControllerTest {
     private String wrongRequest = "p";
     private Skill readSkill = new Skill(1L, "Java");
     private ArrayList<Skill> allSkills = new ArrayList<>();
+    public SkillControllerTest() throws RepoStorageException { }
     @Before
     public void loadFileBefore(){
         Collections.addAll(allSkills, new Skill(1L, "Java"),

@@ -2,6 +2,7 @@ package org.mycode.view;
 
 import org.mycode.controller.SkillController;
 import org.mycode.exceptions.IncorrectRequestException;
+import org.mycode.exceptions.RepoStorageException;
 import org.mycode.model.Skill;
 
 import java.util.Comparator;
@@ -43,10 +44,10 @@ public class SkillView {
                 break;
         }
         try {
-            List<Skill> skillsToView = new SkillController().request(requestStr);
+            List<Skill> skillsToView = SkillController.getInstance().request(requestStr);
             skillsToView.sort(Comparator.comparingLong(Skill::getId));
             skillsToView.forEach(el -> System.out.println(el.toString()));
-        } catch (IncorrectRequestException e) {
+        } catch (IncorrectRequestException | RepoStorageException e) {
             System.out.println(e.toString());
         }
         System.out.println("------------");

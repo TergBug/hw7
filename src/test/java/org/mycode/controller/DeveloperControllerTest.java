@@ -4,6 +4,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mycode.exceptions.IncorrectRequestException;
+import org.mycode.exceptions.RepoStorageException;
 import org.mycode.model.Account;
 import org.mycode.model.AccountStatus;
 import org.mycode.model.Developer;
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
 import static org.junit.Assert.*;
 
 public class DeveloperControllerTest {
-    private DeveloperController testedDeveloperController = new DeveloperController();
+    private DeveloperController testedDeveloperController = DeveloperController.getInstance();
     private String incorrectRequestExceptionStr = "org.mycode.exceptions.IncorrectRequestException";
     private File repoSkill = new File("./src/main/resources/filestxt/skills.txt");
     private File repoAccount = new File("./src/main/resources/filestxt/accounts.txt");
@@ -42,6 +43,7 @@ public class DeveloperControllerTest {
             Arrays.stream(new Skill[]{new Skill(1L, "Java"), new Skill(3L, "JDBC")}).collect(Collectors.toSet()),
             new Account(2L, "Din", AccountStatus.DELETED));
     private ArrayList<Developer> allDevelopers = new ArrayList<>();
+    public DeveloperControllerTest() throws RepoStorageException { }
     @Before
     public void loadFileBefore(){
         Collections.addAll(allDevelopers, new Developer(1L, "Din", "Ford",

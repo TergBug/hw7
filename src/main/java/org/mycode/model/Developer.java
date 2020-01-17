@@ -50,7 +50,7 @@ public class Developer {
     public String toString() {
         StringBuilder str = new StringBuilder(id+" "+firstName+" "+lastName+"\nSkills: ");
         skills.forEach(el -> str.append(el.getName()+" "));
-        str.append("\nAccount: "+account.getName()+" "+account.getStatus().toString());
+        str.append("\nAccount: "+((account==null) ? "null" : account.getName()+" "+account.getStatus().toString()));
         return str.toString();
     }
     @Override

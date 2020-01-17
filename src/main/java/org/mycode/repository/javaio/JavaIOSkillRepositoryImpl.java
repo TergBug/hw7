@@ -5,6 +5,7 @@ import org.mycode.exceptions.NoSuchEntryException;
 import org.mycode.exceptions.NotUniquePrimaryKeyException;
 import org.mycode.model.Skill;
 import org.mycode.repository.SkillRepository;
+import org.mycode.util.JavaIOUtils;
 
 import java.io.File;
 import java.io.FileReader;
@@ -18,16 +19,15 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class JavaIOSkillRepositoryImpl implements SkillRepository {
-    private final String patternOfEntry = "<{*-1-*}{-2-}>";
-    private final String validationPattern = "<\\{\\*\\d+\\*}\\{.*?}>";
-    private final String linkToFile = "./src/main/resources/filestxt/skills.txt";
+    private final String PATTERN_OF_ENTRY = "<{*-1-*}{-2-}>";
+    private final String VALIDATION_PATTERN = "<\\{\\*\\d+\\*}\\{.*?}>";
     private File repo;
     public JavaIOSkillRepositoryImpl(){
-        repo = new File(linkToFile);
+        repo = JavaIOUtils.getSkillRepo();
     }
     private List<String[]> getContentFromFile(File file, String validPattern) throws RepoStorageException {
         if(!file.exists()){
-            throw  new RepoStorageException("Extracting of content from file is failed");
+            throw new RepoStorageException("Extracting of content from file is failed");
         }
         StringBuilder content = new StringBuilder();
         try (FileReader fr = new FileReader(file)){
@@ -64,17 +64,17 @@ public class JavaIOSkillRepositoryImpl implements SkillRepository {
         if(model.getId()==null || model.getId()<1) {
             model.setId(generateAutoIncrId());
         }
-        else if(getContentFromFile(repo, validationPattern).stream().anyMatch(el -> el[0].equals(model.getId().toString()))){
+        else if(getContentFromFile(repo, VALIDATION_PATTERN).stream().anyMatch(el -> el[0].equals(model.getId().toString()))){
             throw new NotUniquePrimaryKeyException("Creating of entry is failed");
         }
-        String entry = patternOfEntry.replace("-1-", String.valueOf(model.getId())).replace("-2-", model.getName());
+        String entry = PATTERN_OF_ENTRY.replace("-1-", String.valueOf(model.getId())).replace("-2-", model.getName());
         try (FileWriter fw = new FileWriter(repo, true)){
             fw.append(entry);
             fw.flush();
         } catch (IOException e) { e.printStackTrace(); }
     }
     private Long generateAutoIncrId() throws RepoStorageException {
-        List<String[]> content = getContentFromFile(repo, validationPattern);
+        List<String[]> content = getContentFromFile(repo, VALIDATION_PATTERN);
         long id = 1L;
         if (content.size()!=0){
             content.sort(Comparator.comparing(el -> el[0]));
@@ -84,7 +84,7 @@ public class JavaIOSkillRepositoryImpl implements SkillRepository {
     }
     @Override
     public Skill getById(Long readID) throws RepoStorageException, NoSuchEntryException, NotUniquePrimaryKeyException {
-        List<String[]> content = getContentFromFile(repo, validationPattern).stream().
+        List<String[]> content = getContentFromFile(repo, VALIDATION_PATTERN).stream().
                 filter(el -> el[0].equals(readID.toString())).
                 collect(Collectors.toList());
         if(content.size()==0){
@@ -97,7 +97,7 @@ public class JavaIOSkillRepositoryImpl implements SkillRepository {
     }
     @Override
     public void update(Skill updatedModel) throws RepoStorageException, NoSuchEntryException {
-        List<String[]> content = getContentFromFile(repo, validationPattern);
+        List<String[]> content = getContentFromFile(repo, VALIDATION_PATTERN);
         boolean isExist = false;
         for (int i = 0; i < content.size(); i++) {
             if(content.get(i)[0].equals(updatedModel.getId().toString())){
@@ -112,7 +112,7 @@ public class JavaIOSkillRepositoryImpl implements SkillRepository {
     }
     @Override
     public void delete(Long deletedID) throws NoSuchEntryException, RepoStorageException {
-        List<String[]> content = getContentFromFile(repo, validationPattern);
+        List<String[]> content = getContentFromFile(repo, VALIDATION_PATTERN);
         if(!content.removeIf(el -> el[0].equals(deletedID.toString()))){
             throw new NoSuchEntryException("Deleting of entry is failed");
         }
@@ -120,7 +120,7 @@ public class JavaIOSkillRepositoryImpl implements SkillRepository {
     }
     @Override
     public List<Skill> getAll() throws RepoStorageException {
-        List<String[]> content = getContentFromFile(repo, validationPattern);
+        List<String[]> content = getContentFromFile(repo, VALIDATION_PATTERN);
         return content.stream().map(this::strMasToSkill).collect(Collectors.toList());
     }
     private Matcher findInMatcherByIndex(Matcher matcher, int index){
@@ -131,7 +131,7 @@ public class JavaIOSkillRepositoryImpl implements SkillRepository {
     private void setAll(List<String[]> listOfSkillsInStrMas){
         StringBuilder content = new StringBuilder();
         for (String[] skillStrMas : listOfSkillsInStrMas) {
-            content.append(patternOfEntry.replace("-1-", skillStrMas[0]).
+            content.append(PATTERN_OF_ENTRY.replace("-1-", skillStrMas[0]).
                     replace("-2-", skillStrMas[1]));
         }
         try (FileWriter fw = new FileWriter(repo, false)){

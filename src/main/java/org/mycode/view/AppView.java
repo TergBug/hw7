@@ -3,10 +3,10 @@ package org.mycode.view;
 import java.util.Scanner;
 
 public class AppView {
-    private final String messageMenu = "0.Exit\n1.Developers\n2.Skills\n3.Accounts";
+    private final String messageMenu = "0.Exit\n1.Developers\n2.Skills\n3.Accounts\n4.Change storage";
     private final String messageChoose = "Choose item of menu: ";
     private final String messageWrongEntering = "Look rules!";
-    private final String patternOfMenuChoice = "[0123]";
+    private final String patternOfMenuChoice = "[01234]";
     public void viewApp(){
         do{
             System.out.println(messageMenu);
@@ -24,6 +24,10 @@ public class AppView {
                 case 3:
                     AccountView accountView = new AccountView();
                     while (!accountView.viewAccountMenu());
+                    break;
+                case 4:
+                    StorageChangeView storageChangeView = new StorageChangeView();
+                    while (!storageChangeView.viewStorageChangeMenu());
                     break;
             }
         }while (true);
