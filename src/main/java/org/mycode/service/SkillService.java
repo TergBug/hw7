@@ -13,7 +13,7 @@ public class SkillService {
     private JDBCSkillRepositoryImpl jdbcRepo = new JDBCSkillRepositoryImpl();
     private SkillRepository currentRepo;
     public SkillService() throws RepoStorageException {
-        this.currentRepo = jdbcRepo;
+        this.currentRepo = javaIORepo;
     }
     public void create(Skill model) throws Exception{
         currentRepo.create(model);

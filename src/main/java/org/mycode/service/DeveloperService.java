@@ -13,7 +13,7 @@ public class DeveloperService {
     private JDBCDeveloperRepositoryImpl jdbcRepo = new JDBCDeveloperRepositoryImpl();
     private DeveloperRepository currentRepo;
     public DeveloperService() throws RepoStorageException {
-        this.currentRepo = jdbcRepo;
+        this.currentRepo = javaIORepo;
     }
     public void create(Developer model) throws Exception{
         currentRepo.create(model);

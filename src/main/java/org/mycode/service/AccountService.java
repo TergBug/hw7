@@ -13,7 +13,7 @@ public class AccountService {
     private JDBCAccountRepositoryImpl jdbcRepo = new JDBCAccountRepositoryImpl();
     private AccountRepository currentRepo;
     public AccountService() throws RepoStorageException {
-        this.currentRepo = jdbcRepo;
+        this.currentRepo = javaIORepo;
     }
     public void create(Account model) throws Exception{
         currentRepo.create(model);
