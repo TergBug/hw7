@@ -30,7 +30,7 @@ public class SkillService {
     public List<Skill> getAll() throws Exception{
         return currentRepo.getAll();
     }
-    public void changeStorage(TypeOfStorage typeOfStorage) throws RepoStorageException {
+    public void changeStorage(TypeOfStorage typeOfStorage) {
         switch (typeOfStorage){
             case FILES:
                 if(this.currentRepo instanceof JDBCSkillRepositoryImpl){

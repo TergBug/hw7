@@ -6,7 +6,7 @@ import org.mycode.exceptions.NotUniquePrimaryKeyException;
 import org.mycode.mapping.JDBCSkillMapper;
 import org.mycode.model.Skill;
 import org.mycode.repository.SkillRepository;
-import org.mycode.util.JDBCUtils;
+import org.mycode.util.JDBCConnectionUtil;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -15,8 +15,11 @@ import java.util.List;
 public class JDBCSkillRepositoryImpl implements SkillRepository {
     private Connection connection;
     public JDBCSkillRepositoryImpl() throws RepoStorageException {
-        JDBCUtils.makeConnectionToDB();
-        connection = JDBCUtils.getConnection();
+        try {
+            connection = JDBCConnectionUtil.getConnection();
+        } catch (SQLException e) {
+            throw new RepoStorageException("Cannot connect to SQL DB");
+        }
     }
     @Override
     public void create(Skill model) throws RepoStorageException {

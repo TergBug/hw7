@@ -6,7 +6,7 @@ import org.mycode.mapping.JDBCDeveloperMapper;
 import org.mycode.model.Developer;
 import org.mycode.model.Skill;
 import org.mycode.repository.DeveloperRepository;
-import org.mycode.util.JDBCUtils;
+import org.mycode.util.JDBCConnectionUtil;
 
 import java.sql.*;
 import java.util.*;
@@ -14,8 +14,11 @@ import java.util.*;
 public class JDBCDeveloperRepositoryImpl implements DeveloperRepository {
     private Connection connection;
     public JDBCDeveloperRepositoryImpl() throws RepoStorageException {
-        JDBCUtils.makeConnectionToDB();
-        connection = JDBCUtils.getConnection();
+        try {
+            connection = JDBCConnectionUtil.getConnection();
+        } catch (SQLException e) {
+            throw new RepoStorageException("Cannot connect to SQL DB");
+        }
     }
     @Override
     public void create(Developer model) throws RepoStorageException {

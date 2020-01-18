@@ -6,7 +6,7 @@ import org.mycode.exceptions.NotUniquePrimaryKeyException;
 import org.mycode.mapping.JDBCAccountMapper;
 import org.mycode.model.Account;
 import org.mycode.repository.AccountRepository;
-import org.mycode.util.JDBCUtils;
+import org.mycode.util.JDBCConnectionUtil;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -15,8 +15,11 @@ import java.util.List;
 public class JDBCAccountRepositoryImpl implements AccountRepository {
     private Connection connection;
     public JDBCAccountRepositoryImpl() throws RepoStorageException {
-        JDBCUtils.makeConnectionToDB();
-        connection = JDBCUtils.getConnection();
+        try {
+            connection = JDBCConnectionUtil.getConnection();
+        } catch (SQLException e) {
+            throw new RepoStorageException("Cannot connect to SQL DB");
+        }
     }
     @Override
     public void create(Account model) throws RepoStorageException {
