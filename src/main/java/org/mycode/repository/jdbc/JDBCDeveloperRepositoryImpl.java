@@ -2,7 +2,6 @@ package org.mycode.repository.jdbc;
 
 import org.mycode.exceptions.RepoStorageException;
 import org.mycode.exceptions.NoSuchEntryException;
-import org.mycode.exceptions.NotUniquePrimaryKeyException;
 import org.mycode.mapping.JDBCDeveloperMapper;
 import org.mycode.model.Developer;
 import org.mycode.model.Skill;
