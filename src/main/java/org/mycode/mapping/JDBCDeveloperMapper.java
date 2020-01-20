@@ -1,5 +1,6 @@
 package org.mycode.mapping;
 
+import org.apache.log4j.Logger;
 import org.mycode.exceptions.NoSuchEntryException;
 import org.mycode.model.Account;
 import org.mycode.model.AccountStatus;
@@ -12,6 +13,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class JDBCDeveloperMapper implements Mapper<Developer, ResultSet, Long> {
+    private static final Logger log = Logger.getLogger(JDBCDeveloperMapper.class);
     @Override
     public Developer map(ResultSet source, Long searchId) throws SQLException, NoSuchEntryException {
         int currentRow = source.getRow();
@@ -34,6 +36,7 @@ public class JDBCDeveloperMapper implements Mapper<Developer, ResultSet, Long> {
         }
         source.absolute(currentRow);
         if(id==-1){
+            log.warn("No such entry with ID: "+searchId);
             throw new NoSuchEntryException("Reading from DB is failed");
         }
         return new Developer(id, firstName, lastName, skills, account);

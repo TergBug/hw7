@@ -1,5 +1,7 @@
 package org.mycode.mapping;
 
+import lombok.extern.log4j.Log4j;
+import org.apache.log4j.Logger;
 import org.mycode.exceptions.NoSuchEntryException;
 import org.mycode.model.Skill;
 
@@ -7,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class JDBCSkillMapper implements Mapper<Skill, ResultSet, Long> {
+    private static final Logger log = Logger.getLogger(JDBCSkillMapper.class);
     @Override
     public Skill map(ResultSet source, Long searchId) throws SQLException, NoSuchEntryException {
         int currentRow = source.getRow();
@@ -21,6 +24,7 @@ public class JDBCSkillMapper implements Mapper<Skill, ResultSet, Long> {
         }
         source.absolute(currentRow);
         if(id==-1){
+            log.warn("No such entry with ID: "+searchId);
             throw new NoSuchEntryException("Reading from DB is failed");
         }
         return new Skill(id, name);

@@ -1,0 +1,6 @@
+
+2020-01-20 23:20:50 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-20 23:20:50 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-20 23:20:50 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-20 23:21:03 DEBUG JDBCSkillRepositoryImpl:53 - Read entry(DB) with ID: 4
+2020-01-20 23:21:03 WARN  JDBCSkillMapper:27 - No such entry with ID: 4
