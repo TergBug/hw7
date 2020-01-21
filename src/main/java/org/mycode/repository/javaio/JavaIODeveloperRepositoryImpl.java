@@ -1,5 +1,6 @@
 package org.mycode.repository.javaio;
 
+import org.apache.log4j.Logger;
 import org.mycode.exceptions.RepoStorageException;
 import org.mycode.exceptions.NoSuchEntryException;
 import org.mycode.exceptions.NotUniquePrimaryKeyException;
@@ -15,6 +16,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class JavaIODeveloperRepositoryImpl implements DeveloperRepository {
+    private static final Logger log = Logger.getLogger(JavaIODeveloperRepositoryImpl.class);
     private final String PATTERN_OF_ENTRY = "<{*-1-*}{-2-}{-3-}{-4-}{-5-}>";
     private final String VALIDATION_PATTERN = "<\\{\\*\\d+\\*}\\{.*?}\\{.*?}\\{(\\[\\d+\\])*}\\{\\[\\d+\\]}>";
     private JavaIOSkillRepositoryImpl skillRepo = new JavaIOSkillRepositoryImpl();
@@ -45,12 +47,16 @@ public class JavaIODeveloperRepositoryImpl implements DeveloperRepository {
         if(!repo.exists()) {
             try {
                 repo.createNewFile();
-            } catch (IOException e) { e.printStackTrace(); }
+            } catch (IOException e) {
+                log.error("Cannot create new file", e);
+                e.printStackTrace();
+            }
         }
         if(model.getId()==null || model.getId()<1) {
             model.setId(JavaIOUtils.generateAutoIncrId(repo, VALIDATION_PATTERN));
         }
         else if(JavaIOUtils.getContentFromFile(repo, VALIDATION_PATTERN).stream().anyMatch(el -> el[0].equals(model.getId().toString()))){
+            log.warn("Not unique primary key: "+model.getId());
             throw new NotUniquePrimaryKeyException("Creating of entry is failed");
         }
         StringBuilder skillForeignKeys = new StringBuilder();
@@ -66,7 +72,11 @@ public class JavaIODeveloperRepositoryImpl implements DeveloperRepository {
         try (FileWriter fw = new FileWriter(repo, true)){
             fw.append(entry);
             fw.flush();
-        } catch (IOException e) { e.printStackTrace(); }
+            log.debug("Create entry(file): "+model);
+        } catch (IOException e) {
+            log.error("Cannot write to file", e);
+            e.printStackTrace();
+        }
     }
     @Override
     public Developer getById(Long readID) throws RepoStorageException, NoSuchEntryException, NotUniquePrimaryKeyException {
@@ -74,11 +84,14 @@ public class JavaIODeveloperRepositoryImpl implements DeveloperRepository {
                 .filter(el -> el[0].equals(readID.toString()))
                 .collect(Collectors.toList());
         if(content.size()==0){
+            log.warn("No such entry with ID: "+readID);
             throw new NoSuchEntryException("Reading of entry is failed");
         }
         else if(content.size()>1){
+            log.warn("Not unique primary key: "+readID);
             throw new NotUniquePrimaryKeyException("Reading of entry is failed");
         }
+        log.debug("Read entry(file) with ID: "+readID);
         return strMasToDeveloper(content.get(0));
     }
     @Override
@@ -92,17 +105,21 @@ public class JavaIODeveloperRepositoryImpl implements DeveloperRepository {
             }
         }
         if(!isExist){
+            log.warn("No such entry: "+updatedModel);
             throw new NoSuchEntryException("Updating of entry is failed");
         }
         setAll(content);
+        log.debug("Update entry(file): "+updatedModel);
     }
     @Override
     public void delete(Long deletedID) throws RepoStorageException, NoSuchEntryException {
         List<String[]> content = JavaIOUtils.getContentFromFile(repo, VALIDATION_PATTERN);
         if(!content.removeIf(el -> el[0].equals(deletedID.toString()))){
+            log.warn("No such entry with ID: "+deletedID);
             throw new NoSuchEntryException("Deleting of entry is failed");
         }
         setAll(content);
+        log.debug("Delete entry(file) with ID: "+deletedID);
     }
     @Override
     public List<Developer> getAll() throws RepoStorageException, NoSuchEntryException, NotUniquePrimaryKeyException {
@@ -111,6 +128,7 @@ public class JavaIODeveloperRepositoryImpl implements DeveloperRepository {
         for (String[] strings : content) {
             developers.add(strMasToDeveloper(strings));
         }
+        log.debug("Read all entries(file)");
         return developers;
     }
     private void setAll(List<String[]> listOfDevelopersInStrMas){
@@ -127,6 +145,9 @@ public class JavaIODeveloperRepositoryImpl implements DeveloperRepository {
         try (FileWriter fw = new FileWriter(repo, false)){
             fw.append(content.toString());
             fw.flush();
-        } catch (IOException e) { e.printStackTrace(); }
+        } catch (IOException e) {
+            log.error("Cannot write to file", e);
+            e.printStackTrace();
+        }
     }
 }

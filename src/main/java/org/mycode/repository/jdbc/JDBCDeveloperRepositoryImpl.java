@@ -74,8 +74,9 @@ public class JDBCDeveloperRepositoryImpl implements DeveloperRepository {
             ResultSet resultSet = statement.executeQuery(selectQuery);
             connection.commit();
             connection.setAutoCommit(true);
+            Developer developer = new JDBCDeveloperMapper().map(resultSet, readID);
             log.debug("Read entry(DB) with ID: "+readID);
-            return new JDBCDeveloperMapper().map(resultSet, readID);
+            return developer;
         } catch (SQLException e) {
             try {
                 connection.rollback();

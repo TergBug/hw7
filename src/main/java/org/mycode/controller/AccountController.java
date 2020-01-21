@@ -1,5 +1,6 @@
 package org.mycode.controller;
 
+import org.apache.log4j.Logger;
 import org.mycode.exceptions.IncorrectRequestException;
 import org.mycode.exceptions.RepoStorageException;
 import org.mycode.model.Account;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AccountController {
+    private static final Logger log = Logger.getLogger(AccountController.class);
     private final String PATTERN_OF_REQUEST = "(f)|(db)|(c\\|\\d+\\|[^|]*\\|((a)|(b)|(d)))|(r\\|\\d+)|(u\\|\\d+\\|[^|]*\\|((a)|(b)|(d)))|(d\\|\\d+)|(g)";
     private AccountService service;
     private static AccountController instance;
@@ -24,7 +26,11 @@ public class AccountController {
         return instance;
     }
     public List<Account> request(String requestStr) throws IncorrectRequestException {
-        if(!requestStr.matches(PATTERN_OF_REQUEST)) throw new IncorrectRequestException();
+        log.debug("Controller handle request: "+requestStr);
+        if(!requestStr.matches(PATTERN_OF_REQUEST)){
+            log.warn("Incorrect request: "+requestStr);
+            throw new IncorrectRequestException();
+        }
         String[] req = requestStr.split("\\|");
         List<Account> accounts = new ArrayList<>();
         try {

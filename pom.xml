@@ -59,6 +59,12 @@
       <version>1.18.8</version>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+      <version>1.4.200</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -131,6 +137,36 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.2.1</version>
+        <executions>
+          <execution>
+            <id>start-h2</id>
+            <goals>
+              <goal>java</goal>
+            </goals>
+            <phase>process-test-resources</phase>
+          </execution>
+        </executions>
+        <configuration>
+          <includeProjectDependencies>true</includeProjectDependencies>
+          <includePluginDependencies>true</includePluginDependencies>
+          <mainClass>org.h2.tools.Server</mainClass>
+          <arguments>
+            <argument>-tcp</argument>
+            <argument>-tcpDaemon</argument>
+          </arguments>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.200</version>
+          </dependency>
+        </dependencies>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

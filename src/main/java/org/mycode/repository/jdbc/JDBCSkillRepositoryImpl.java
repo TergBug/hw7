@@ -50,8 +50,9 @@ public class JDBCSkillRepositoryImpl implements SkillRepository {
                 throw new NotUniquePrimaryKeyException("Reading from DB is failed");
             }
             resultSet.first();
+            Skill skill = new JDBCSkillMapper().map(resultSet, readID);
             log.debug("Read entry(DB) with ID: "+readID);
-            return new JDBCSkillMapper().map(resultSet, readID);
+            return skill;
         } catch (SQLException e) {
             log.error("Wrong SQL query to DB in reading", e);
             throw new RepoStorageException("Wrong SQL query to DB in reading");

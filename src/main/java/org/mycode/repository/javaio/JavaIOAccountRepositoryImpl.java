@@ -1,5 +1,6 @@
 package org.mycode.repository.javaio;
 
+import org.apache.log4j.Logger;
 import org.mycode.exceptions.RepoStorageException;
 import org.mycode.exceptions.NoSuchEntryException;
 import org.mycode.exceptions.NotUniquePrimaryKeyException;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class JavaIOAccountRepositoryImpl implements AccountRepository {
+    private static final Logger log = Logger.getLogger(JavaIOAccountRepositoryImpl.class);
     private final String PATTERN_OF_ENTRY = "<{*-1-*}{-2-}{-3-}>";
     private final String VALIDATION_PATTERN = "<\\{\\*\\d+?\\*}\\{.*?}\\{((ACTIVE)|(BANNED)|(DELETED))}>";
     private File repo;
@@ -32,12 +34,16 @@ public class JavaIOAccountRepositoryImpl implements AccountRepository {
         if(!repo.exists()) {
             try {
                 repo.createNewFile();
-            } catch (IOException e) { e.printStackTrace(); }
+            } catch (IOException e) {
+                log.error("Cannot create new file", e);
+                e.printStackTrace();
+            }
         }
         if(model.getId()==null || model.getId()<1) {
             model.setId(JavaIOUtils.generateAutoIncrId(repo, VALIDATION_PATTERN));
         }
         else if(JavaIOUtils.getContentFromFile(repo, VALIDATION_PATTERN).stream().anyMatch(el -> el[0].equals(model.getId().toString()))){
+            log.warn("Not unique primary key: "+model.getId());
             throw new NotUniquePrimaryKeyException("Creating of entry is failed");
         }
         String entry = PATTERN_OF_ENTRY.replace("-1-", String.valueOf(model.getId())).
@@ -46,7 +52,11 @@ public class JavaIOAccountRepositoryImpl implements AccountRepository {
         try (FileWriter fw = new FileWriter(repo, true)){
             fw.append(entry);
             fw.flush();
-        } catch (IOException e) { e.printStackTrace(); }
+            log.debug("Create entry(file): "+model);
+        } catch (IOException e) {
+            log.error("Cannot write to file", e);
+            e.printStackTrace();
+        }
     }
     @Override
     public Account getById(Long readID) throws RepoStorageException, NoSuchEntryException, NotUniquePrimaryKeyException {
@@ -54,11 +64,14 @@ public class JavaIOAccountRepositoryImpl implements AccountRepository {
                 filter(el -> el[0].equals(readID.toString())).
                 collect(Collectors.toList());
         if(content.size()==0){
+            log.warn("No such entry with ID: "+readID);
             throw new NoSuchEntryException("Reading of entry is failed");
         }
         else if(content.size()>1){
+            log.warn("Not unique primary key: "+readID);
             throw new NotUniquePrimaryKeyException("Reading of entry is failed");
         }
+        log.debug("Read entry(file) with ID: "+readID);
         return strMasToAccount(content.get(0));
     }
     @Override
@@ -72,22 +85,28 @@ public class JavaIOAccountRepositoryImpl implements AccountRepository {
             }
         }
         if(!isExist){
+            log.warn("No such entry: "+updatedModel);
             throw new NoSuchEntryException("Updating of entry is failed");
         }
         setAll(content);
+        log.debug("Update entry(file): "+updatedModel);
     }
     @Override
     public void delete(Long deletedID) throws NoSuchEntryException, RepoStorageException {
         List<String[]> content = JavaIOUtils.getContentFromFile(repo, VALIDATION_PATTERN);
         if(!content.removeIf(el -> el[0].equals(deletedID.toString()))){
+            log.warn("No such entry with ID: "+deletedID);
             throw new NoSuchEntryException("Deleting of entry is failed");
         }
         setAll(content);
+        log.debug("Delete entry(file) with ID: "+deletedID);
     }
     @Override
     public List<Account> getAll() throws RepoStorageException {
         List<String[]> content = JavaIOUtils.getContentFromFile(repo, VALIDATION_PATTERN);
-        return content.stream().map(this::strMasToAccount).collect(Collectors.toList());
+        List<Account> accounts = content.stream().map(this::strMasToAccount).collect(Collectors.toList());
+        log.debug("Read all entries(file)");
+        return accounts;
     }
     private void setAll(List<String[]> listOfAccountsInStrMas){
         StringBuilder content = new StringBuilder();
@@ -99,6 +118,9 @@ public class JavaIOAccountRepositoryImpl implements AccountRepository {
         try (FileWriter fw = new FileWriter(repo, false)){
             fw.append(content.toString());
             fw.flush();
-        } catch (IOException e) { e.printStackTrace(); }
+        } catch (IOException e) {
+            log.error("Cannot write to file", e);
+            e.printStackTrace();
+        }
     }
 }

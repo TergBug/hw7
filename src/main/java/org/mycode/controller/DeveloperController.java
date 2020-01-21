@@ -1,5 +1,6 @@
 package org.mycode.controller;
 
+import org.apache.log4j.Logger;
 import org.mycode.exceptions.IncorrectRequestException;
 import org.mycode.exceptions.RepoStorageException;
 import org.mycode.model.Account;
@@ -12,6 +13,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class DeveloperController {
+    private static final Logger log = Logger.getLogger(DeveloperController.class);
     private final String PATTERN_OF_REQUEST = "(f)|(db)|(c\\|\\d+\\|[^|]*\\|[^|]*\\|(\\d+,?)*\\|\\d+)|(r\\|\\d+)|(u\\|\\d+\\|[^|]*\\|[^|]*\\|(\\d+,?)*\\|\\d+)|(d\\|\\d+)|(g)";
     private DeveloperService service;
     private static DeveloperController instance;
@@ -25,7 +27,11 @@ public class DeveloperController {
         return instance;
     }
     public List<Developer> request(String requestStr) throws IncorrectRequestException {
-        if(!requestStr.matches(PATTERN_OF_REQUEST)) throw new IncorrectRequestException();
+        log.debug("Controller handle request: "+requestStr);
+        if(!requestStr.matches(PATTERN_OF_REQUEST)){
+            log.warn("Incorrect request: "+requestStr);
+            throw new IncorrectRequestException();
+        }
         String[] req = requestStr.split("\\|");
         List<Developer> developers = new ArrayList<>();
         Set<Skill> skillSet;

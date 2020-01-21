@@ -50,8 +50,9 @@ public class JDBCAccountRepositoryImpl implements AccountRepository {
                 throw new NotUniquePrimaryKeyException("Reading from DB is failed");
             }
             resultSet.first();
+            Account account = new JDBCAccountMapper().map(resultSet, readID);
             log.debug("Read entry(DB) with ID: "+readID);
-            return new JDBCAccountMapper().map(resultSet, readID);
+            return account;
         } catch (SQLException e) {
             log.error("Wrong SQL query to DB in reading", e);
             throw new RepoStorageException("Wrong SQL query to DB in reading");

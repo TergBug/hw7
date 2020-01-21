@@ -1,5 +1,6 @@
 package org.mycode.controller;
 
+import org.apache.log4j.Logger;
 import org.mycode.exceptions.IncorrectRequestException;
 import org.mycode.exceptions.RepoStorageException;
 import org.mycode.model.Skill;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SkillController {
+    private static final Logger log = Logger.getLogger(SkillController.class);
     private final String PATTERN_OF_REQUEST = "(f)|(db)|(c\\|\\d+\\|[^|]*)|(r\\|\\d+)|(u\\|\\d+\\|[^|]*)|(d\\|\\d+)|(g)";
     private SkillService service;
     private static SkillController instance;
@@ -23,7 +25,9 @@ public class SkillController {
         return instance;
     }
     public List<Skill> request(String requestStr) throws IncorrectRequestException {
+        log.debug("Controller handle request: "+requestStr);
         if(!requestStr.matches(PATTERN_OF_REQUEST)) {
+            log.warn("Incorrect request: "+requestStr);
             throw new IncorrectRequestException();
         }
         String[] req = requestStr.split("\\|");

@@ -14,9 +14,6 @@ import java.util.regex.Pattern;
 
 public class JavaIOUtils {
     private final static String LINK_TO_CONFIG = "./src/main/resources/config.properties";
-    private final static String LINK_TO_SKILL_FILE;
-    private final static String LINK_TO_ACCOUNT_FILE;
-    private final static String LINK_TO_DEVELOPER_FILE;
     private static File skillRepo;
     private static File accountRepo;
     private static File developerRepo;
@@ -27,12 +24,9 @@ public class JavaIOUtils {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        LINK_TO_SKILL_FILE = properties.getProperty("javaio.file.path.skills");
-        LINK_TO_ACCOUNT_FILE = properties.getProperty("javaio.file.path.accounts");
-        LINK_TO_DEVELOPER_FILE = properties.getProperty("javaio.file.path.developers");
-        skillRepo = new File(LINK_TO_SKILL_FILE);
-        accountRepo = new File(LINK_TO_ACCOUNT_FILE);
-        developerRepo = new File(LINK_TO_DEVELOPER_FILE);
+        skillRepo = new File(properties.getProperty("javaio.file.path.skills"));
+        accountRepo = new File(properties.getProperty("javaio.file.path.accounts"));
+        developerRepo = new File(properties.getProperty("javaio.file.path.developers"));
     }
     public static File getSkillRepo(){
         return skillRepo;
