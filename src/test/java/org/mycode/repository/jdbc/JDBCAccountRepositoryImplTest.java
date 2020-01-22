@@ -70,7 +70,7 @@ public class JDBCAccountRepositoryImplTest {
             assertEquals(createdAccount, new JDBCAccountMapper().map(resultSet, 5L));
             log.debug("Create");
         } catch (RepoStorageException | SQLException | NoSuchEntryException e) {
-            e.printStackTrace();
+            fail();
         }
     }
     @Test
@@ -79,7 +79,7 @@ public class JDBCAccountRepositoryImplTest {
             assertEquals(readAccount, testedRepo.getById(2L));
             log.debug("Read");
         } catch (RepoStorageException | NoSuchEntryException | NotUniquePrimaryKeyException e) {
-            e.printStackTrace();
+            fail();
         }
     }
     @Test
@@ -91,7 +91,7 @@ public class JDBCAccountRepositoryImplTest {
             assertEquals(updatedAccount, new JDBCAccountMapper().map(resultSet, 1L));
             log.debug("Update");
         } catch (RepoStorageException | SQLException | NoSuchEntryException e) {
-            e.printStackTrace();
+            fail();
         }
     }
     @Test
@@ -102,7 +102,7 @@ public class JDBCAccountRepositoryImplTest {
             assertFalse(statement.executeQuery().next());
             log.debug("Delete");
         } catch (RepoStorageException | SQLException | NoSuchEntryException e) {
-            e.printStackTrace();
+            fail();
         }
     }
     @Test
@@ -115,7 +115,7 @@ public class JDBCAccountRepositoryImplTest {
             assertEquals(allAccount, testedRepo.getAll());
             log.debug("GetAll");
         } catch (RepoStorageException | NoSuchEntryException e) {
-            e.printStackTrace();
+            fail();
         }
     }
 }

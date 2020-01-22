@@ -69,7 +69,7 @@ public class JDBCSkillRepositoryImplTest {
             assertEquals(createdSkill, new JDBCSkillMapper().map(resultSet, 5L));
             log.debug("Create");
         } catch (RepoStorageException | SQLException | NoSuchEntryException e) {
-            e.printStackTrace();
+            fail();
         }
     }
     @Test
@@ -78,7 +78,7 @@ public class JDBCSkillRepositoryImplTest {
             assertEquals(readSkill, testedRepo.getById(2L));
             log.debug("Read");
         } catch (RepoStorageException | NoSuchEntryException | NotUniquePrimaryKeyException e) {
-            e.printStackTrace();
+            fail();
         }
     }
     @Test
@@ -90,7 +90,7 @@ public class JDBCSkillRepositoryImplTest {
             assertEquals(updatedSkill, new JDBCSkillMapper().map(resultSet, 1L));
             log.debug("Update");
         } catch (RepoStorageException | SQLException | NoSuchEntryException e) {
-            e.printStackTrace();
+            fail();
         }
     }
     @Test
@@ -101,7 +101,7 @@ public class JDBCSkillRepositoryImplTest {
             assertFalse(statement.executeQuery().next());
             log.debug("Delete");
         } catch (RepoStorageException | SQLException | NoSuchEntryException e) {
-            e.printStackTrace();
+            fail();
         }
     }
     @Test
@@ -114,7 +114,7 @@ public class JDBCSkillRepositoryImplTest {
             assertEquals(allSkill, testedRepo.getAll());
             log.debug("GetAll");
         } catch (RepoStorageException | NoSuchEntryException e) {
-            e.printStackTrace();
+            fail();
         }
     }
 }

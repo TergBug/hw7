@@ -14,11 +14,21 @@ import java.util.*;
 
 public class JDBCDeveloperRepositoryImpl implements DeveloperRepository {
     private static final Logger log = Logger.getLogger(JDBCDeveloperRepositoryImpl.class);
-    private final String INSERT_QUERY = "insert into developers(first_name, last_name, account_id) values (?, ?, ?);";
-    private final String SELECT_QUERY = "select * from accounts where id=?;";
-    private final String UPDATE_QUERY = "update accounts set name=?, status=? where id=?;";
-    private final String DELETE_QUERY = "delete from accounts where id=?;";
-    private final String SELECT_ALL_QUERY = "select * from accounts;";
+    private final String INSERT_QUERY = "insert into 1?(2?) values (3?);";
+    private final String SELECT_QUERY = "select 1? from 2?;";
+    private final String SELECT_QUERY_COMPLEX = "select d.id, d.first_name, d.last_name, s.id, s.name, a.id, a.name, a.status " +
+            "from developers d " +
+            "left join (" +
+            "select ds.developer_id, s.id, s.name " +
+            "from developer_skill ds " +
+            "inner join skills s " +
+            "on ds.skill_id = s.id) s " +
+            "on d.id = s.developer_id " +
+            "left join accounts a " +
+            "on d.account_id = a.id " +
+            "1?;";
+    private final String UPDATE_QUERY = "update 1? set 2? where 3?;";
+    private final String DELETE_QUERY = "delete from 1? where 2?;";
     private Connection connection;
     public JDBCDeveloperRepositoryImpl() throws RepoStorageException {
         try {
@@ -32,15 +42,17 @@ public class JDBCDeveloperRepositoryImpl implements DeveloperRepository {
     public void create(Developer model) throws RepoStorageException {
         try (Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)){
             connection.setAutoCommit(false);
-            String insertToDevelopersTableQuery = "insert into developers(first_name, last_name, account_id) " +
-                    "values ('"+model.getFirstName()+"', '"+model.getLastName()+"', '"+model.getAccount().getId()+"');";
-            statement.execute(insertToDevelopersTableQuery);
-            ResultSet resultSet = statement.executeQuery("select max(id) from developers;");
+            statement.execute(INSERT_QUERY.replace("1?", "developers")
+                    .replace("2?", "first_name, last_name, account_id")
+                    .replace("3?", "'"+model.getFirstName()+"', '"+model.getLastName()+"', '"+model.getAccount().getId()+"'"));
+            ResultSet resultSet = statement.executeQuery(SELECT_QUERY.replace("1?", "max(id)")
+                    .replace("2?", "developers"));
             resultSet.first();
             long developerId = resultSet.getLong(1);
             for (Skill skill : model.getSkills()) {
-                statement.addBatch("insert into developer_skill(developer_id, skill_id) " +
-                        "values ('" + developerId + "', '" + skill.getId() + "');");
+                statement.addBatch(INSERT_QUERY.replace("1?", "developer_skill")
+                        .replace("2?", "developer_id, skill_id")
+                        .replace("3?", "'" + developerId + "', '" + skill.getId() + "'"));
             }
             statement.executeBatch();
             connection.commit();
@@ -60,18 +72,7 @@ public class JDBCDeveloperRepositoryImpl implements DeveloperRepository {
     public Developer getById(Long readID) throws RepoStorageException, NoSuchEntryException {
         try (Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)){
             connection.setAutoCommit(false);
-            String selectQuery = "select d.id, d.first_name, d.last_name, s.id, s.name, a.id, a.name, a.status " +
-                    "from developers d " +
-                    "left join (" +
-                    "select ds.developer_id, s.id, s.name " +
-                    "from developer_skill ds " +
-                    "inner join skills s " +
-                    "on ds.skill_id = s.id) s " +
-                    "on d.id = s.developer_id " +
-                    "left join accounts a " +
-                    "on d.account_id = a.id " +
-                    "where d.id='"+readID+"';";
-            ResultSet resultSet = statement.executeQuery(selectQuery);
+            ResultSet resultSet = statement.executeQuery(SELECT_QUERY_COMPLEX.replace("1?", "where d.id='"+readID+"'"));
             connection.commit();
             connection.setAutoCommit(true);
             Developer developer = new JDBCDeveloperMapper().map(resultSet, readID);
@@ -91,12 +92,11 @@ public class JDBCDeveloperRepositoryImpl implements DeveloperRepository {
     public void update(Developer updatedModel) throws RepoStorageException, NoSuchEntryException {
         try (Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)){
             connection.setAutoCommit(false);
-            String updateQuery = "update developers " +
-                    "set first_name='"+updatedModel.getFirstName()+"', " +
-                    "last_name='" +updatedModel.getLastName()+ "', " +
-                    "account_id='"+updatedModel.getAccount().getId()+"' " +
-                    "where id='"+updatedModel.getId()+"';";
-            if(statement.executeUpdate(updateQuery)<1){
+            if(statement.executeUpdate(UPDATE_QUERY.replace("1?", "developers")
+                    .replace("2?", "first_name='"+updatedModel.getFirstName()+"', " +
+                            "last_name='" +updatedModel.getLastName()+ "', " +
+                            "account_id='"+updatedModel.getAccount().getId()+"' ")
+                    .replace("3?", "id='"+updatedModel.getId()+"'"))<1){
                 try {
                     connection.rollback();
                 } catch (SQLException ex) {
@@ -105,10 +105,12 @@ public class JDBCDeveloperRepositoryImpl implements DeveloperRepository {
                 log.warn("No such entry: "+updatedModel);
                 throw new NoSuchEntryException("Updating in DB is failed");
             }
-            statement.execute("delete from developer_skill where developer_id='"+updatedModel.getId()+"';");
+            statement.execute(DELETE_QUERY.replace("1?", "developer_skill")
+                    .replace("2?", "developer_id='"+updatedModel.getId()+"'"));
             for (Skill skill : updatedModel.getSkills()) {
-                statement.addBatch("insert into developer_skill(developer_id, skill_id) " +
-                        "values ('" + updatedModel.getId() + "', '" + skill.getId() + "');");
+                statement.addBatch(INSERT_QUERY.replace("1?", "developer_skill")
+                        .replace("2?", "developer_id, skill_id")
+                        .replace("3?", "'" + updatedModel.getId() + "', '" + skill.getId() + "'"));
             }
             statement.executeBatch();
             connection.commit();
@@ -128,9 +130,10 @@ public class JDBCDeveloperRepositoryImpl implements DeveloperRepository {
     public void delete(Long deletedEntry) throws RepoStorageException, NoSuchEntryException {
         try (Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)){
             connection.setAutoCommit(false);
-            statement.execute("delete from developer_skill where developer_id='"+deletedEntry+"';");
-            String deleteQuery = "delete from developers where id='"+deletedEntry+"';";
-            if(statement.executeUpdate(deleteQuery)<1){
+            statement.execute(DELETE_QUERY.replace("1?", "developer_skill")
+                    .replace("2?", "developer_id='"+deletedEntry+"'"));
+            if(statement.executeUpdate(DELETE_QUERY.replace("1?", "developers")
+                    .replace("2?", "id='"+deletedEntry+"'"))<1){
                 try {
                     connection.rollback();
                 } catch (SQLException ex) {
@@ -156,17 +159,7 @@ public class JDBCDeveloperRepositoryImpl implements DeveloperRepository {
     public List<Developer> getAll() throws RepoStorageException, NoSuchEntryException {
         try (Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)){
             connection.setAutoCommit(false);
-            String selectQuery = "select d.id, d.first_name, d.last_name, s.id, s.name, a.id, a.name, a.status " +
-                    "from developers d " +
-                    "left join (" +
-                    "select ds.developer_id, s.id, s.name " +
-                    "from developer_skill ds " +
-                    "inner join skills s " +
-                    "on ds.skill_id = s.id) s " +
-                    "on d.id = s.developer_id " +
-                    "left join accounts a " +
-                    "on d.account_id = a.id;";
-            ResultSet resultSet = statement.executeQuery(selectQuery);
+            ResultSet resultSet = statement.executeQuery(SELECT_QUERY_COMPLEX.replace("1?", ""));
             ArrayList<Developer> developers = new ArrayList<>();
             JDBCDeveloperMapper mapper = new JDBCDeveloperMapper();
             long index = -1;

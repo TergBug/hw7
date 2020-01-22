@@ -100,7 +100,7 @@ public class JDBCDeveloperRepositoryImplTest {
             assertEquals(createdDeveloper, new JDBCDeveloperMapper().map(resultSet, 5L));
             log.debug("Create");
         } catch (RepoStorageException | SQLException | NoSuchEntryException e) {
-            e.printStackTrace();
+            fail();
         }
     }
     @Test
@@ -109,7 +109,7 @@ public class JDBCDeveloperRepositoryImplTest {
             assertEquals(readDeveloper, testedRepo.getById(2L));
             log.debug("Read");
         } catch (RepoStorageException | NoSuchEntryException e) {
-            e.printStackTrace();
+            fail();
         }
     }
     @Test
@@ -121,7 +121,7 @@ public class JDBCDeveloperRepositoryImplTest {
             assertEquals(updatedDeveloper, new JDBCDeveloperMapper().map(resultSet, 1L));
             log.debug("Update");
         } catch (RepoStorageException | SQLException | NoSuchEntryException e) {
-            e.printStackTrace();
+            fail();
         }
     }
     @Test
@@ -132,7 +132,7 @@ public class JDBCDeveloperRepositoryImplTest {
             assertFalse(statement.executeQuery().next());
             log.debug("Delete");
         } catch (RepoStorageException | SQLException | NoSuchEntryException e) {
-            e.printStackTrace();
+            fail();
         }
     }
     @Test
@@ -153,7 +153,7 @@ public class JDBCDeveloperRepositoryImplTest {
             assertEquals(allDeveloper, testedRepo.getAll());
             log.debug("GetAll");
         } catch (RepoStorageException | NoSuchEntryException e) {
-            e.printStackTrace();
+            fail();
         }
     }
 }
