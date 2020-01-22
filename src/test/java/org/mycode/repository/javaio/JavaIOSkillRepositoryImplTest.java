@@ -1,13 +1,14 @@
 package org.mycode.repository.javaio;
 
 import static org.junit.Assert.*;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.*;
 import org.mycode.exceptions.RepoStorageException;
 import org.mycode.exceptions.NoSuchEntryException;
 import org.mycode.exceptions.NotUniquePrimaryKeyException;
 import org.mycode.model.Skill;
+import org.mycode.testutil.TestUtils;
+import org.mycode.util.JavaIOUtils;
 
 import java.io.File;
 import java.io.FileReader;
@@ -18,7 +19,7 @@ import java.util.Collections;
 
 public class JavaIOSkillRepositoryImplTest {
     private JavaIOSkillRepositoryImpl testedSkillRepo = new JavaIOSkillRepositoryImpl();
-    private File repo = new File("./src/main/resources/filestxt/skills.txt");
+    private File repo = JavaIOUtils.getSkillRepo();
     private String noSuchEntryExceptionStr = "org.mycode.exceptions.NoSuchEntryException: # of entry is failed";
     private String notUniquePrimaryKeyExceptionStr = "org.mycode.exceptions.NotUniquePrimaryKeyException: # of entry is failed";
     private String newInfoInFile = "<{*1*}{Java}><{*2*}{C#}><{*3*}{JDBC}>";
@@ -29,6 +30,14 @@ public class JavaIOSkillRepositoryImplTest {
     private Skill updatedSkill = new Skill(2L, "DB");
     private Skill updatedNotExistSkill = new Skill(4L, "DB");
     private ArrayList<Skill> getAllSkills = new ArrayList<>();
+    @BeforeClass
+    public static void connect(){
+        TestUtils.switchConfigToTestMode();
+    }
+    @AfterClass
+    public static void backProperty(){
+        TestUtils.switchConfigToWorkMode();
+    }
     @Before
     public void clearFileBefore(){
         oldInfoInFile = readFileContent();

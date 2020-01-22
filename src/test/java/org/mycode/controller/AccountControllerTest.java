@@ -1,12 +1,12 @@
 package org.mycode.controller;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.mycode.exceptions.IncorrectRequestException;
 import org.mycode.exceptions.RepoStorageException;
 import org.mycode.model.Account;
 import org.mycode.model.AccountStatus;
+import org.mycode.testutil.TestUtils;
+import org.mycode.util.JavaIOUtils;
 
 import java.io.File;
 import java.io.FileReader;
@@ -20,8 +20,8 @@ import static org.junit.Assert.*;
 public class AccountControllerTest {
     private AccountController testedAccController = AccountController.getInstance();
     private String incorrectRequestExceptionStr = "org.mycode.exceptions.IncorrectRequestException";
-    private File repo = new File("./src/main/resources/filestxt/accounts.txt");
-    private String newInfoInFile = "<{*1*}{LiXiao}{ACTIVE}><{*2*}{Din}{DELETED}><{*3*}{Geek}{BANNED}>";
+    private File repo = JavaIOUtils.getAccountRepo();
+    private String newInfoInFile = "<{*1*}{LiXiao}{ACTIVE}><{*2*}{Din}{DELETED}><{*3*}{Geek}{BANNED}><{*4*}{Ford}{ACTIVE}>";
     private String oldInfoInFile = "";
     private String createRequest = "c|0|Root|ACTIVE";
     private String readRequest = "r|1";
@@ -32,11 +32,20 @@ public class AccountControllerTest {
     private Account readAccount = new Account(1L, "LiXiao", AccountStatus.ACTIVE);
     private ArrayList<Account> allAccounts = new ArrayList<>();
     public AccountControllerTest() throws RepoStorageException { }
+    @BeforeClass
+    public static void connect(){
+        TestUtils.switchConfigToTestMode();
+    }
+    @AfterClass
+    public static void backProperty(){
+        TestUtils.switchConfigToWorkMode();
+    }
     @Before
     public void loadFileBefore(){
         Collections.addAll(allAccounts, new Account(1L, "LiXiao", AccountStatus.ACTIVE),
                 new Account(2L, "Din", AccountStatus.DELETED),
-                new Account(3L, "Geek", AccountStatus.BANNED));
+                new Account(3L, "Geek", AccountStatus.BANNED),
+                new Account(4L, "Ford", AccountStatus.ACTIVE));
         oldInfoInFile = readFileContent();
         fillFile(newInfoInFile);
     }

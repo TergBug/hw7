@@ -28,8 +28,10 @@ public class JavaIODeveloperRepositoryImpl implements DeveloperRepository {
     private Developer strMasToDeveloper(String[] mas) throws RepoStorageException, NotUniquePrimaryKeyException, NoSuchEntryException {
         Set<Skill> skills = new HashSet<>();
         String[] skillsFK = mas[3].split("\\s");
-        for (String oneSkillFK : skillsFK) {
-            skills.add(skillRepo.getById(Long.parseLong(oneSkillFK)));
+        if(!skillsFK[0].equals("")){
+            for (String oneSkillFK : skillsFK) {
+                skills.add(skillRepo.getById(Long.parseLong(oneSkillFK)));
+            }
         }
         return new Developer(Long.parseLong(mas[0]), mas[1], mas[2], skills, accountRepo.getById(Long.parseLong(mas[4])));
     }

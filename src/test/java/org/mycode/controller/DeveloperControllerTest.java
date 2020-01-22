@@ -1,14 +1,14 @@
 package org.mycode.controller;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.mycode.exceptions.IncorrectRequestException;
 import org.mycode.exceptions.RepoStorageException;
 import org.mycode.model.Account;
 import org.mycode.model.AccountStatus;
 import org.mycode.model.Developer;
 import org.mycode.model.Skill;
+import org.mycode.testutil.TestUtils;
+import org.mycode.util.JavaIOUtils;
 
 import java.io.File;
 import java.io.FileReader;
@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
@@ -24,11 +25,11 @@ import static org.junit.Assert.*;
 public class DeveloperControllerTest {
     private DeveloperController testedDeveloperController = DeveloperController.getInstance();
     private String incorrectRequestExceptionStr = "org.mycode.exceptions.IncorrectRequestException";
-    private File repoSkill = new File("./src/main/resources/filestxt/skills.txt");
-    private File repoAccount = new File("./src/main/resources/filestxt/accounts.txt");
-    private File repoDeveloper = new File("./src/main/resources/filestxt/developers.txt");
-    private String newInfoInFileSkills = "<{*1*}{Java}><{*2*}{C#}><{*3*}{JDBC}>";
-    private String newInfoInFileAccounts = "<{*1*}{LiXiao}{ACTIVE}><{*2*}{Din}{DELETED}><{*3*}{Geek}{BANNED}>";
+    private File repoSkill = JavaIOUtils.getSkillRepo();
+    private File repoAccount = JavaIOUtils.getAccountRepo();
+    private File repoDeveloper = JavaIOUtils.getDeveloperRepo();
+    private String newInfoInFileSkills = "<{*1*}{Java}><{*2*}{C#}><{*3*}{JDBC}><{*4*}{JSON}>";
+    private String newInfoInFileAccounts = "<{*1*}{LiXiao}{ACTIVE}><{*2*}{Din}{DELETED}><{*3*}{Geek}{BANNED}><{*4*}{Ford}{ACTIVE}>";
     private String newInfoInFileDevelopers = "<{*1*}{Din}{Ford}{[1][3]}{[2]}><{*2*}{Xiaoming}{Li}{[2]}{[1]}><{*3*}{Gird}{Long}{[1][2]}{[3]}>";
     private String oldInfoInFileSkills = "";
     private String oldInfoInFileAccounts = "";
@@ -44,6 +45,14 @@ public class DeveloperControllerTest {
             new Account(2L, "Din", AccountStatus.DELETED));
     private ArrayList<Developer> allDevelopers = new ArrayList<>();
     public DeveloperControllerTest() throws RepoStorageException { }
+    @BeforeClass
+    public static void connect(){
+        TestUtils.switchConfigToTestMode();
+    }
+    @AfterClass
+    public static void backProperty(){
+        TestUtils.switchConfigToWorkMode();
+    }
     @Before
     public void loadFileBefore(){
         Collections.addAll(allDevelopers, new Developer(1L, "Din", "Ford",
@@ -54,7 +63,10 @@ public class DeveloperControllerTest {
                         new Account(1L, "LiXiao", AccountStatus.ACTIVE)),
                 new Developer(3L, "Gird", "Long",
                         Arrays.stream(new Skill[]{new Skill(1L, "Java"), new Skill(2L, "C#")}).collect(Collectors.toSet()),
-                        new Account(3L, "Geek", AccountStatus.BANNED)));
+                        new Account(3L, "Geek", AccountStatus.BANNED)),
+                new Developer(4L, "Gordon", "Fong",
+                        new HashSet<>(),
+                        new Account(1L, "LiXiao", AccountStatus.ACTIVE)));
         oldInfoInFileSkills = readFileContent(repoSkill);
         oldInfoInFileAccounts = readFileContent(repoAccount);
         oldInfoInFileDevelopers = readFileContent(repoDeveloper);

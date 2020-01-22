@@ -1,13 +1,13 @@
 package org.mycode.repository.javaio;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.mycode.exceptions.RepoStorageException;
 import org.mycode.exceptions.NoSuchEntryException;
 import org.mycode.exceptions.NotUniquePrimaryKeyException;
 import org.mycode.model.Account;
 import org.mycode.model.AccountStatus;
+import org.mycode.testutil.TestUtils;
+import org.mycode.util.JavaIOUtils;
 
 import java.io.File;
 import java.io.FileReader;
@@ -20,7 +20,7 @@ import static org.junit.Assert.*;
 
 public class JavaIOAccountRepositoryImplTest {
     private JavaIOAccountRepositoryImpl testedAccRepo = new JavaIOAccountRepositoryImpl();
-    private File repo = new File("./src/main/resources/filestxt/accounts.txt");
+    private File repo = JavaIOUtils.getAccountRepo();
     private String noSuchEntryExceptionStr = "org.mycode.exceptions.NoSuchEntryException: # of entry is failed";
     private String notUniquePrimaryKeyExceptionStr = "org.mycode.exceptions.NotUniquePrimaryKeyException: # of entry is failed";
     private String newInfoInFile = "<{*1*}{LiXiao}{ACTIVE}><{*2*}{Din}{DELETED}><{*3*}{Geek}{BANNED}>";
@@ -31,6 +31,14 @@ public class JavaIOAccountRepositoryImplTest {
     private Account updatedAccount = new Account(2L, "Dorfling", AccountStatus.BANNED);
     private Account updatedNotExistAccount = new Account(4L, "Potter", AccountStatus.ACTIVE);
     private ArrayList<Account> getAllAccounts = new ArrayList<>();
+    @BeforeClass
+    public static void connect(){
+        TestUtils.switchConfigToTestMode();
+    }
+    @AfterClass
+    public static void backProperty(){
+        TestUtils.switchConfigToWorkMode();
+    }
     @Before
     public void clearFileBefore(){
         oldInfoInFile = readFileContent();

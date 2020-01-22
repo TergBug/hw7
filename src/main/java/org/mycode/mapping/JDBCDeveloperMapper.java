@@ -28,7 +28,9 @@ public class JDBCDeveloperMapper implements Mapper<Developer, ResultSet, Long> {
                 id = source.getLong(1);
                 firstName = source.getString(2);
                 lastName = source.getString(3);
-                skills.add(new Skill(source.getLong(4), source.getString(5)));
+                if(source.getLong(4)!=0L && source.getString(5)!=null){
+                    skills.add(new Skill(source.getLong(4), source.getString(5)));
+                }
                 account = (source.getString(6)==null) ? null : new Account(source.getLong(6),
                         source.getString(7),
                         AccountStatus.valueOf(source.getString(8)));

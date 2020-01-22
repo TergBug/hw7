@@ -1,11 +1,11 @@
 package org.mycode.controller;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.mycode.exceptions.IncorrectRequestException;
 import org.mycode.exceptions.RepoStorageException;
 import org.mycode.model.Skill;
+import org.mycode.testutil.TestUtils;
+import org.mycode.util.JavaIOUtils;
 
 import java.io.File;
 import java.io.FileReader;
@@ -19,8 +19,8 @@ import static org.junit.Assert.*;
 public class SkillControllerTest {
     private SkillController testedSkillController = SkillController.getInstance();
     private String incorrectRequestExceptionStr = "org.mycode.exceptions.IncorrectRequestException";
-    private File repo = new File("./src/main/resources/filestxt/skills.txt");
-    private String newInfoInFile = "<{*1*}{Java}><{*2*}{C#}><{*3*}{JDBC}>";
+    private File repo = JavaIOUtils.getSkillRepo();
+    private String newInfoInFile = "<{*1*}{Java}><{*2*}{C#}><{*3*}{JDBC}><{*4*}{JSON}>";
     private String oldInfoInFile = "";
     private String createRequest = "c|0|Python";
     private String readRequest = "r|1";
@@ -31,11 +31,20 @@ public class SkillControllerTest {
     private Skill readSkill = new Skill(1L, "Java");
     private ArrayList<Skill> allSkills = new ArrayList<>();
     public SkillControllerTest() throws RepoStorageException { }
+    @BeforeClass
+    public static void connect(){
+        TestUtils.switchConfigToTestMode();
+    }
+    @AfterClass
+    public static void backProperty(){
+        TestUtils.switchConfigToWorkMode();
+    }
     @Before
     public void loadFileBefore(){
         Collections.addAll(allSkills, new Skill(1L, "Java"),
                 new Skill(2L, "C#"),
-                new Skill(3L, "JDBC"));
+                new Skill(3L, "JDBC"),
+                new Skill(4L, "JSON"));
         oldInfoInFile = readFileContent();
         fillFile(newInfoInFile);
     }

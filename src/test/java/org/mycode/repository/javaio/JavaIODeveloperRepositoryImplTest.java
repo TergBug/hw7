@@ -1,8 +1,6 @@
 package org.mycode.repository.javaio;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.mycode.exceptions.RepoStorageException;
 import org.mycode.exceptions.NoSuchEntryException;
 import org.mycode.exceptions.NotUniquePrimaryKeyException;
@@ -10,6 +8,8 @@ import org.mycode.model.Account;
 import org.mycode.model.AccountStatus;
 import org.mycode.model.Developer;
 import org.mycode.model.Skill;
+import org.mycode.testutil.TestUtils;
+import org.mycode.util.JavaIOUtils;
 
 import java.io.File;
 import java.io.FileReader;
@@ -24,9 +24,9 @@ public class JavaIODeveloperRepositoryImplTest {
     private JavaIODeveloperRepositoryImpl testedDeveloperRepo = new JavaIODeveloperRepositoryImpl();
     private String noSuchEntryExceptionStr = "org.mycode.exceptions.NoSuchEntryException: # of entry is failed";
     private String notUniquePrimaryKeyExceptionStr = "org.mycode.exceptions.NotUniquePrimaryKeyException: # of entry is failed";
-    private File repoSkill = new File("./src/main/resources/filestxt/skills.txt");
-    private File repoAccount = new File("./src/main/resources/filestxt/accounts.txt");
-    private File repoDeveloper = new File("./src/main/resources/filestxt/developers.txt");
+    private File repoSkill = JavaIOUtils.getSkillRepo();
+    private File repoAccount = JavaIOUtils.getAccountRepo();
+    private File repoDeveloper = JavaIOUtils.getDeveloperRepo();
     private String newInfoInFileSkills = "<{*1*}{Java}><{*2*}{C#}><{*3*}{JDBC}>";
     private String newInfoInFileAccounts = "<{*1*}{LiXiao}{ACTIVE}><{*2*}{Din}{DELETED}><{*3*}{Geek}{BANNED}>";
     private String newInfoInFileDevelopers = "<{*1*}{Din}{Ford}{[1][3]}{[2]}><{*2*}{Xiaoming}{Li}{[2]}{[1]}><{*3*}{Gird}{Long}{[1][2]}{[3]}>";
@@ -45,6 +45,14 @@ public class JavaIODeveloperRepositoryImplTest {
             Arrays.stream(new Skill[]{new Skill(1L, "Java")}).collect(Collectors.toSet()),
             new Account(2L, "Din", AccountStatus.DELETED));
     private ArrayList<Developer> getAllDevelopers = new ArrayList<>();
+    @BeforeClass
+    public static void connect(){
+        TestUtils.switchConfigToTestMode();
+    }
+    @AfterClass
+    public static void backProperty(){
+        TestUtils.switchConfigToWorkMode();
+    }
     @Before
     public void clearFileBefore(){
         oldInfoInFileSkills = readFileContent(repoSkill);
