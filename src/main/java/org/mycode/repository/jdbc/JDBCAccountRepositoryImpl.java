@@ -31,7 +31,7 @@ public class JDBCAccountRepositoryImpl implements AccountRepository {
     }
     @Override
     public void create(Account model) throws RepoStorageException {
-        try (PreparedStatement statement = connection.prepareStatement(INSERT_QUERY)){
+        try (PreparedStatement statement = connection.prepareStatement(INSERT_QUERY, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)){
             statement.setString(1, model.getName());
             statement.setString(2, model.getStatus().toString());
             statement.execute();
@@ -43,7 +43,7 @@ public class JDBCAccountRepositoryImpl implements AccountRepository {
     }
     @Override
     public Account getById(Long readID) throws RepoStorageException, NoSuchEntryException, NotUniquePrimaryKeyException {
-        try (PreparedStatement statement = connection.prepareStatement(SELECT_QUERY)){
+        try (PreparedStatement statement = connection.prepareStatement(SELECT_QUERY, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)){
             statement.setLong(1, readID);
             ResultSet resultSet = statement.executeQuery();
             if(resultSet.absolute(2)){
@@ -60,7 +60,7 @@ public class JDBCAccountRepositoryImpl implements AccountRepository {
     }
     @Override
     public void update(Account updatedModel) throws RepoStorageException, NoSuchEntryException {
-        try (PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY)){
+        try (PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)){
             statement.setString(1, updatedModel.getName());
             statement.setString(2, updatedModel.getStatus().toString());
             statement.setLong(3, updatedModel.getId());
@@ -76,7 +76,7 @@ public class JDBCAccountRepositoryImpl implements AccountRepository {
     }
     @Override
     public void delete(Long deletedEntry) throws RepoStorageException, NoSuchEntryException {
-        try (PreparedStatement statement = connection.prepareStatement(DELETE_QUERY)){
+        try (PreparedStatement statement = connection.prepareStatement(DELETE_QUERY, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)){
             statement.setLong(1, deletedEntry);
             if(statement.executeUpdate()<1){
                 log.warn("No such entry with ID: "+deletedEntry);
@@ -90,7 +90,7 @@ public class JDBCAccountRepositoryImpl implements AccountRepository {
     }
     @Override
     public List<Account> getAll() throws RepoStorageException, NoSuchEntryException {
-        try (PreparedStatement statement = connection.prepareStatement(SELECT_ALL_QUERY)){
+        try (PreparedStatement statement = connection.prepareStatement(SELECT_ALL_QUERY, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)){
             ResultSet resultSet = statement.executeQuery();
             ArrayList<Account> accounts = new ArrayList<>();
             JDBCAccountMapper mapper = new JDBCAccountMapper();

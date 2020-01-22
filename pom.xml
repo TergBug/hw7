@@ -126,15 +126,26 @@
         <groupId>org.liquibase</groupId>
         <artifactId>liquibase-maven-plugin</artifactId>
         <version>3.8.4</version>
-        <configuration>
-          <propertyFile>src/main/resources/liquibase/liquibase.properties</propertyFile>
-        </configuration>
         <executions>
           <execution>
+            <id>work</id>
             <phase>process-resources</phase>
             <goals>
               <goal>update</goal>
             </goals>
+            <configuration>
+              <propertyFile>src/main/resources/liquibase/liquibase.properties</propertyFile>
+            </configuration>
+          </execution>
+          <execution>
+            <id>test</id>
+            <phase>process-test-resources</phase>
+            <goals>
+              <goal>update</goal>
+            </goals>
+            <configuration>
+              <propertyFile>src/test/resources/liquibase/liquibase.properties</propertyFile>
+            </configuration>
           </execution>
         </executions>
       </plugin>

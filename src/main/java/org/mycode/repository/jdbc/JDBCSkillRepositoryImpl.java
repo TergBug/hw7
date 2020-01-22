@@ -31,7 +31,7 @@ public class JDBCSkillRepositoryImpl implements SkillRepository {
     }
     @Override
     public void create(Skill model) throws RepoStorageException {
-        try (PreparedStatement statement = connection.prepareStatement(INSERT_QUERY)){
+        try (PreparedStatement statement = connection.prepareStatement(INSERT_QUERY, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)){
             statement.setString(1, model.getName());
             statement.execute();
             log.debug("Create entry(DB): "+model);
@@ -42,7 +42,7 @@ public class JDBCSkillRepositoryImpl implements SkillRepository {
     }
     @Override
     public Skill getById(Long readID) throws RepoStorageException, NoSuchEntryException, NotUniquePrimaryKeyException {
-        try (PreparedStatement statement = connection.prepareStatement(SELECT_QUERY)){
+        try (PreparedStatement statement = connection.prepareStatement(SELECT_QUERY, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)){
             statement.setLong(1, readID);
             ResultSet resultSet = statement.executeQuery();
             if(resultSet.absolute(2)){
@@ -60,7 +60,7 @@ public class JDBCSkillRepositoryImpl implements SkillRepository {
     }
     @Override
     public void update(Skill updatedModel) throws RepoStorageException, NoSuchEntryException {
-        try (PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY)){
+        try (PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)){
             statement.setString(1, updatedModel.getName());
             statement.setLong(2, updatedModel.getId());
             if(statement.executeUpdate()<1){
@@ -75,7 +75,7 @@ public class JDBCSkillRepositoryImpl implements SkillRepository {
     }
     @Override
     public void delete(Long deletedEntry) throws RepoStorageException, NoSuchEntryException {
-        try (PreparedStatement statement = connection.prepareStatement(DELETE_QUERY)){
+        try (PreparedStatement statement = connection.prepareStatement(DELETE_QUERY, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)){
             statement.setLong(1, deletedEntry);
             if(statement.executeUpdate()<1){
                 log.warn("No such entry with ID: "+deletedEntry);
@@ -89,7 +89,7 @@ public class JDBCSkillRepositoryImpl implements SkillRepository {
     }
     @Override
     public List<Skill> getAll() throws RepoStorageException, NoSuchEntryException {
-        try (PreparedStatement statement = connection.prepareStatement(SELECT_ALL_QUERY)){
+        try (PreparedStatement statement = connection.prepareStatement(SELECT_ALL_QUERY, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)){
             ResultSet resultSet = statement.executeQuery();
             ArrayList<Skill> skills = new ArrayList<>();
             JDBCSkillMapper mapper = new JDBCSkillMapper();

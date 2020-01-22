@@ -30,7 +30,7 @@ public class JDBCDeveloperRepositoryImpl implements DeveloperRepository {
     }
     @Override
     public void create(Developer model) throws RepoStorageException {
-        try (Statement statement = connection.createStatement()){
+        try (Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)){
             connection.setAutoCommit(false);
             String insertToDevelopersTableQuery = "insert into developers(first_name, last_name, account_id) " +
                     "values ('"+model.getFirstName()+"', '"+model.getLastName()+"', '"+model.getAccount().getId()+"');";
@@ -58,7 +58,7 @@ public class JDBCDeveloperRepositoryImpl implements DeveloperRepository {
     }
     @Override
     public Developer getById(Long readID) throws RepoStorageException, NoSuchEntryException {
-        try (Statement statement = connection.createStatement()){
+        try (Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)){
             connection.setAutoCommit(false);
             String selectQuery = "select d.id, d.first_name, d.last_name, s.id, s.name, a.id, a.name, a.status " +
                     "from developers d " +
@@ -89,7 +89,7 @@ public class JDBCDeveloperRepositoryImpl implements DeveloperRepository {
     }
     @Override
     public void update(Developer updatedModel) throws RepoStorageException, NoSuchEntryException {
-        try (Statement statement = connection.createStatement()){
+        try (Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)){
             connection.setAutoCommit(false);
             String updateQuery = "update developers " +
                     "set first_name='"+updatedModel.getFirstName()+"', " +
@@ -126,7 +126,7 @@ public class JDBCDeveloperRepositoryImpl implements DeveloperRepository {
     }
     @Override
     public void delete(Long deletedEntry) throws RepoStorageException, NoSuchEntryException {
-        try (Statement statement = connection.createStatement()){
+        try (Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)){
             connection.setAutoCommit(false);
             statement.execute("delete from developer_skill where developer_id='"+deletedEntry+"';");
             String deleteQuery = "delete from developers where id='"+deletedEntry+"';";
@@ -154,7 +154,7 @@ public class JDBCDeveloperRepositoryImpl implements DeveloperRepository {
     }
     @Override
     public List<Developer> getAll() throws RepoStorageException, NoSuchEntryException {
-        try (Statement statement = connection.createStatement()){
+        try (Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)){
             connection.setAutoCommit(false);
             String selectQuery = "select d.id, d.first_name, d.last_name, s.id, s.name, a.id, a.name, a.status " +
                     "from developers d " +

@@ -7,22 +7,22 @@ import static org.junit.Assert.*;
 public class JDBCDeveloperRepositoryImplTest {
 
     @Test
-    public void create() {
+    public void shouldCreate() {
     }
 
     @Test
-    public void getById() {
+    public void shouldGetById() {
     }
 
     @Test
-    public void update() {
+    public void shouldUpdate() {
     }
 
     @Test
-    public void delete() {
+    public void shouldDelete() {
     }
 
     @Test
-    public void getAll() {
+    public void shouldGetAll() {
     }
 }

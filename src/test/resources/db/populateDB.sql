@@ -1,7 +1,8 @@
-use developerCRUD;
+set schema public;
 insert into skills(name) values ('Java');
 insert into skills(name) values ('C#');
 insert into skills(name) values ('JDBC');
+insert into skills(name) values ('JSON');
 insert into accounts(name, status) values ('LiXiao', 'ACTIVE');
 insert into accounts(name, status) values ('Din', 'DELETED');
 insert into accounts(name, status) values ('Geek', 'BANNED');
