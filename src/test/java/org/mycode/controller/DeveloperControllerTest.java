@@ -1,49 +1,47 @@
 package org.mycode.controller;
 
 import org.junit.*;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.mycode.exceptions.IncorrectRequestException;
 import org.mycode.exceptions.RepoStorageException;
 import org.mycode.model.Account;
-import org.mycode.model.AccountStatus;
 import org.mycode.model.Developer;
 import org.mycode.model.Skill;
+import org.mycode.service.DeveloperService;
+import org.mycode.service.TypeOfStorage;
 import org.mycode.testutil.TestUtils;
-import org.mycode.util.JavaIOUtils;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
+@RunWith(MockitoJUnitRunner.class)
 public class DeveloperControllerTest {
+    @InjectMocks
     private DeveloperController testedDeveloperController = DeveloperController.getInstance();
+    @Mock
+    private DeveloperService service;
     private String incorrectRequestExceptionStr = "org.mycode.exceptions.IncorrectRequestException";
-    private File repoSkill = JavaIOUtils.getSkillRepo();
-    private File repoAccount = JavaIOUtils.getAccountRepo();
-    private File repoDeveloper = JavaIOUtils.getDeveloperRepo();
-    private String newInfoInFileSkills = "<{*1*}{Java}><{*2*}{C#}><{*3*}{JDBC}><{*4*}{JSON}>";
-    private String newInfoInFileAccounts = "<{*1*}{LiXiao}{ACTIVE}><{*2*}{Din}{DELETED}><{*3*}{Geek}{BANNED}><{*4*}{Ford}{ACTIVE}>";
-    private String newInfoInFileDevelopers = "<{*1*}{Din}{Ford}{[1][3]}{[2]}><{*2*}{Xiaoming}{Li}{[2]}{[1]}><{*3*}{Gird}{Long}{[1][2]}{[3]}>";
-    private String oldInfoInFileSkills = "";
-    private String oldInfoInFileAccounts = "";
-    private String oldInfoInFileDevelopers = "";
     private String createRequest = "c|0|Fred|Lord|2,3|1";
     private String readRequest = "r|1";
     private String updateRequest = "u|2|Dorf|Ford|1,3|3";
     private String deleteRequest = "d|4";
     private String getAllRequest = "g";
+    private String changeStorageToDBRequest = "db";
+    private String changeStorageToFileRequest = "f";
     private String wrongRequest = "p";
-    private Developer readDeveloper = new Developer(1L, "Din", "Ford",
-            Arrays.stream(new Skill[]{new Skill(1L, "Java"), new Skill(3L, "JDBC")}).collect(Collectors.toSet()),
-            new Account(2L, "Din", AccountStatus.DELETED));
-    private ArrayList<Developer> allDevelopers = new ArrayList<>();
+    private Developer createDeveloper = new Developer(0L, "Fred", "Lord",
+            Arrays.stream(new Skill[]{new Skill(2L), new Skill(3L)}).collect(Collectors.toSet()),
+            new Account(1L));
+    private Developer updateDeveloper = new Developer(2L, "Dorf", "Ford",
+            Arrays.stream(new Skill[]{new Skill(1L), new Skill(3L)}).collect(Collectors.toSet()),
+            new Account(3L));
     public DeveloperControllerTest() throws RepoStorageException { }
     @BeforeClass
     public static void connect(){
@@ -53,60 +51,30 @@ public class DeveloperControllerTest {
     public static void backProperty(){
         TestUtils.switchConfigToWorkMode();
     }
-    @Before
-    public void loadFileBefore(){
-        Collections.addAll(allDevelopers, new Developer(1L, "Din", "Ford",
-                        Arrays.stream(new Skill[]{new Skill(1L, "Java"), new Skill(3L, "JDBC")}).collect(Collectors.toSet()),
-                        new Account(2L, "Din", AccountStatus.DELETED)),
-                new Developer(2L, "Xiaoming", "Li",
-                        Arrays.stream(new Skill[]{new Skill(2L, "C#")}).collect(Collectors.toSet()),
-                        new Account(1L, "LiXiao", AccountStatus.ACTIVE)),
-                new Developer(3L, "Gird", "Long",
-                        Arrays.stream(new Skill[]{new Skill(1L, "Java"), new Skill(2L, "C#")}).collect(Collectors.toSet()),
-                        new Account(3L, "Geek", AccountStatus.BANNED)),
-                new Developer(4L, "Gordon", "Fong",
-                        new HashSet<>(),
-                        new Account(1L, "LiXiao", AccountStatus.ACTIVE)));
-        oldInfoInFileSkills = readFileContent(repoSkill);
-        oldInfoInFileAccounts = readFileContent(repoAccount);
-        oldInfoInFileDevelopers = readFileContent(repoDeveloper);
-        fillFile(repoSkill, newInfoInFileSkills);
-        fillFile(repoAccount, newInfoInFileAccounts);
-        fillFile(repoDeveloper, newInfoInFileDevelopers);
-    }
-    @After
-    public void backOldInfo(){
-        fillFile(repoSkill, oldInfoInFileSkills);
-        fillFile(repoAccount, oldInfoInFileAccounts);
-        fillFile(repoDeveloper, oldInfoInFileDevelopers);
-    }
     @Test
     public void shouldComputeRequest() {
         String exceptionStr = "";
         try {
-            assertEquals(allDevelopers, testedDeveloperController.request(getAllRequest));
-            assertEquals(0, testedDeveloperController.request(createRequest).size());
-            assertEquals(readDeveloper, testedDeveloperController.request(readRequest).get(0));
-            assertEquals(0, testedDeveloperController.request(updateRequest).size());
-            assertEquals(0, testedDeveloperController.request(deleteRequest).size());
+            testedDeveloperController.request(createRequest);
+            verify(service, times(1)).create(createDeveloper);
+            testedDeveloperController.request(readRequest);
+            verify(service, times(1)).getById(1L);
+            testedDeveloperController.request(updateRequest);
+            verify(service, times(1)).update(updateDeveloper);
+            testedDeveloperController.request(deleteRequest);
+            verify(service, times(1)).delete(4L);
+            testedDeveloperController.request(getAllRequest);
+            verify(service, times(1)).getAll();
+            testedDeveloperController.request(changeStorageToDBRequest);
+            verify(service, times(1)).changeStorage(TypeOfStorage.DATABASE);
+            testedDeveloperController.request(changeStorageToFileRequest);
+            verify(service, times(1)).changeStorage(TypeOfStorage.FILES);
             testedDeveloperController.request(wrongRequest);
-        } catch (IncorrectRequestException e) {
-            exceptionStr = e.toString();
+        } catch (Exception e) {
+            if(e instanceof IncorrectRequestException) {
+                exceptionStr = e.toString();
+            }
         }
         assertEquals(incorrectRequestExceptionStr, exceptionStr);
-    }
-    private void fillFile(File repo, String infoToWrite){
-        try (FileWriter fw = new FileWriter(repo, false)){
-            fw.write(infoToWrite);
-            fw.flush();
-        } catch (IOException e) { e.printStackTrace(); }
-    }
-    private String readFileContent(File repo){
-        String content = "";
-        try (FileReader fr = new FileReader(repo)){
-            int c;
-            while ((c=fr.read()) != -1) content+=(char) c;
-        } catch (IOException e) { e.printStackTrace(); }
-        return content;
     }
 }

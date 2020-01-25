@@ -1,35 +1,37 @@
 package org.mycode.controller;
 
 import org.junit.*;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.mycode.exceptions.IncorrectRequestException;
 import org.mycode.exceptions.RepoStorageException;
 import org.mycode.model.Skill;
+import org.mycode.service.SkillService;
+import org.mycode.service.TypeOfStorage;
 import org.mycode.testutil.TestUtils;
-import org.mycode.util.JavaIOUtils;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-
+import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class SkillControllerTest {
+    @InjectMocks
     private SkillController testedSkillController = SkillController.getInstance();
+    @Mock
+    private SkillService service;
     private String incorrectRequestExceptionStr = "org.mycode.exceptions.IncorrectRequestException";
-    private File repo = JavaIOUtils.getSkillRepo();
-    private String newInfoInFile = "<{*1*}{Java}><{*2*}{C#}><{*3*}{JDBC}><{*4*}{JSON}>";
-    private String oldInfoInFile = "";
     private String createRequest = "c|0|Python";
     private String readRequest = "r|1";
     private String updateRequest = "u|2|DB";
     private String deleteRequest = "d|4";
     private String getAllRequest = "g";
+    private String changeStorageToDBRequest = "db";
+    private String changeStorageToFileRequest = "f";
     private String wrongRequest = "p";
-    private Skill readSkill = new Skill(1L, "Java");
-    private ArrayList<Skill> allSkills = new ArrayList<>();
+    private Skill createSkill = new Skill(0L, "Python");
+    private Skill updateSkill = new Skill(2L, "DB");
     public SkillControllerTest() throws RepoStorageException { }
     @BeforeClass
     public static void connect(){
@@ -39,46 +41,30 @@ public class SkillControllerTest {
     public static void backProperty(){
         TestUtils.switchConfigToWorkMode();
     }
-    @Before
-    public void loadFileBefore(){
-        Collections.addAll(allSkills, new Skill(1L, "Java"),
-                new Skill(2L, "C#"),
-                new Skill(3L, "JDBC"),
-                new Skill(4L, "JSON"));
-        oldInfoInFile = readFileContent();
-        fillFile(newInfoInFile);
-    }
-    @After
-    public void backOldInfo(){
-        fillFile(oldInfoInFile);
-    }
     @Test
     public void shouldComputeRequest() {
         String exceptionStr = "";
         try {
-            assertEquals(allSkills, testedSkillController.request(getAllRequest));
-            assertEquals(0, testedSkillController.request(createRequest).size());
-            assertEquals(readSkill, testedSkillController.request(readRequest).get(0));
-            assertEquals(0, testedSkillController.request(updateRequest).size());
-            assertEquals(0, testedSkillController.request(deleteRequest).size());
+            testedSkillController.request(createRequest);
+            verify(service, times(1)).create(createSkill);
+            testedSkillController.request(readRequest);
+            verify(service, times(1)).getById(1L);
+            testedSkillController.request(updateRequest);
+            verify(service, times(1)).update(updateSkill);
+            testedSkillController.request(deleteRequest);
+            verify(service, times(1)).delete(4L);
+            testedSkillController.request(getAllRequest);
+            verify(service, times(1)).getAll();
+            testedSkillController.request(changeStorageToDBRequest);
+            verify(service, times(1)).changeStorage(TypeOfStorage.DATABASE);
+            testedSkillController.request(changeStorageToFileRequest);
+            verify(service, times(1)).changeStorage(TypeOfStorage.FILES);
             testedSkillController.request(wrongRequest);
-        } catch (IncorrectRequestException e) {
-            exceptionStr = e.toString();
+        } catch (Exception e) {
+            if(e instanceof IncorrectRequestException) {
+                exceptionStr = e.toString();
+            }
         }
         assertEquals(incorrectRequestExceptionStr, exceptionStr);
-    }
-    private void fillFile(String infoToWrite){
-        try (FileWriter fw = new FileWriter(repo, false)){
-            fw.write(infoToWrite);
-            fw.flush();
-        } catch (IOException e) { e.printStackTrace(); }
-    }
-    private String readFileContent(){
-        String content = "";
-        try (FileReader fr = new FileReader(repo)){
-            int c;
-            while ((c=fr.read()) != -1) content+=(char) c;
-        } catch (IOException e) { e.printStackTrace(); }
-        return content;
     }
 }
