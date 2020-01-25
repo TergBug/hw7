@@ -149,3 +149,132 @@ Account: Din DELETED
 2020-01-23 01:18:28 DEBUG JDBCSkillRepositoryImplTest:91 - Update
 2020-01-23 01:18:28 DEBUG JDBCSkillRepositoryImpl:54 - Read entry(DB) with ID: 2
 2020-01-23 01:18:28 DEBUG JDBCSkillRepositoryImplTest:79 - Read
+2020-01-25 16:50:24 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 16:50:25 DEBUG SkillService:22 - Service->Create
+2020-01-25 16:51:00 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 16:51:08 DEBUG SkillService:22 - Service->Create
+2020-01-25 16:51:50 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 16:51:53 DEBUG SkillService:22 - Service->Create
+2020-01-25 16:52:49 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 16:52:50 DEBUG SkillService:22 - Service->Create
+2020-01-25 16:53:48 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 16:53:49 DEBUG JDBCSkillRepositoryImpl:37 - Create entry(DB): 5 Java
+2020-01-25 16:53:49 DEBUG SkillService:22 - Service->Create
+2020-01-25 16:55:50 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 16:55:50 DEBUG SkillService:22 - Service->Create
+2020-01-25 16:59:28 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 16:59:29 DEBUG SkillService:26 - Service->Read
+2020-01-25 17:00:10 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 17:00:11 DEBUG SkillService:31 - Service->Update
+2020-01-25 17:00:56 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 17:00:57 DEBUG SkillService:35 - Service->Delete
+2020-01-25 17:01:22 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 17:01:23 DEBUG SkillService:39 - Service->Get all
+2020-01-25 17:14:13 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 17:17:52 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 17:18:42 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 17:20:52 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 17:21:36 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 17:39:18 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 17:44:09 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 17:44:10 DEBUG SkillService:47 - Service->Switch to files
+2020-01-25 17:44:36 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 17:50:49 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 17:50:50 DEBUG JDBCSkillRepositoryImpl:37 - Create entry(DB): 5 Java
+2020-01-25 17:50:50 DEBUG SkillService:22 - Service->Create
+2020-01-25 19:33:42 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:33:44 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:33:44 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:33:44 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:33:44 DEBUG SkillService:54 - Service->Switch to files
+2020-01-25 19:33:44 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:33:44 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:33:44 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:35:07 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:35:08 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:35:08 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:35:08 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:35:08 DEBUG SkillService:54 - Service->Switch to files
+2020-01-25 19:35:08 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:35:08 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:35:08 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:36:51 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:36:52 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:36:52 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:36:52 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:36:52 DEBUG SkillService:54 - Service->Switch to files
+2020-01-25 19:36:52 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:36:52 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:36:52 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:37:29 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:38:25 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:38:32 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:38:32 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:38:32 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:38:32 DEBUG SkillService:54 - Service->Switch to files
+2020-01-25 19:38:32 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:38:32 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:38:32 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:41:12 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:41:13 DEBUG SkillService:46 - Service->Get all
+2020-01-25 19:41:13 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:41:13 DEBUG SkillService:29 - Service->Create
+2020-01-25 19:41:13 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:41:13 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:41:13 DEBUG SkillService:54 - Service->Switch to files
+2020-01-25 19:41:13 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:41:13 DEBUG SkillService:38 - Service->Update
+2020-01-25 19:41:13 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:41:13 DEBUG SkillService:42 - Service->Delete
+2020-01-25 19:41:13 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:41:13 DEBUG SkillService:33 - Service->Read
+2020-01-25 19:42:15 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:42:16 DEBUG SkillService:46 - Service->Get all
+2020-01-25 19:42:16 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:42:16 DEBUG SkillService:29 - Service->Create
+2020-01-25 19:42:16 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:42:16 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:42:16 DEBUG SkillService:38 - Service->Update
+2020-01-25 19:42:16 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:42:16 DEBUG SkillService:42 - Service->Delete
+2020-01-25 19:42:16 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:42:16 DEBUG SkillService:33 - Service->Read
+2020-01-25 19:42:41 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:42:42 DEBUG SkillService:46 - Service->Get all
+2020-01-25 19:42:42 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:42:42 DEBUG SkillService:29 - Service->Create
+2020-01-25 19:42:42 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:42:42 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:42:42 DEBUG SkillService:54 - Service->Switch to files
+2020-01-25 19:42:42 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:42:42 DEBUG SkillService:38 - Service->Update
+2020-01-25 19:42:42 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:42:42 DEBUG SkillService:42 - Service->Delete
+2020-01-25 19:42:42 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:42:42 DEBUG SkillService:33 - Service->Read
+2020-01-25 19:57:31 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:57:31 DEBUG AccountService:46 - Service->Get all
+2020-01-25 19:57:31 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:57:31 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:57:31 DEBUG AccountService:54 - Service->Switch to files
+2020-01-25 19:57:31 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:57:31 DEBUG AccountService:29 - Service->Create
+2020-01-25 19:57:32 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:57:32 DEBUG AccountService:38 - Service->Update
+2020-01-25 19:57:32 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:57:32 DEBUG AccountService:42 - Service->Delete
+2020-01-25 19:57:32 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:57:32 DEBUG AccountService:33 - Service->Read
+2020-01-25 19:57:42 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:57:42 DEBUG DeveloperService:46 - Service->Get all
+2020-01-25 19:57:42 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:57:42 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:57:42 DEBUG DeveloperService:54 - Service->Switch to files
+2020-01-25 19:57:42 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:57:42 DEBUG DeveloperService:29 - Service->Create
+2020-01-25 19:57:42 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:57:42 DEBUG DeveloperService:38 - Service->Update
+2020-01-25 19:57:42 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:57:42 DEBUG DeveloperService:42 - Service->Delete
+2020-01-25 19:57:42 DEBUG JDBCConnectionUtil:28 - Getting connection from pool
+2020-01-25 19:57:42 DEBUG DeveloperService:33 - Service->Read

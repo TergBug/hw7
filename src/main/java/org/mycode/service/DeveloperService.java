@@ -11,11 +11,18 @@ import java.util.List;
 
 public class DeveloperService {
     private static final Logger log = Logger.getLogger(DeveloperService.class);
-    private JavaIODeveloperRepositoryImpl javaIORepo = new JavaIODeveloperRepositoryImpl();
-    private JDBCDeveloperRepositoryImpl jdbcRepo = new JDBCDeveloperRepositoryImpl();
+    private JavaIODeveloperRepositoryImpl javaIORepo;
+    private JDBCDeveloperRepositoryImpl jdbcRepo;
     private DeveloperRepository currentRepo;
     public DeveloperService() throws RepoStorageException {
+        javaIORepo = new JavaIODeveloperRepositoryImpl();
+        jdbcRepo = new JDBCDeveloperRepositoryImpl();
         this.currentRepo = jdbcRepo;
+    }
+    public DeveloperService(DeveloperRepository currentRepo) throws RepoStorageException {
+        javaIORepo = (currentRepo instanceof JavaIODeveloperRepositoryImpl) ? (JavaIODeveloperRepositoryImpl) currentRepo : new JavaIODeveloperRepositoryImpl();
+        jdbcRepo = (currentRepo instanceof JDBCDeveloperRepositoryImpl) ? (JDBCDeveloperRepositoryImpl) currentRepo : new JDBCDeveloperRepositoryImpl();
+        this.currentRepo = currentRepo;
     }
     public void create(Developer model) throws Exception{
         currentRepo.create(model);
@@ -54,5 +61,8 @@ public class DeveloperService {
                 }
                 break;
         }
+    }
+    public DeveloperRepository getCurrentRepo() {
+        return currentRepo;
     }
 }

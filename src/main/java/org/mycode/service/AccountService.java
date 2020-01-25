@@ -11,11 +11,18 @@ import java.util.List;
 
 public class AccountService {
     private static final Logger log = Logger.getLogger(AccountService.class);
-    private JavaIOAccountRepositoryImpl javaIORepo = new JavaIOAccountRepositoryImpl();
-    private JDBCAccountRepositoryImpl jdbcRepo = new JDBCAccountRepositoryImpl();
+    private JavaIOAccountRepositoryImpl javaIORepo;
+    private JDBCAccountRepositoryImpl jdbcRepo;
     private AccountRepository currentRepo;
     public AccountService() throws RepoStorageException {
+        javaIORepo = new JavaIOAccountRepositoryImpl();
+        jdbcRepo = new JDBCAccountRepositoryImpl();
         this.currentRepo = jdbcRepo;
+    }
+    public AccountService(AccountRepository currentRepo) throws RepoStorageException {
+        javaIORepo = (currentRepo instanceof JavaIOAccountRepositoryImpl) ? (JavaIOAccountRepositoryImpl) currentRepo : new JavaIOAccountRepositoryImpl();
+        jdbcRepo = (currentRepo instanceof JDBCAccountRepositoryImpl) ? (JDBCAccountRepositoryImpl) currentRepo : new JDBCAccountRepositoryImpl();
+        this.currentRepo = currentRepo;
     }
     public void create(Account model) throws Exception{
         currentRepo.create(model);
@@ -54,5 +61,8 @@ public class AccountService {
                 }
                 break;
         }
+    }
+    public AccountRepository getCurrentRepo() {
+        return currentRepo;
     }
 }

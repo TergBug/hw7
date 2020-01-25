@@ -11,11 +11,18 @@ import java.util.List;
 
 public class SkillService {
     private static final Logger log = Logger.getLogger(SkillService.class);
-    private JavaIOSkillRepositoryImpl javaIORepo = new JavaIOSkillRepositoryImpl();
-    private JDBCSkillRepositoryImpl jdbcRepo = new JDBCSkillRepositoryImpl();
+    private JavaIOSkillRepositoryImpl javaIORepo;
+    private JDBCSkillRepositoryImpl jdbcRepo;
     private SkillRepository currentRepo;
     public SkillService() throws RepoStorageException {
+        javaIORepo = new JavaIOSkillRepositoryImpl();
+        jdbcRepo = new JDBCSkillRepositoryImpl();
         this.currentRepo = jdbcRepo;
+    }
+    public SkillService(SkillRepository currentRepo) throws RepoStorageException {
+        javaIORepo = (currentRepo instanceof JavaIOSkillRepositoryImpl) ? (JavaIOSkillRepositoryImpl) currentRepo : new JavaIOSkillRepositoryImpl();
+        jdbcRepo = (currentRepo instanceof JDBCSkillRepositoryImpl) ? (JDBCSkillRepositoryImpl) currentRepo : new JDBCSkillRepositoryImpl();
+        this.currentRepo = currentRepo;
     }
     public void create(Skill model) throws Exception{
         currentRepo.create(model);
@@ -54,5 +61,8 @@ public class SkillService {
                 }
                 break;
         }
+    }
+    public SkillRepository getCurrentRepo() {
+        return currentRepo;
     }
 }
