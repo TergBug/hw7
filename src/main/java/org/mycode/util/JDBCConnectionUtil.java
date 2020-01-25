@@ -19,6 +19,8 @@ public class JDBCConnectionUtil {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        ds.setMaxActive(-1);
+        ds.setMaxIdle(-1);
         ds.setDriverClassName(properties.getProperty("jdbc.driver"));
         ds.setUrl(properties.getProperty("jdbc.url"));
         ds.setUsername(properties.getProperty("jdbc.user"));
