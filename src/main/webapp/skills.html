@@ -1,0 +1,34 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>Skills</title>
+</head>
+<body>
+<form action="/api/v1/skills" method="post" name="read">
+    <input type="hidden" name="type" value="read">
+    <H2>Read entry</H2>
+    <H3>Enter ID:</H3><input type="text" name="id">
+    <input type="submit" value="Submit">
+</form>
+<form action="/api/v1/skills" method="post" name="create">
+    <input type="hidden" name="type" value="create">
+    <H2>Create entry</H2>
+    <H3>Enter name:</H3><input type="text" name="name">
+    <input type="submit" value="Submit">
+</form>
+<form action="/api/v1/skills" method="post" name="update">
+    <input type="hidden" name="type" value="update">
+    <H2>Update entry</H2>
+    <H3>Enter ID:</H3><input type="text" name="id">
+    <H3>Enter name:</H3><input type="text" name="name">
+    <input type="submit" value="Submit">
+</form>
+<form action="/api/v1/skills" method="post" name="delete">
+    <input type="hidden" name="type" value="delete">
+    <H2>Delete entry</H2>
+    <H3>Enter ID:</H3><input type="text" name="id">
+    <input type="submit" value="Submit">
+</form>
+</body>
+</html>
