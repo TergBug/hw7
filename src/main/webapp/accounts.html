@@ -8,13 +8,13 @@
 <form action="/api/v1/accounts" method="post" name="read">
     <input type="hidden" name="type" value="read">
     <H2>Read entry</H2>
-    Enter ID: <input type="text" name="id">
+    Enter ID: <input type="text" name="id"><br>
     <input type="submit" value="Submit">
 </form>
 <form action="/api/v1/accounts" method="post" name="create">
     <input type="hidden" name="type" value="create">
     <H2>Create entry</H2>
-    Enter name: <input type="text" name="name">
+    Enter name: <input type="text" name="name"><br>
     Select status:<br>
     <input type="radio" name="status" value="a"> ACTIVE<br>
     <input type="radio" name="status" value="b"> BANNED<br>
@@ -24,8 +24,8 @@
 <form action="/api/v1/accounts" method="post" name="update">
     <input type="hidden" name="type" value="update">
     <H2>Update entry</H2>
-    Enter ID: <input type="text" name="id">
-    Enter name: <input type="text" name="name">
+    Enter ID: <input type="text" name="id"><br>
+    Enter name: <input type="text" name="name"><br>
     Select status:<br>
     <input type="radio" name="status" value="a"> ACTIVE<br>
     <input type="radio" name="status" value="b"> BANNED<br>
@@ -35,7 +35,7 @@
 <form action="/api/v1/accounts" method="post" name="delete">
     <input type="hidden" name="type" value="delete">
     <H2>Delete entry</H2>
-    Enter ID: <input type="text" name="id">
+    Enter ID: <input type="text" name="id"><br>
     <input type="submit" value="Submit">
 </form>
 </body>
