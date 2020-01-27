@@ -4,16 +4,16 @@ drop table if exists developers;
 drop table if exists skills;
 drop table if exists accounts;
 create table if not exists skills(
-    id int primary key auto_increment unique not null,
+    id int primary key unique not null,
     name varchar(255) unique not null
 );
 create table if not exists accounts(
-    id int primary key auto_increment unique not null,
+    id int primary key unique not null,
     name varchar(255) unique not null,
     status varchar(255)
 );
 create table if not exists developers(
-    id int primary key auto_increment unique not null,
+    id int primary key unique not null,
     first_name varchar(255),
     last_name varchar(255),
     account_id int,
