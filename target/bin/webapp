@@ -1,0 +1,128 @@
+#!/bin/sh
+# ----------------------------------------------------------------------------
+#  Copyright 2001-2006 The Apache Software Foundation.
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+# ----------------------------------------------------------------------------
+#
+#   Copyright (c) 2001-2006 The Apache Software Foundation.  All rights
+#   reserved.
+
+
+# resolve links - $0 may be a softlink
+PRG="$0"
+
+while [ -h "$PRG" ]; do
+  ls=`ls -ld "$PRG"`
+  link=`expr "$ls" : '.*-> \(.*\)$'`
+  if expr "$link" : '/.*' > /dev/null; then
+    PRG="$link"
+  else
+    PRG=`dirname "$PRG"`/"$link"
+  fi
+done
+
+PRGDIR=`dirname "$PRG"`
+BASEDIR=`cd "$PRGDIR/.." >/dev/null; pwd`
+
+# Reset the REPO variable. If you need to influence this use the environment setup file.
+REPO=
+
+
+# OS specific support.  $var _must_ be set to either true or false.
+cygwin=false;
+darwin=false;
+case "`uname`" in
+  CYGWIN*) cygwin=true ;;
+  Darwin*) darwin=true
+           if [ -z "$JAVA_VERSION" ] ; then
+             JAVA_VERSION="CurrentJDK"
+           else
+             echo "Using Java version: $JAVA_VERSION"
+           fi
+		   if [ -z "$JAVA_HOME" ]; then
+		      if [ -x "/usr/libexec/java_home" ]; then
+			      JAVA_HOME=`/usr/libexec/java_home`
+			  else
+			      JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Versions/${JAVA_VERSION}/Home
+			  fi
+           fi       
+           ;;
+esac
+
+if [ -z "$JAVA_HOME" ] ; then
+  if [ -r /etc/gentoo-release ] ; then
+    JAVA_HOME=`java-config --jre-home`
+  fi
+fi
+
+# For Cygwin, ensure paths are in UNIX format before anything is touched
+if $cygwin ; then
+  [ -n "$JAVA_HOME" ] && JAVA_HOME=`cygpath --unix "$JAVA_HOME"`
+  [ -n "$CLASSPATH" ] && CLASSPATH=`cygpath --path --unix "$CLASSPATH"`
+fi
+
+# If a specific java binary isn't specified search for the standard 'java' binary
+if [ -z "$JAVACMD" ] ; then
+  if [ -n "$JAVA_HOME"  ] ; then
+    if [ -x "$JAVA_HOME/jre/sh/java" ] ; then
+      # IBM's JDK on AIX uses strange locations for the executables
+      JAVACMD="$JAVA_HOME/jre/sh/java"
+    else
+      JAVACMD="$JAVA_HOME/bin/java"
+    fi
+  else
+    JAVACMD=`which java`
+  fi
+fi
+
+if [ ! -x "$JAVACMD" ] ; then
+  echo "Error: JAVA_HOME is not defined correctly." 1>&2
+  echo "  We cannot execute $JAVACMD" 1>&2
+  exit 1
+fi
+
+if [ -z "$REPO" ]
+then
+  REPO="$BASEDIR"/repo
+fi
+
+CLASSPATH="$BASEDIR"/etc:"$REPO"/commons-dbcp/commons-dbcp/1.4/commons-dbcp-1.4.jar:"$REPO"/commons-pool/commons-pool/1.5.4/commons-pool-1.5.4.jar:"$REPO"/org/mybatis/mybatis/3.4.5/mybatis-3.4.5.jar:"$REPO"/mysql/mysql-connector-java/8.0.15/mysql-connector-java-8.0.15.jar:"$REPO"/com/google/protobuf/protobuf-java/3.6.1/protobuf-java-3.6.1.jar:"$REPO"/org/liquibase/liquibase-core/3.8.4/liquibase-core-3.8.4.jar:"$REPO"/javax/xml/bind/jaxb-api/2.3.0/jaxb-api-2.3.0.jar:"$REPO"/org/slf4j/slf4j-api/1.7.28/slf4j-api-1.7.28.jar:"$REPO"/ch/qos/logback/logback-classic/1.2.3/logback-classic-1.2.3.jar:"$REPO"/ch/qos/logback/logback-core/1.2.3/logback-core-1.2.3.jar:"$REPO"/org/liquibase/liquibase-maven-plugin/3.8.4/liquibase-maven-plugin-3.8.4.jar:"$REPO"/org/apache/maven/maven-plugin-api/2.0/maven-plugin-api-2.0.jar:"$REPO"/org/apache/maven/maven-project/2.0/maven-project-2.0.jar:"$REPO"/org/apache/maven/maven-profile/2.0/maven-profile-2.0.jar:"$REPO"/org/apache/maven/maven-model/2.0/maven-model-2.0.jar:"$REPO"/org/apache/maven/maven-artifact-manager/2.0/maven-artifact-manager-2.0.jar:"$REPO"/org/apache/maven/maven-repository-metadata/2.0/maven-repository-metadata-2.0.jar:"$REPO"/org/apache/maven/wagon/wagon-provider-api/1.0-alpha-5/wagon-provider-api-1.0-alpha-5.jar:"$REPO"/org/codehaus/plexus/plexus-utils/1.0.4/plexus-utils-1.0.4.jar:"$REPO"/org/apache/maven/maven-artifact/2.0/maven-artifact-2.0.jar:"$REPO"/org/codehaus/plexus/plexus-container-default/1.0-alpha-8/plexus-container-default-1.0-alpha-8.jar:"$REPO"/classworlds/classworlds/1.1-alpha-2/classworlds-1.1-alpha-2.jar:"$REPO"/log4j/log4j/1.2.17/log4j-1.2.17.jar:"$REPO"/com/google/code/gson/gson/2.8.6/gson-2.8.6.jar:"$REPO"/io/swagger/core/v3/swagger-core/2.1.1/swagger-core-2.1.1.jar:"$REPO"/org/apache/commons/commons-lang3/3.7/commons-lang3-3.7.jar:"$REPO"/com/fasterxml/jackson/core/jackson-annotations/2.10.1/jackson-annotations-2.10.1.jar:"$REPO"/com/fasterxml/jackson/core/jackson-databind/2.10.1/jackson-databind-2.10.1.jar:"$REPO"/com/fasterxml/jackson/core/jackson-core/2.10.1/jackson-core-2.10.1.jar:"$REPO"/com/fasterxml/jackson/dataformat/jackson-dataformat-yaml/2.10.1/jackson-dataformat-yaml-2.10.1.jar:"$REPO"/org/yaml/snakeyaml/1.24/snakeyaml-1.24.jar:"$REPO"/com/fasterxml/jackson/datatype/jackson-datatype-jsr310/2.10.1/jackson-datatype-jsr310-2.10.1.jar:"$REPO"/io/swagger/core/v3/swagger-annotations/2.1.1/swagger-annotations-2.1.1.jar:"$REPO"/io/swagger/core/v3/swagger-models/2.1.1/swagger-models-2.1.1.jar:"$REPO"/javax/validation/validation-api/1.1.0.Final/validation-api-1.1.0.Final.jar:"$REPO"/org/apache/tomcat/embed/tomcat-embed-core/8.5.23/tomcat-embed-core-8.5.23.jar:"$REPO"/org/apache/tomcat/tomcat-annotations-api/8.5.23/tomcat-annotations-api-8.5.23.jar:"$REPO"/org/apache/tomcat/embed/tomcat-embed-jasper/8.5.23/tomcat-embed-jasper-8.5.23.jar:"$REPO"/org/apache/tomcat/embed/tomcat-embed-el/8.5.23/tomcat-embed-el-8.5.23.jar:"$REPO"/org/eclipse/jdt/ecj/3.12.3/ecj-3.12.3.jar:"$REPO"/org/apache/tomcat/tomcat-jasper/8.5.23/tomcat-jasper-8.5.23.jar:"$REPO"/org/apache/tomcat/tomcat-servlet-api/8.5.23/tomcat-servlet-api-8.5.23.jar:"$REPO"/org/apache/tomcat/tomcat-juli/8.5.23/tomcat-juli-8.5.23.jar:"$REPO"/org/apache/tomcat/tomcat-el-api/8.5.23/tomcat-el-api-8.5.23.jar:"$REPO"/org/apache/tomcat/tomcat-api/8.5.23/tomcat-api-8.5.23.jar:"$REPO"/org/apache/tomcat/tomcat-util-scan/8.5.23/tomcat-util-scan-8.5.23.jar:"$REPO"/org/apache/tomcat/tomcat-util/8.5.23/tomcat-util-8.5.23.jar:"$REPO"/org/apache/tomcat/tomcat-jasper-el/8.5.23/tomcat-jasper-el-8.5.23.jar:"$REPO"/org/apache/tomcat/tomcat-jsp-api/8.5.23/tomcat-jsp-api-8.5.23.jar:"$REPO"/org/mycode/DeveloperCRUD/1.0-SNAPSHOT/DeveloperCRUD-1.0-SNAPSHOT.war
+
+ENDORSED_DIR=
+if [ -n "$ENDORSED_DIR" ] ; then
+  CLASSPATH=$BASEDIR/$ENDORSED_DIR/*:$CLASSPATH
+fi
+
+if [ -n "$CLASSPATH_PREFIX" ] ; then
+  CLASSPATH=$CLASSPATH_PREFIX:$CLASSPATH
+fi
+
+# For Cygwin, switch paths to Windows format before running java
+if $cygwin; then
+  [ -n "$CLASSPATH" ] && CLASSPATH=`cygpath --path --windows "$CLASSPATH"`
+  [ -n "$JAVA_HOME" ] && JAVA_HOME=`cygpath --path --windows "$JAVA_HOME"`
+  [ -n "$HOME" ] && HOME=`cygpath --path --windows "$HOME"`
+  [ -n "$BASEDIR" ] && BASEDIR=`cygpath --path --windows "$BASEDIR"`
+  [ -n "$REPO" ] && REPO=`cygpath --path --windows "$REPO"`
+fi
+
+exec "$JAVACMD" $JAVA_OPTS  \
+  -classpath "$CLASSPATH" \
+  -Dapp.name="webapp" \
+  -Dapp.pid="$$" \
+  -Dapp.repo="$REPO" \
+  -Dapp.home="$BASEDIR" \
+  -Dbasedir="$BASEDIR" \
+  org.mycode.Main \
+  "$@"
