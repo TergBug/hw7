@@ -6,3 +6,170 @@
 2020-01-26 22:44:27 DEBUG JDBCAccountRepositoryImpl:100 - Read all entries(DB)
 2020-01-26 22:44:27 DEBUG AccountService:46 - Service->Get all
 2020-01-26 22:44:27 DEBUG AccountServlet:86 - Sand JSON response
+2020-01-27 18:03:15 DEBUG JDBCConnectionUtil:30 - Getting connection from pool
+2020-01-27 18:03:16 DEBUG AccountController:29 - Controller handle request: c|0|Root|ACTIVE
+2020-01-27 18:03:16 WARN  AccountController:31 - Incorrect request: c|0|Root|ACTIVE
+2020-01-27 18:03:16 DEBUG JDBCConnectionUtil:30 - Getting connection from pool
+2020-01-27 18:03:16 DEBUG DeveloperController:30 - Controller handle request: c|0|Fred|Lord|2,3|1
+2020-01-27 18:03:16 DEBUG DeveloperController:30 - Controller handle request: r|1
+2020-01-27 18:03:16 DEBUG DeveloperController:30 - Controller handle request: u|2|Dorf|Ford|1,3|3
+2020-01-27 18:03:16 DEBUG DeveloperController:30 - Controller handle request: d|4
+2020-01-27 18:03:16 DEBUG DeveloperController:30 - Controller handle request: g
+2020-01-27 18:03:16 DEBUG DeveloperController:30 - Controller handle request: db
+2020-01-27 18:03:16 DEBUG DeveloperController:30 - Controller handle request: f
+2020-01-27 18:03:16 DEBUG DeveloperController:30 - Controller handle request: p
+2020-01-27 18:03:16 WARN  DeveloperController:32 - Incorrect request: p
+2020-01-27 18:03:16 DEBUG JDBCConnectionUtil:30 - Getting connection from pool
+2020-01-27 18:03:16 DEBUG SkillController:28 - Controller handle request: c|0|Python
+2020-01-27 18:03:16 DEBUG SkillController:28 - Controller handle request: r|1
+2020-01-27 18:03:16 DEBUG SkillController:28 - Controller handle request: u|2|DB
+2020-01-27 18:03:16 DEBUG SkillController:28 - Controller handle request: d|4
+2020-01-27 18:03:16 DEBUG SkillController:28 - Controller handle request: g
+2020-01-27 18:03:16 DEBUG SkillController:28 - Controller handle request: db
+2020-01-27 18:03:16 DEBUG SkillController:28 - Controller handle request: f
+2020-01-27 18:03:16 DEBUG SkillController:28 - Controller handle request: p
+2020-01-27 18:03:16 WARN  SkillController:30 - Incorrect request: p
+2020-01-27 18:03:16 DEBUG JavaIOAccountRepositoryImpl:55 - Create entry(file): 1 LiXiao ACTIVE
+2020-01-27 18:03:16 DEBUG JavaIOAccountRepositoryImpl:55 - Create entry(file): 2 Din DELETED
+2020-01-27 18:03:16 DEBUG JavaIOAccountRepositoryImpl:55 - Create entry(file): 3 Geek BANNED
+2020-01-27 18:03:16 WARN  JavaIOAccountRepositoryImpl:46 - Not unique primary key: 2
+2020-01-27 18:03:16 DEBUG JavaIOAccountRepositoryImpl:102 - Delete entry(file) with ID: 2
+2020-01-27 18:03:16 WARN  JavaIOAccountRepositoryImpl:98 - No such entry with ID: 4
+2020-01-27 18:03:16 DEBUG JavaIOAccountRepositoryImpl:108 - Read all entries(file)
+2020-01-27 18:03:16 DEBUG JavaIOAccountRepositoryImpl:92 - Update entry(file): 2 Dorfling BANNED
+2020-01-27 18:03:16 WARN  JavaIOAccountRepositoryImpl:88 - No such entry: 4 Potter ACTIVE
+2020-01-27 18:03:16 DEBUG JavaIOAccountRepositoryImpl:74 - Read entry(file) with ID: 1
+2020-01-27 18:03:16 WARN  JavaIOAccountRepositoryImpl:67 - No such entry with ID: 4
+2020-01-27 18:03:16 DEBUG JavaIOSkillRepositoryImpl:71 - Read entry(file) with ID: 1
+2020-01-27 18:03:16 DEBUG JavaIOSkillRepositoryImpl:71 - Read entry(file) with ID: 3
+2020-01-27 18:03:16 DEBUG JavaIOAccountRepositoryImpl:74 - Read entry(file) with ID: 2
+2020-01-27 18:03:16 DEBUG JavaIODeveloperRepositoryImpl:77 - Create entry(file): 1 Din Ford
+Skills: null null 
+Account: null
+2020-01-27 18:03:16 DEBUG JavaIOSkillRepositoryImpl:71 - Read entry(file) with ID: 2
+2020-01-27 18:03:16 DEBUG JavaIOAccountRepositoryImpl:74 - Read entry(file) with ID: 1
+2020-01-27 18:03:16 DEBUG JavaIODeveloperRepositoryImpl:77 - Create entry(file): 2 Xiaoming Li
+Skills: null 
+Account: null
+2020-01-27 18:03:16 DEBUG JavaIOSkillRepositoryImpl:71 - Read entry(file) with ID: 1
+2020-01-27 18:03:16 DEBUG JavaIOSkillRepositoryImpl:71 - Read entry(file) with ID: 2
+2020-01-27 18:03:16 DEBUG JavaIOAccountRepositoryImpl:74 - Read entry(file) with ID: 3
+2020-01-27 18:03:16 DEBUG JavaIODeveloperRepositoryImpl:77 - Create entry(file): 3 Gird Long
+Skills: null null 
+Account: null
+2020-01-27 18:03:16 WARN  JavaIODeveloperRepositoryImpl:61 - Not unique primary key: 2
+2020-01-27 18:03:16 DEBUG JavaIODeveloperRepositoryImpl:124 - Delete entry(file) with ID: 2
+2020-01-27 18:03:16 WARN  JavaIODeveloperRepositoryImpl:120 - No such entry with ID: 4
+2020-01-27 18:03:16 DEBUG JavaIOSkillRepositoryImpl:71 - Read entry(file) with ID: 1
+2020-01-27 18:03:16 DEBUG JavaIOSkillRepositoryImpl:71 - Read entry(file) with ID: 3
+2020-01-27 18:03:16 DEBUG JavaIOAccountRepositoryImpl:74 - Read entry(file) with ID: 2
+2020-01-27 18:03:16 DEBUG JavaIOSkillRepositoryImpl:71 - Read entry(file) with ID: 2
+2020-01-27 18:03:16 DEBUG JavaIOAccountRepositoryImpl:74 - Read entry(file) with ID: 1
+2020-01-27 18:03:16 DEBUG JavaIOSkillRepositoryImpl:71 - Read entry(file) with ID: 1
+2020-01-27 18:03:16 DEBUG JavaIOSkillRepositoryImpl:71 - Read entry(file) with ID: 2
+2020-01-27 18:03:16 DEBUG JavaIOAccountRepositoryImpl:74 - Read entry(file) with ID: 3
+2020-01-27 18:03:16 DEBUG JavaIODeveloperRepositoryImpl:133 - Read all entries(file)
+2020-01-27 18:03:16 DEBUG JavaIOSkillRepositoryImpl:71 - Read entry(file) with ID: 1
+2020-01-27 18:03:16 DEBUG JavaIOSkillRepositoryImpl:71 - Read entry(file) with ID: 3
+2020-01-27 18:03:16 DEBUG JavaIOAccountRepositoryImpl:74 - Read entry(file) with ID: 3
+2020-01-27 18:03:16 DEBUG JavaIODeveloperRepositoryImpl:114 - Update entry(file): 2 Dorf Ford
+Skills: Java JDBC 
+Account: Geek BANNED
+2020-01-27 18:03:16 WARN  JavaIODeveloperRepositoryImpl:110 - No such entry: 4 Sirius Black
+Skills: Java 
+Account: Din DELETED
+2020-01-27 18:03:16 DEBUG JavaIODeveloperRepositoryImpl:96 - Read entry(file) with ID: 1
+2020-01-27 18:03:16 DEBUG JavaIOSkillRepositoryImpl:71 - Read entry(file) with ID: 1
+2020-01-27 18:03:16 DEBUG JavaIOSkillRepositoryImpl:71 - Read entry(file) with ID: 3
+2020-01-27 18:03:16 DEBUG JavaIOAccountRepositoryImpl:74 - Read entry(file) with ID: 2
+2020-01-27 18:03:16 WARN  JavaIODeveloperRepositoryImpl:89 - No such entry with ID: 4
+2020-01-27 18:03:16 DEBUG JavaIOSkillRepositoryImpl:52 - Create entry(file): 1 Java
+2020-01-27 18:03:16 DEBUG JavaIOSkillRepositoryImpl:52 - Create entry(file): 2 C#
+2020-01-27 18:03:16 DEBUG JavaIOSkillRepositoryImpl:52 - Create entry(file): 3 JDBC
+2020-01-27 18:03:16 WARN  JavaIOSkillRepositoryImpl:45 - Not unique primary key: 2
+2020-01-27 18:03:16 DEBUG JavaIOSkillRepositoryImpl:99 - Delete entry(file) with ID: 2
+2020-01-27 18:03:16 WARN  JavaIOSkillRepositoryImpl:95 - No such entry with ID: 4
+2020-01-27 18:03:16 DEBUG JavaIOSkillRepositoryImpl:105 - Read all entries(file)
+2020-01-27 18:03:16 DEBUG JavaIOSkillRepositoryImpl:89 - Update entry(file): 2 DB
+2020-01-27 18:03:16 WARN  JavaIOSkillRepositoryImpl:85 - No such entry: 4 DB
+2020-01-27 18:03:16 DEBUG JavaIOSkillRepositoryImpl:71 - Read entry(file) with ID: 1
+2020-01-27 18:03:16 WARN  JavaIOSkillRepositoryImpl:64 - No such entry with ID: 4
+2020-01-27 18:03:16 DEBUG JDBCConnectionUtil:30 - Getting connection from pool
+2020-01-27 18:03:16 DEBUG JDBCConnectionUtil:30 - Getting connection from pool
+2020-01-27 18:03:16 DEBUG JDBCAccountRepositoryImpl:38 - Create entry(DB): 5 Lord ACTIVE
+2020-01-27 18:03:16 DEBUG JDBCAccountRepositoryImplTest:71 - Create
+2020-01-27 18:03:16 DEBUG JDBCAccountRepositoryImpl:85 - Delete entry(DB) with ID: 4
+2020-01-27 18:03:16 DEBUG JDBCAccountRepositoryImplTest:103 - Delete
+2020-01-27 18:03:16 DEBUG JDBCAccountRepositoryImpl:100 - Read all entries(DB)
+2020-01-27 18:03:16 DEBUG JDBCAccountRepositoryImplTest:116 - GetAll
+2020-01-27 18:03:16 DEBUG JDBCAccountRepositoryImpl:71 - Update entry(DB): 1 Ming BANNED
+2020-01-27 18:03:16 DEBUG JDBCAccountRepositoryImplTest:92 - Update
+2020-01-27 18:03:16 DEBUG JDBCAccountRepositoryImpl:54 - Read entry(DB) with ID: 2
+2020-01-27 18:03:16 DEBUG JDBCAccountRepositoryImplTest:80 - Read
+2020-01-27 18:03:16 DEBUG JDBCConnectionUtil:30 - Getting connection from pool
+2020-01-27 18:03:16 DEBUG JDBCConnectionUtil:30 - Getting connection from pool
+2020-01-27 18:03:16 DEBUG JDBCDeveloperRepositoryImpl:60 - Create entry(DB): 5 Lord Dog
+Skills: C# 
+Account: Geek BANNED
+2020-01-27 18:03:16 DEBUG JDBCDeveloperRepositoryImplTest:101 - Create
+2020-01-27 18:03:16 DEBUG JDBCDeveloperRepositoryImpl:147 - Delete entry(DB) with ID: 4
+2020-01-27 18:03:16 DEBUG JDBCDeveloperRepositoryImplTest:133 - Delete
+2020-01-27 18:03:16 DEBUG JDBCDeveloperRepositoryImpl:174 - Read all entries(DB)
+2020-01-27 18:03:16 DEBUG JDBCDeveloperRepositoryImplTest:154 - GetAll
+2020-01-27 18:03:16 DEBUG JDBCDeveloperRepositoryImpl:118 - Update entry(DB): 1 Dinis Wong
+Skills: JDBC 
+Account: Din DELETED
+2020-01-27 18:03:16 DEBUG JDBCDeveloperRepositoryImplTest:122 - Update
+2020-01-27 18:03:16 DEBUG JDBCDeveloperRepositoryImpl:79 - Read entry(DB) with ID: 2
+2020-01-27 18:03:16 DEBUG JDBCDeveloperRepositoryImplTest:110 - Read
+2020-01-27 18:03:16 DEBUG JDBCConnectionUtil:30 - Getting connection from pool
+2020-01-27 18:03:16 DEBUG JDBCConnectionUtil:30 - Getting connection from pool
+2020-01-27 18:03:16 DEBUG JDBCSkillRepositoryImpl:37 - Create entry(DB): 5 HTML
+2020-01-27 18:03:16 DEBUG JDBCSkillRepositoryImplTest:70 - Create
+2020-01-27 18:03:16 DEBUG JDBCSkillRepositoryImpl:84 - Delete entry(DB) with ID: 4
+2020-01-27 18:03:16 DEBUG JDBCSkillRepositoryImplTest:102 - Delete
+2020-01-27 18:03:17 DEBUG JDBCSkillRepositoryImpl:99 - Read all entries(DB)
+2020-01-27 18:03:17 DEBUG JDBCSkillRepositoryImplTest:115 - GetAll
+2020-01-27 18:03:17 DEBUG JDBCSkillRepositoryImpl:70 - Update entry(DB): 1 JavaScript
+2020-01-27 18:03:17 DEBUG JDBCSkillRepositoryImplTest:91 - Update
+2020-01-27 18:03:17 DEBUG JDBCSkillRepositoryImpl:54 - Read entry(DB) with ID: 2
+2020-01-27 18:03:17 DEBUG JDBCSkillRepositoryImplTest:79 - Read
+2020-01-27 18:03:17 DEBUG JDBCConnectionUtil:30 - Getting connection from pool
+2020-01-27 18:03:17 DEBUG AccountService:46 - Service->Get all
+2020-01-27 18:03:17 DEBUG JDBCConnectionUtil:30 - Getting connection from pool
+2020-01-27 18:03:17 DEBUG JDBCConnectionUtil:30 - Getting connection from pool
+2020-01-27 18:03:17 DEBUG AccountService:54 - Service->Switch to files
+2020-01-27 18:03:17 DEBUG JDBCConnectionUtil:30 - Getting connection from pool
+2020-01-27 18:03:17 DEBUG AccountService:29 - Service->Create
+2020-01-27 18:03:17 DEBUG JDBCConnectionUtil:30 - Getting connection from pool
+2020-01-27 18:03:17 DEBUG AccountService:38 - Service->Update
+2020-01-27 18:03:17 DEBUG JDBCConnectionUtil:30 - Getting connection from pool
+2020-01-27 18:03:17 DEBUG AccountService:42 - Service->Delete
+2020-01-27 18:03:17 DEBUG JDBCConnectionUtil:30 - Getting connection from pool
+2020-01-27 18:03:17 DEBUG AccountService:33 - Service->Read
+2020-01-27 18:03:17 DEBUG JDBCConnectionUtil:30 - Getting connection from pool
+2020-01-27 18:03:17 DEBUG DeveloperService:46 - Service->Get all
+2020-01-27 18:03:17 DEBUG JDBCConnectionUtil:30 - Getting connection from pool
+2020-01-27 18:03:17 DEBUG JDBCConnectionUtil:30 - Getting connection from pool
+2020-01-27 18:03:17 DEBUG DeveloperService:54 - Service->Switch to files
+2020-01-27 18:03:17 DEBUG JDBCConnectionUtil:30 - Getting connection from pool
+2020-01-27 18:03:17 DEBUG DeveloperService:29 - Service->Create
+2020-01-27 18:03:17 DEBUG JDBCConnectionUtil:30 - Getting connection from pool
+2020-01-27 18:03:17 DEBUG DeveloperService:38 - Service->Update
+2020-01-27 18:03:17 DEBUG JDBCConnectionUtil:30 - Getting connection from pool
+2020-01-27 18:03:17 DEBUG DeveloperService:42 - Service->Delete
+2020-01-27 18:03:17 DEBUG JDBCConnectionUtil:30 - Getting connection from pool
+2020-01-27 18:03:17 DEBUG DeveloperService:33 - Service->Read
+2020-01-27 18:03:17 DEBUG JDBCConnectionUtil:30 - Getting connection from pool
+2020-01-27 18:03:17 DEBUG SkillService:46 - Service->Get all
+2020-01-27 18:03:17 DEBUG JDBCConnectionUtil:30 - Getting connection from pool
+2020-01-27 18:03:17 DEBUG JDBCConnectionUtil:30 - Getting connection from pool
+2020-01-27 18:03:17 DEBUG SkillService:54 - Service->Switch to files
+2020-01-27 18:03:17 DEBUG JDBCConnectionUtil:30 - Getting connection from pool
+2020-01-27 18:03:17 DEBUG SkillService:29 - Service->Create
+2020-01-27 18:03:17 DEBUG JDBCConnectionUtil:30 - Getting connection from pool
+2020-01-27 18:03:17 DEBUG SkillService:38 - Service->Update
+2020-01-27 18:03:17 DEBUG JDBCConnectionUtil:30 - Getting connection from pool
+2020-01-27 18:03:17 DEBUG SkillService:42 - Service->Delete
+2020-01-27 18:03:17 DEBUG JDBCConnectionUtil:30 - Getting connection from pool
+2020-01-27 18:03:17 DEBUG SkillService:33 - Service->Read
