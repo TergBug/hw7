@@ -253,6 +253,7 @@
         </configuration>
         <executions>
           <execution>
+            <id>starting</id>
             <phase>package</phase>
             <goals>
               <goal>assemble</goal>
