@@ -1,5 +1,4 @@
-create database if not exists developerCRUD;
-use developerCRUD;
+use heroku_35887555ec02359;
 drop table if exists developer_skill;
 drop table if exists developers;
 drop table if exists skills;
