@@ -247,7 +247,7 @@
           <programs>
             <program>
               <mainClass>org.mycode.WebAppRunner</mainClass>
-              <name>webapp</name>
+              <id>webapp</id>
             </program>
           </programs>
         </configuration>
