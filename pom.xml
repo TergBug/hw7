@@ -257,15 +257,6 @@
           <port>8084</port>
           <path>/</path>
         </configuration>
-        <executions>
-          <execution>
-            <id>tomcat-run</id>
-            <phase>package</phase>
-            <goals>
-              <goal>run</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
 
       <plugin>
