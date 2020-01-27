@@ -1,0 +1,8 @@
+2020-01-26 22:44:27 DEBUG JDBCConnectionUtil:30 - Getting connection from pool
+2020-01-26 22:44:27 DEBUG AccountServlet:32 - POST request with type parameter
+2020-01-26 22:44:27 DEBUG AccountServlet:69 - GET request to read
+2020-01-26 22:44:27 DEBUG AccountServlet:73 - Request to get all
+2020-01-26 22:44:27 DEBUG AccountController:29 - Controller handle request: g
+2020-01-26 22:44:27 DEBUG JDBCAccountRepositoryImpl:100 - Read all entries(DB)
+2020-01-26 22:44:27 DEBUG AccountService:46 - Service->Get all
+2020-01-26 22:44:27 DEBUG AccountServlet:86 - Sand JSON response
