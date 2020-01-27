@@ -173,3 +173,313 @@ Account: Din DELETED
 2020-01-27 18:03:17 DEBUG SkillService:42 - Service->Delete
 2020-01-27 18:03:17 DEBUG JDBCConnectionUtil:30 - Getting connection from pool
 2020-01-27 18:03:17 DEBUG SkillService:33 - Service->Read
+2020-01-27 20:14:52 DEBUG JDBCConnectionUtil:30 - Getting connection from pool
+2020-01-27 20:14:52 DEBUG SkillServlet:60 - GET request to read
+2020-01-27 20:14:52 DEBUG SkillServlet:65 - Request to get all
+2020-01-27 20:14:53 DEBUG JDBCSkillRepositoryImpl:99 - Read all entries(DB)
+2020-01-27 20:14:53 DEBUG SkillService:46 - Service->Get all
+2020-01-27 20:14:53 DEBUG SkillServlet:67 - Sand JSON response
+2020-01-27 20:15:15 DEBUG SkillServlet:60 - GET request to read
+2020-01-27 20:15:15 DEBUG SkillServlet:69 - Request to get by ID
+2020-01-27 20:15:16 DEBUG JDBCSkillRepositoryImpl:54 - Read entry(DB) with ID: 2
+2020-01-27 20:15:16 DEBUG SkillService:33 - Service->Read
+2020-01-27 20:15:16 DEBUG SkillServlet:71 - Sand JSON response
+2020-01-27 20:16:27 DEBUG SkillServlet:50 - POST request to create
+2020-01-27 20:16:27 DEBUG JDBCSkillRepositoryImpl:37 - Create entry(DB): 0 Perl
+2020-01-27 20:16:27 DEBUG SkillService:29 - Service->Create
+2020-01-27 20:16:46 DEBUG SkillServlet:60 - GET request to read
+2020-01-27 20:16:46 DEBUG SkillServlet:65 - Request to get all
+2020-01-27 20:16:46 DEBUG JDBCSkillRepositoryImpl:99 - Read all entries(DB)
+2020-01-27 20:16:46 DEBUG SkillService:46 - Service->Get all
+2020-01-27 20:16:46 DEBUG SkillServlet:67 - Sand JSON response
+2020-01-27 20:17:11 DEBUG SkillServlet:50 - POST request to create
+2020-01-27 20:17:11 DEBUG JDBCSkillRepositoryImpl:37 - Create entry(DB): null Perl
+2020-01-27 20:17:11 DEBUG SkillService:29 - Service->Create
+2020-01-27 20:17:21 DEBUG SkillServlet:60 - GET request to read
+2020-01-27 20:17:21 DEBUG SkillServlet:65 - Request to get all
+2020-01-27 20:17:21 DEBUG JDBCSkillRepositoryImpl:99 - Read all entries(DB)
+2020-01-27 20:17:21 DEBUG SkillService:46 - Service->Get all
+2020-01-27 20:17:21 DEBUG SkillServlet:67 - Sand JSON response
+2020-01-27 20:17:55 DEBUG SkillServlet:50 - POST request to create
+2020-01-27 20:17:55 DEBUG JDBCSkillRepositoryImpl:37 - Create entry(DB): 0 Perl
+2020-01-27 20:17:55 DEBUG SkillService:29 - Service->Create
+2020-01-27 20:18:00 DEBUG SkillServlet:60 - GET request to read
+2020-01-27 20:18:00 DEBUG SkillServlet:65 - Request to get all
+2020-01-27 20:18:00 DEBUG JDBCSkillRepositoryImpl:99 - Read all entries(DB)
+2020-01-27 20:18:00 DEBUG SkillService:46 - Service->Get all
+2020-01-27 20:18:00 DEBUG SkillServlet:67 - Sand JSON response
+2020-01-27 20:18:17 DEBUG SkillServlet:50 - POST request to create
+2020-01-27 20:18:17 ERROR SkillServlet:54 - Cannot create entry
+com.google.gson.JsonSyntaxException: com.google.gson.stream.MalformedJsonException: Expected name at line 3 column 2 path $.id
+	at com.google.gson.Gson.fromJson(Gson.java:947)
+	at com.google.gson.Gson.fromJson(Gson.java:870)
+	at org.mycode.rest.SkillServlet.doPost(SkillServlet.java:52)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:650)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:731)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:303)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:208)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:218)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:110)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:506)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:169)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:103)
+	at org.apache.catalina.valves.AccessLogValve.invoke(AccessLogValve.java:962)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:116)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:445)
+	at org.apache.coyote.http11.AbstractHttp11Processor.process(AbstractHttp11Processor.java:1087)
+	at org.apache.coyote.AbstractProtocol$AbstractConnectionHandler.process(AbstractProtocol.java:637)
+	at org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor.run(JIoEndpoint.java:318)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.lang.Thread.run(Thread.java:748)
+Caused by: com.google.gson.stream.MalformedJsonException: Expected name at line 3 column 2 path $.id
+	at com.google.gson.stream.JsonReader.syntaxError(JsonReader.java:1564)
+	at com.google.gson.stream.JsonReader.doPeek(JsonReader.java:506)
+	at com.google.gson.stream.JsonReader.hasNext(JsonReader.java:415)
+	at com.google.gson.internal.bind.ReflectiveTypeAdapterFactory$Adapter.read(ReflectiveTypeAdapterFactory.java:216)
+	at com.google.gson.Gson.fromJson(Gson.java:932)
+	... 21 more
+2020-01-27 20:18:42 DEBUG SkillServlet:50 - POST request to create
+2020-01-27 20:18:42 ERROR JDBCSkillRepositoryImpl:39 - Wrong SQL query to DB in creation
+java.sql.SQLIntegrityConstraintViolationException: Column 'name' cannot be null
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:117)
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:97)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:970)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.execute(ClientPreparedStatement.java:387)
+	at org.apache.commons.dbcp.DelegatingPreparedStatement.execute(DelegatingPreparedStatement.java:172)
+	at org.apache.commons.dbcp.DelegatingPreparedStatement.execute(DelegatingPreparedStatement.java:172)
+	at org.mycode.repository.jdbc.JDBCSkillRepositoryImpl.create(JDBCSkillRepositoryImpl.java:36)
+	at org.mycode.repository.jdbc.JDBCSkillRepositoryImpl.create(JDBCSkillRepositoryImpl.java:16)
+	at org.mycode.service.SkillService.create(SkillService.java:28)
+	at org.mycode.rest.SkillServlet.doPost(SkillServlet.java:52)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:650)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:731)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:303)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:208)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:218)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:110)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:506)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:169)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:103)
+	at org.apache.catalina.valves.AccessLogValve.invoke(AccessLogValve.java:962)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:116)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:445)
+	at org.apache.coyote.http11.AbstractHttp11Processor.process(AbstractHttp11Processor.java:1087)
+	at org.apache.coyote.AbstractProtocol$AbstractConnectionHandler.process(AbstractProtocol.java:637)
+	at org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor.run(JIoEndpoint.java:318)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.lang.Thread.run(Thread.java:748)
+2020-01-27 20:18:42 ERROR SkillServlet:54 - Cannot create entry
+org.mycode.exceptions.RepoStorageException: Wrong SQL query to DB in creation
+	at org.mycode.repository.jdbc.JDBCSkillRepositoryImpl.create(JDBCSkillRepositoryImpl.java:40)
+	at org.mycode.repository.jdbc.JDBCSkillRepositoryImpl.create(JDBCSkillRepositoryImpl.java:16)
+	at org.mycode.service.SkillService.create(SkillService.java:28)
+	at org.mycode.rest.SkillServlet.doPost(SkillServlet.java:52)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:650)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:731)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:303)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:208)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:218)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:110)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:506)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:169)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:103)
+	at org.apache.catalina.valves.AccessLogValve.invoke(AccessLogValve.java:962)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:116)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:445)
+	at org.apache.coyote.http11.AbstractHttp11Processor.process(AbstractHttp11Processor.java:1087)
+	at org.apache.coyote.AbstractProtocol$AbstractConnectionHandler.process(AbstractProtocol.java:637)
+	at org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor.run(JIoEndpoint.java:318)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.lang.Thread.run(Thread.java:748)
+2020-01-27 20:19:01 DEBUG SkillServlet:60 - GET request to read
+2020-01-27 20:19:01 DEBUG SkillServlet:65 - Request to get all
+2020-01-27 20:19:01 DEBUG JDBCSkillRepositoryImpl:99 - Read all entries(DB)
+2020-01-27 20:19:01 DEBUG SkillService:46 - Service->Get all
+2020-01-27 20:19:01 DEBUG SkillServlet:67 - Sand JSON response
+2020-01-27 20:19:19 DEBUG SkillServlet:90 - DELETE request to delete
+2020-01-27 20:19:19 DEBUG JDBCSkillRepositoryImpl:84 - Delete entry(DB) with ID: 7
+2020-01-27 20:19:19 DEBUG SkillService:42 - Service->Delete
+2020-01-27 20:19:24 DEBUG SkillServlet:90 - DELETE request to delete
+2020-01-27 20:19:24 DEBUG JDBCSkillRepositoryImpl:84 - Delete entry(DB) with ID: 6
+2020-01-27 20:19:24 DEBUG SkillService:42 - Service->Delete
+2020-01-27 20:19:31 DEBUG SkillServlet:60 - GET request to read
+2020-01-27 20:19:31 DEBUG SkillServlet:65 - Request to get all
+2020-01-27 20:19:31 DEBUG JDBCSkillRepositoryImpl:99 - Read all entries(DB)
+2020-01-27 20:19:31 DEBUG SkillService:46 - Service->Get all
+2020-01-27 20:19:31 DEBUG SkillServlet:67 - Sand JSON response
+2020-01-27 20:21:40 DEBUG SkillServlet:60 - GET request to read
+2020-01-27 20:21:40 DEBUG SkillServlet:69 - Request to get by ID
+2020-01-27 20:21:40 DEBUG JDBCSkillRepositoryImpl:54 - Read entry(DB) with ID: 2
+2020-01-27 20:21:40 DEBUG SkillService:33 - Service->Read
+2020-01-27 20:21:40 DEBUG SkillServlet:71 - Sand JSON response
+2020-01-27 20:21:43 DEBUG SkillServlet:60 - GET request to read
+2020-01-27 20:21:43 DEBUG SkillServlet:65 - Request to get all
+2020-01-27 20:21:43 DEBUG JDBCSkillRepositoryImpl:99 - Read all entries(DB)
+2020-01-27 20:21:43 DEBUG SkillService:46 - Service->Get all
+2020-01-27 20:21:43 DEBUG SkillServlet:67 - Sand JSON response
+2020-01-27 20:23:10 DEBUG SkillServlet:50 - POST request to create
+2020-01-27 20:23:10 DEBUG JDBCSkillRepositoryImpl:37 - Create entry(DB): 0 perl
+2020-01-27 20:23:10 DEBUG SkillService:29 - Service->Create
+2020-01-27 20:23:19 DEBUG SkillServlet:60 - GET request to read
+2020-01-27 20:23:19 DEBUG SkillServlet:65 - Request to get all
+2020-01-27 20:23:19 DEBUG JDBCSkillRepositoryImpl:99 - Read all entries(DB)
+2020-01-27 20:23:19 DEBUG SkillService:46 - Service->Get all
+2020-01-27 20:23:19 DEBUG SkillServlet:67 - Sand JSON response
+2020-01-27 20:25:04 DEBUG SkillServlet:80 - PUT request to update
+2020-01-27 20:25:05 DEBUG JDBCSkillRepositoryImpl:70 - Update entry(DB): 5 SmallTalk
+2020-01-27 20:25:05 DEBUG SkillService:38 - Service->Update
+2020-01-27 20:25:09 DEBUG SkillServlet:60 - GET request to read
+2020-01-27 20:25:09 DEBUG SkillServlet:65 - Request to get all
+2020-01-27 20:25:09 DEBUG JDBCSkillRepositoryImpl:99 - Read all entries(DB)
+2020-01-27 20:25:09 DEBUG SkillService:46 - Service->Get all
+2020-01-27 20:25:09 DEBUG SkillServlet:67 - Sand JSON response
+2020-01-27 20:25:47 DEBUG SkillServlet:90 - DELETE request to delete
+2020-01-27 20:25:47 WARN  JDBCSkillRepositoryImpl:81 - No such entry with ID: 6
+2020-01-27 20:25:47 ERROR SkillServlet:99 - Cannot delete entry
+org.mycode.exceptions.NoSuchEntryException: Deleting in DB is failed
+	at org.mycode.repository.jdbc.JDBCSkillRepositoryImpl.delete(JDBCSkillRepositoryImpl.java:82)
+	at org.mycode.repository.jdbc.JDBCSkillRepositoryImpl.delete(JDBCSkillRepositoryImpl.java:16)
+	at org.mycode.service.SkillService.delete(SkillService.java:41)
+	at org.mycode.rest.SkillServlet.doDelete(SkillServlet.java:96)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:656)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:731)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:303)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:208)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:218)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:110)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:506)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:169)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:103)
+	at org.apache.catalina.valves.AccessLogValve.invoke(AccessLogValve.java:962)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:116)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:445)
+	at org.apache.coyote.http11.AbstractHttp11Processor.process(AbstractHttp11Processor.java:1087)
+	at org.apache.coyote.AbstractProtocol$AbstractConnectionHandler.process(AbstractProtocol.java:637)
+	at org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor.run(JIoEndpoint.java:318)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.lang.Thread.run(Thread.java:748)
+2020-01-27 20:25:51 DEBUG SkillServlet:60 - GET request to read
+2020-01-27 20:25:51 DEBUG SkillServlet:65 - Request to get all
+2020-01-27 20:25:51 DEBUG JDBCSkillRepositoryImpl:99 - Read all entries(DB)
+2020-01-27 20:25:51 DEBUG SkillService:46 - Service->Get all
+2020-01-27 20:25:51 DEBUG SkillServlet:67 - Sand JSON response
+2020-01-27 20:31:57 DEBUG JDBCConnectionUtil:30 - Getting connection from pool
+2020-01-27 20:31:57 DEBUG AccountServlet:69 - GET request to read
+2020-01-27 20:31:57 DEBUG AccountServlet:73 - Request to get all
+2020-01-27 20:31:57 DEBUG AccountController:29 - Controller handle request: g
+2020-01-27 20:31:57 DEBUG JDBCAccountRepositoryImpl:100 - Read all entries(DB)
+2020-01-27 20:31:57 DEBUG AccountService:46 - Service->Get all
+2020-01-27 20:31:57 DEBUG AccountServlet:86 - Sand JSON response
+2020-01-27 20:34:16 DEBUG JDBCConnectionUtil:30 - Getting connection from pool
+2020-01-27 20:34:16 DEBUG DeveloperServlet:77 - GET request to read
+2020-01-27 20:34:16 DEBUG DeveloperServlet:81 - Request to get all
+2020-01-27 20:34:16 DEBUG DeveloperController:30 - Controller handle request: g
+2020-01-27 20:34:17 DEBUG JDBCDeveloperRepositoryImpl:174 - Read all entries(DB)
+2020-01-27 20:34:17 DEBUG DeveloperService:46 - Service->Get all
+2020-01-27 20:34:17 DEBUG DeveloperServlet:94 - Sand JSON response
+2020-01-27 20:36:49 DEBUG DeveloperServlet:51 - POST request to create
+2020-01-27 20:36:49 WARN  DeveloperServlet:61 - POST request gives invalid firstName, lastName, skills, account parameters
+2020-01-27 20:42:56 DEBUG JDBCConnectionUtil:30 - Getting connection from pool
+2020-01-27 20:42:56 DEBUG DeveloperServlet:48 - POST request to create
+2020-01-27 20:42:57 DEBUG JDBCDeveloperRepositoryImpl:60 - Create entry(DB): 1 Port Forg
+Skills: null null 
+Account: null
+2020-01-27 20:42:57 DEBUG DeveloperService:29 - Service->Create
+2020-01-27 20:43:08 DEBUG DeveloperServlet:58 - GET request to read
+2020-01-27 20:43:08 DEBUG DeveloperServlet:63 - Request to get all
+2020-01-27 20:43:08 DEBUG JDBCDeveloperRepositoryImpl:174 - Read all entries(DB)
+2020-01-27 20:43:08 DEBUG DeveloperService:46 - Service->Get all
+2020-01-27 20:43:08 DEBUG DeveloperServlet:65 - Sand JSON response
+2020-01-27 20:44:00 DEBUG DeveloperServlet:78 - PUT request to update
+2020-01-27 20:44:00 DEBUG JDBCDeveloperRepositoryImpl:118 - Update entry(DB): 4 Port Forg
+Skills: null 
+Account: null
+2020-01-27 20:44:00 DEBUG DeveloperService:38 - Service->Update
+2020-01-27 20:44:07 DEBUG DeveloperServlet:58 - GET request to read
+2020-01-27 20:44:07 DEBUG DeveloperServlet:63 - Request to get all
+2020-01-27 20:44:07 DEBUG JDBCDeveloperRepositoryImpl:174 - Read all entries(DB)
+2020-01-27 20:44:07 DEBUG DeveloperService:46 - Service->Get all
+2020-01-27 20:44:07 DEBUG DeveloperServlet:65 - Sand JSON response
+2020-01-27 20:44:18 DEBUG DeveloperServlet:88 - DELETE request to delete
+2020-01-27 20:44:18 WARN  JDBCDeveloperRepositoryImpl:142 - No such entry with ID: 6
+2020-01-27 20:44:18 ERROR DeveloperServlet:97 - Cannot delete entry
+org.mycode.exceptions.NoSuchEntryException: Deleting in DB is failed
+	at org.mycode.repository.jdbc.JDBCDeveloperRepositoryImpl.delete(JDBCDeveloperRepositoryImpl.java:143)
+	at org.mycode.repository.jdbc.JDBCDeveloperRepositoryImpl.delete(JDBCDeveloperRepositoryImpl.java:15)
+	at org.mycode.service.DeveloperService.delete(DeveloperService.java:41)
+	at org.mycode.rest.DeveloperServlet.doDelete(DeveloperServlet.java:94)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:656)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:731)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:303)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:208)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:218)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:110)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:506)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:169)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:103)
+	at org.apache.catalina.valves.AccessLogValve.invoke(AccessLogValve.java:962)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:116)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:445)
+	at org.apache.coyote.http11.AbstractHttp11Processor.process(AbstractHttp11Processor.java:1087)
+	at org.apache.coyote.AbstractProtocol$AbstractConnectionHandler.process(AbstractProtocol.java:637)
+	at org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor.run(JIoEndpoint.java:318)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.lang.Thread.run(Thread.java:748)
+2020-01-27 20:44:27 DEBUG DeveloperServlet:88 - DELETE request to delete
+2020-01-27 20:44:27 DEBUG JDBCDeveloperRepositoryImpl:147 - Delete entry(DB) with ID: 4
+2020-01-27 20:44:27 DEBUG DeveloperService:42 - Service->Delete
+2020-01-27 20:44:31 DEBUG DeveloperServlet:58 - GET request to read
+2020-01-27 20:44:31 DEBUG DeveloperServlet:63 - Request to get all
+2020-01-27 20:44:31 DEBUG JDBCDeveloperRepositoryImpl:174 - Read all entries(DB)
+2020-01-27 20:44:31 DEBUG DeveloperService:46 - Service->Get all
+2020-01-27 20:44:31 DEBUG DeveloperServlet:65 - Sand JSON response
+2020-01-27 20:44:37 DEBUG DeveloperServlet:58 - GET request to read
+2020-01-27 20:44:37 DEBUG DeveloperServlet:67 - Request to get by ID
+2020-01-27 20:44:37 DEBUG JDBCDeveloperRepositoryImpl:79 - Read entry(DB) with ID: 2
+2020-01-27 20:44:37 DEBUG DeveloperService:33 - Service->Read
+2020-01-27 20:44:37 DEBUG DeveloperServlet:69 - Sand JSON response
+2020-01-27 20:44:49 DEBUG DeveloperServlet:58 - GET request to read
+2020-01-27 20:44:49 DEBUG DeveloperServlet:67 - Request to get by ID
+2020-01-27 20:44:49 WARN  JDBCDeveloperMapper:41 - No such entry with ID: 6
+2020-01-27 20:44:49 ERROR DeveloperServlet:72 - Cannot read entry
+org.mycode.exceptions.NoSuchEntryException: Reading from DB is failed
+	at org.mycode.mapping.JDBCDeveloperMapper.map(JDBCDeveloperMapper.java:42)
+	at org.mycode.repository.jdbc.JDBCDeveloperRepositoryImpl.getById(JDBCDeveloperRepositoryImpl.java:78)
+	at org.mycode.repository.jdbc.JDBCDeveloperRepositoryImpl.getById(JDBCDeveloperRepositoryImpl.java:15)
+	at org.mycode.service.DeveloperService.getById(DeveloperService.java:32)
+	at org.mycode.rest.DeveloperServlet.doGet(DeveloperServlet.java:68)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:624)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:731)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:303)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:208)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:218)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:110)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:506)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:169)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:103)
+	at org.apache.catalina.valves.AccessLogValve.invoke(AccessLogValve.java:962)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:116)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:445)
+	at org.apache.coyote.http11.AbstractHttp11Processor.process(AbstractHttp11Processor.java:1087)
+	at org.apache.coyote.AbstractProtocol$AbstractConnectionHandler.process(AbstractProtocol.java:637)
+	at org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor.run(JIoEndpoint.java:318)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.lang.Thread.run(Thread.java:748)
+2020-01-27 20:44:56 DEBUG DeveloperServlet:58 - GET request to read
+2020-01-27 20:44:56 DEBUG DeveloperServlet:67 - Request to get by ID
+2020-01-27 20:44:56 DEBUG JDBCDeveloperRepositoryImpl:79 - Read entry(DB) with ID: 2
+2020-01-27 20:44:56 DEBUG DeveloperService:33 - Service->Read
+2020-01-27 20:44:56 DEBUG DeveloperServlet:69 - Sand JSON response

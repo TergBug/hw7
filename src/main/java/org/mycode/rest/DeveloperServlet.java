@@ -2,10 +2,9 @@ package org.mycode.rest;
 
 import com.google.gson.Gson;
 import org.apache.log4j.Logger;
-import org.mycode.controller.DeveloperController;
-import org.mycode.exceptions.IncorrectRequestException;
 import org.mycode.exceptions.RepoStorageException;
 import org.mycode.model.Developer;
+import org.mycode.service.DeveloperService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,17 +13,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
 
 @WebServlet(name = "DeveloperServlet", urlPatterns = "/api/v1/developers")
 public class DeveloperServlet extends HttpServlet {
     private static final Logger log = Logger.getLogger(DeveloperServlet.class);
     private Gson gson;
-    private DeveloperController developerController;
+    private DeveloperService developerService;
     public DeveloperServlet() throws RepoStorageException {
         gson = new Gson();
-        developerController = DeveloperController.getInstance();
+        developerService = new DeveloperService();
     }
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -50,75 +47,39 @@ public class DeveloperServlet extends HttpServlet {
         }
         log.debug("POST request to create");
         try {
-            if(req.getParameter("firstName")==null
-                    || req.getParameter("firstName").equals("")
-                    || req.getParameter("lastName")==null
-                    || req.getParameter("lastName").equals("")
-                    || req.getParameter("skills")==null
-                    || !req.getParameter("skills").matches("(\\d+,?)*")
-                    || req.getParameter("account")==null
-                    || !req.getParameter("account").matches("\\d+")){
-                log.warn("POST request gives invalid firstName, lastName, skills, account parameters");
-                resp.sendError(400, "Invalid parameter firstName, lastName, skills, account");
-            } else {
-                developerController.request("c|0|"+
-                        req.getParameter("firstName")+"|"+
-                        req.getParameter("lastName")+"|"+
-                        req.getParameter("skills")+"|"+
-                        req.getParameter("account"));
-            }
-        } catch (IncorrectRequestException e) {
-            log.error("Incorrect request to controller", e);
+            developerService.create(gson.fromJson(req.getReader(), Developer.class));
+        } catch (Exception e) {
+            log.error("Cannot create entry", e);
             e.printStackTrace();
         }
     }
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         log.debug("GET request to read");
-        List<Developer> developers = new ArrayList<>();
+        resp.setContentType("application/json");
+        PrintWriter writer = resp.getWriter();
         try {
             if(req.getParameter("id")==null || !req.getParameter("id").matches("\\d+")){
                 log.debug("Request to get all");
-                developers = developerController.request("g");
+                writer.println(gson.toJson(developerService.getAll()));
+                log.debug("Sand JSON response");
             } else {
                 log.debug("Request to get by ID");
-                developers = developerController.request("r|"+req.getParameter("id"));
+                writer.println(gson.toJson(developerService.getById(Long.parseLong(req.getParameter("id")))));
+                log.debug("Sand JSON response");
             }
-        } catch (IncorrectRequestException e) {
-            log.error("Incorrect request to controller", e);
+        } catch (Exception e) {
+            log.error("Cannot read entry", e);
             e.printStackTrace();
         }
-        resp.setContentType("application/json");
-        PrintWriter writer = resp.getWriter();
-        writer.println(gson.toJson(developers));
-        log.debug("Sand JSON response");
     }
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         log.debug("PUT request to update");
         try {
-            if(req.getParameter("id")==null
-                    || !req.getParameter("id").matches("\\d+")
-                    || req.getParameter("firstName")==null
-                    || req.getParameter("firstName").equals("")
-                    || req.getParameter("lastName")==null
-                    || req.getParameter("lastName").equals("")
-                    || req.getParameter("skills")==null
-                    || !req.getParameter("skills").matches("(\\d+,?)*")
-                    || req.getParameter("account")==null
-                    || !req.getParameter("account").matches("\\d+")){
-                log.warn("PUT request gives invalid id, firstName, lastName, skills, account parameters");
-                resp.sendError(400, "Invalid parameters id, firstName, lastName, skills, account");
-            } else {
-                developerController.request("u|"+
-                        req.getParameter("id")+"|"+
-                        req.getParameter("firstName")+"|"+
-                        req.getParameter("lastName")+"|"+
-                        req.getParameter("skills")+"|"+
-                        req.getParameter("account"));
-            }
-        } catch (IncorrectRequestException e) {
-            log.error("Incorrect request to controller", e);
+            developerService.update(gson.fromJson(req.getReader(), Developer.class));
+        } catch (Exception e) {
+            log.error("Cannot update entry", e);
             e.printStackTrace();
         }
     }
@@ -130,10 +91,10 @@ public class DeveloperServlet extends HttpServlet {
                 log.warn("DELETE request gives invalid id parameter");
                 resp.sendError(400, "Invalid parameter id");
             } else {
-                developerController.request("d|"+req.getParameter("id"));
+                developerService.delete(Long.parseLong(req.getParameter("id")));
             }
-        } catch (IncorrectRequestException e) {
-            log.error("Incorrect request to controller", e);
+        } catch (Exception e) {
+            log.error("Cannot delete entry", e);
             e.printStackTrace();
         }
     }

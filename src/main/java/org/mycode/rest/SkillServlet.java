@@ -2,10 +2,9 @@ package org.mycode.rest;
 
 import com.google.gson.Gson;
 import org.apache.log4j.Logger;
-import org.mycode.controller.SkillController;
-import org.mycode.exceptions.IncorrectRequestException;
 import org.mycode.exceptions.RepoStorageException;
 import org.mycode.model.Skill;
+import org.mycode.service.SkillService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,17 +13,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
 
 @WebServlet(name = "SkillServlet", urlPatterns = "/api/v1/skills")
 public class SkillServlet extends HttpServlet {
     private static final Logger log = Logger.getLogger(SkillServlet.class);
     private Gson gson;
-    private SkillController skillController;
+    private SkillService skillService;
     public SkillServlet() throws RepoStorageException {
         gson = new Gson();
-        skillController = SkillController.getInstance();
+        skillService = new SkillService();
     }
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -50,53 +47,39 @@ public class SkillServlet extends HttpServlet {
         }
         log.debug("POST request to create");
         try {
-            if(req.getParameter("name")==null || req.getParameter("name").equals("")){
-                log.warn("POST request gives invalid name parameter");
-                resp.sendError(400, "Invalid parameter name");
-            } else {
-                skillController.request("c|0|"+req.getParameter("name"));
-            }
-        } catch (IncorrectRequestException e) {
-            log.error("Incorrect request to controller", e);
+            skillService.create(gson.fromJson(req.getReader(), Skill.class));
+        } catch (Exception e) {
+            log.error("Cannot create entry", e);
             e.printStackTrace();
         }
     }
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         log.debug("GET request to read");
-        List<Skill> skills = new ArrayList<>();
+        resp.setContentType("application/json");
+        PrintWriter writer = resp.getWriter();
         try {
             if(req.getParameter("id")==null || !req.getParameter("id").matches("\\d+")){
                 log.debug("Request to get all");
-                skills = skillController.request("g");
+                writer.println(gson.toJson(skillService.getAll()));
+                log.debug("Sand JSON response");
             } else {
                 log.debug("Request to get by ID");
-                skills = skillController.request("r|"+req.getParameter("id"));
+                writer.println(gson.toJson(skillService.getById(Long.parseLong(req.getParameter("id")))));
+                log.debug("Sand JSON response");
             }
-        } catch (IncorrectRequestException e) {
-            log.error("Incorrect request to controller", e);
+        } catch (Exception e) {
+            log.error("Cannot read entry", e);
             e.printStackTrace();
         }
-        resp.setContentType("application/json");
-        PrintWriter writer = resp.getWriter();
-        writer.println(gson.toJson(skills));
-        log.debug("Sand JSON response");
     }
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         log.debug("PUT request to update");
         try {
-            if(req.getParameter("id")==null
-                    || !req.getParameter("id").matches("\\d+")
-                    || req.getParameter("name")==null
-                    || req.getParameter("name").equals("")){
-                log.warn("PUT request gives invalid id, name parameters");
-                resp.sendError(400, "Invalid parameters id, name");
-            } else {
-                skillController.request("u|"+req.getParameter("id")+"|"+req.getParameter("name"));
-            }
-        } catch (IncorrectRequestException e) {
-            log.error("Incorrect request to controller", e);
+            skillService.update(gson.fromJson(req.getReader(), Skill.class));
+        } catch (Exception e) {
+            log.error("Cannot update entry", e);
             e.printStackTrace();
         }
     }
@@ -108,10 +91,10 @@ public class SkillServlet extends HttpServlet {
                 log.warn("DELETE request gives invalid id parameter");
                 resp.sendError(400, "Invalid parameter id");
             } else {
-                skillController.request("d|"+req.getParameter("id"));
+                skillService.delete(Long.parseLong(req.getParameter("id")));
             }
-        } catch (IncorrectRequestException e) {
-            log.error("Incorrect request to controller", e);
+        } catch (Exception e) {
+            log.error("Cannot delete entry", e);
             e.printStackTrace();
         }
     }

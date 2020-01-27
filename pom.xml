@@ -20,11 +20,6 @@
 
   <dependencies>
     <dependency>
-      <groupId>mysql</groupId>
-      <artifactId>mysql-connector-java</artifactId>
-      <version>8.0.15</version>
-    </dependency>
-    <dependency>
       <groupId>commons-dbcp</groupId>
       <artifactId>commons-dbcp</artifactId>
       <version>1.4</version>
@@ -34,12 +29,20 @@
       <artifactId>mybatis</artifactId>
       <version>3.4.5</version>
     </dependency>
+    <!--MySQL connector-->
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>8.0.15</version>
+    </dependency>
+    <!--JUnit-->
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.11</version>
       <scope>test</scope>
     </dependency>
+    <!--Liquibase-->
     <dependency>
       <groupId>org.liquibase</groupId>
       <artifactId>liquibase-core</artifactId>
@@ -50,39 +53,77 @@
       <artifactId>liquibase-maven-plugin</artifactId>
       <version>3.8.4</version>
     </dependency>
+    <!--Log4j-->
     <dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
       <version>1.2.17</version>
     </dependency>
+    <!--Lombok-->
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <version>1.18.8</version>
       <scope>provided</scope>
     </dependency>
+    <!--H2 DB-->
     <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
       <version>1.4.200</version>
       <scope>test</scope>
     </dependency>
+    <!--Mockito-->
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
       <version>3.2.4</version>
       <scope>test</scope>
     </dependency>
+    <!--Servlet-->
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>javax.servlet-api</artifactId>
       <version>4.0.1</version>
       <scope>provided</scope>
     </dependency>
+    <!--Gson-->
     <dependency>
       <groupId>com.google.code.gson</groupId>
       <artifactId>gson</artifactId>
       <version>2.8.6</version>
+    </dependency>
+    <!--Swagger-->
+    <dependency>
+      <groupId>io.swagger.core.v3</groupId>
+      <artifactId>swagger-core</artifactId>
+      <version>2.1.1</version>
+    </dependency>
+    <!--Tomcat-->
+    <dependency>
+      <groupId>org.apache.tomcat.embed</groupId>
+      <artifactId>tomcat-embed-core</artifactId>
+      <version>${tomcat.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.tomcat.embed</groupId>
+      <artifactId>tomcat-embed-jasper</artifactId>
+      <version>${tomcat.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.tomcat</groupId>
+      <artifactId>tomcat-jasper</artifactId>
+      <version>${tomcat.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.tomcat</groupId>
+      <artifactId>tomcat-jasper-el</artifactId>
+      <version>${tomcat.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.tomcat</groupId>
+      <artifactId>tomcat-jsp-api</artifactId>
+      <version>${tomcat.version}</version>
     </dependency>
   </dependencies>
 
@@ -99,55 +140,6 @@
     </testResources>
     <pluginManagement>
       <plugins>
-        <!--Tomcat-->
-        <plugin>
-          <groupId>org.apache.tomcat.maven</groupId>
-          <artifactId>tomcat7-maven-plugin</artifactId>
-          <version>2.2</version>
-          <dependencies>
-            <dependency>
-              <groupId>org.apache.tomcat.embed</groupId>
-              <artifactId>tomcat-embed-core</artifactId>
-              <version>${tomcat.version}</version>
-            </dependency>
-            <dependency>
-              <groupId>org.apache.tomcat</groupId>
-              <artifactId>tomcat-util</artifactId>
-              <version>${tomcat.version}</version>
-            </dependency>
-            <dependency>
-              <groupId>org.apache.tomcat</groupId>
-              <artifactId>tomcat-coyote</artifactId>
-              <version>${tomcat.version}</version>
-            </dependency>
-            <dependency>
-              <groupId>org.apache.tomcat</groupId>
-              <artifactId>tomcat-api</artifactId>
-              <version>${tomcat.version}</version>
-            </dependency>
-            <dependency>
-              <groupId>org.apache.tomcat</groupId>
-              <artifactId>tomcat-servlet-api</artifactId>
-              <version>${tomcat.version}</version>
-            </dependency>
-
-            <dependency>
-              <groupId>org.apache.tomcat</groupId>
-              <artifactId>tomcat-jsp-api</artifactId>
-              <version>${tomcat.version}</version>
-            </dependency>
-            <dependency>
-              <groupId>org.apache.tomcat</groupId>
-              <artifactId>tomcat-catalina</artifactId>
-              <version>${tomcat.version}</version>
-            </dependency>
-            <dependency>
-              <groupId>org.apache.tomcat</groupId>
-              <artifactId>tomcat-annotations-api</artifactId>
-              <version>${tomcat.version}</version>
-            </dependency>
-          </dependencies>
-        </plugin>
         <plugin>
           <artifactId>maven-clean-plugin</artifactId>
           <version>3.1.0</version>
@@ -215,7 +207,6 @@
           </execution>
         </executions>
       </plugin>
-
       <!--H2 DB Run-->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -247,18 +238,28 @@
           </dependency>
         </dependencies>
       </plugin>
-
-      <!--Tomcat-->
       <plugin>
-        <groupId>org.apache.tomcat.maven</groupId>
-        <artifactId>tomcat7-maven-plugin</artifactId>
-        <version>2.2</version>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>appassembler-maven-plugin</artifactId>
+        <version>2.0.0</version>
         <configuration>
-          <port>8084</port>
-          <path>/</path>
+          <assembleDirectory>target</assembleDirectory>
+          <programs>
+            <program>
+              <mainClass>org.mycode.WebAppRunner</mainClass>
+              <name>webapp</name>
+            </program>
+          </programs>
         </configuration>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>assemble</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
-
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
