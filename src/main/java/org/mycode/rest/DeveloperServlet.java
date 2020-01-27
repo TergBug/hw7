@@ -1,11 +1,11 @@
-package org.mycode.servlets;
+package org.mycode.rest;
 
 import com.google.gson.Gson;
 import org.apache.log4j.Logger;
-import org.mycode.controller.AccountController;
+import org.mycode.controller.DeveloperController;
 import org.mycode.exceptions.IncorrectRequestException;
 import org.mycode.exceptions.RepoStorageException;
-import org.mycode.model.Account;
+import org.mycode.model.Developer;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,14 +17,14 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-@WebServlet(name = "AccountServlet", urlPatterns = "/api/v1/accounts")
-public class AccountServlet extends HttpServlet {
-    private static final Logger log = Logger.getLogger(AccountServlet.class);
+@WebServlet(name = "DeveloperServlet", urlPatterns = "/api/v1/developers")
+public class DeveloperServlet extends HttpServlet {
+    private static final Logger log = Logger.getLogger(DeveloperServlet.class);
     private Gson gson;
-    private AccountController accountController;
-    public AccountServlet() throws RepoStorageException {
+    private DeveloperController developerController;
+    public DeveloperServlet() throws RepoStorageException {
         gson = new Gson();
-        accountController = AccountController.getInstance();
+        developerController = DeveloperController.getInstance();
     }
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -50,14 +50,22 @@ public class AccountServlet extends HttpServlet {
         }
         log.debug("POST request to create");
         try {
-            if(req.getParameter("name")==null
-                    || req.getParameter("name").equals("")
-                    || req.getParameter("status")==null
-                    || !req.getParameter("status").matches("(a)|(b)|(d)")){
-                log.warn("POST request gives invalid name, status parameters");
-                resp.sendError(400, "Invalid parameter name, status");
+            if(req.getParameter("firstName")==null
+                    || req.getParameter("firstName").equals("")
+                    || req.getParameter("lastName")==null
+                    || req.getParameter("lastName").equals("")
+                    || req.getParameter("skills")==null
+                    || !req.getParameter("skills").matches("(\\d+,?)*")
+                    || req.getParameter("account")==null
+                    || !req.getParameter("account").matches("\\d+")){
+                log.warn("POST request gives invalid firstName, lastName, skills, account parameters");
+                resp.sendError(400, "Invalid parameter firstName, lastName, skills, account");
             } else {
-                accountController.request("c|0|"+req.getParameter("name")+"|"+req.getParameter("status"));
+                developerController.request("c|0|"+
+                        req.getParameter("firstName")+"|"+
+                        req.getParameter("lastName")+"|"+
+                        req.getParameter("skills")+"|"+
+                        req.getParameter("account"));
             }
         } catch (IncorrectRequestException e) {
             log.error("Incorrect request to controller", e);
@@ -67,14 +75,14 @@ public class AccountServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         log.debug("GET request to read");
-        List<Account> accounts = new ArrayList<>();
+        List<Developer> developers = new ArrayList<>();
         try {
             if(req.getParameter("id")==null || !req.getParameter("id").matches("\\d+")){
                 log.debug("Request to get all");
-                accounts = accountController.request("g");
+                developers = developerController.request("g");
             } else {
                 log.debug("Request to get by ID");
-                accounts = accountController.request("r|"+req.getParameter("id"));
+                developers = developerController.request("r|"+req.getParameter("id"));
             }
         } catch (IncorrectRequestException e) {
             log.error("Incorrect request to controller", e);
@@ -82,7 +90,7 @@ public class AccountServlet extends HttpServlet {
         }
         resp.setContentType("application/json");
         PrintWriter writer = resp.getWriter();
-        writer.println(gson.toJson(accounts));
+        writer.println(gson.toJson(developers));
         log.debug("Sand JSON response");
     }
     @Override
@@ -91,17 +99,23 @@ public class AccountServlet extends HttpServlet {
         try {
             if(req.getParameter("id")==null
                     || !req.getParameter("id").matches("\\d+")
-                    || req.getParameter("name")==null
-                    || req.getParameter("name").equals("")
-                    || req.getParameter("status")==null
-                    || !req.getParameter("status").matches("(a)|(b)|(d)")){
-                log.warn("PUT request gives invalid id, name, status parameters");
-                resp.sendError(400, "Invalid parameters id, name, status");
+                    || req.getParameter("firstName")==null
+                    || req.getParameter("firstName").equals("")
+                    || req.getParameter("lastName")==null
+                    || req.getParameter("lastName").equals("")
+                    || req.getParameter("skills")==null
+                    || !req.getParameter("skills").matches("(\\d+,?)*")
+                    || req.getParameter("account")==null
+                    || !req.getParameter("account").matches("\\d+")){
+                log.warn("PUT request gives invalid id, firstName, lastName, skills, account parameters");
+                resp.sendError(400, "Invalid parameters id, firstName, lastName, skills, account");
             } else {
-                accountController.request("u|"+
+                developerController.request("u|"+
                         req.getParameter("id")+"|"+
-                        req.getParameter("name")+"|"+
-                        req.getParameter("status"));
+                        req.getParameter("firstName")+"|"+
+                        req.getParameter("lastName")+"|"+
+                        req.getParameter("skills")+"|"+
+                        req.getParameter("account"));
             }
         } catch (IncorrectRequestException e) {
             log.error("Incorrect request to controller", e);
@@ -116,7 +130,7 @@ public class AccountServlet extends HttpServlet {
                 log.warn("DELETE request gives invalid id parameter");
                 resp.sendError(400, "Invalid parameter id");
             } else {
-                accountController.request("d|"+req.getParameter("id"));
+                developerController.request("d|"+req.getParameter("id"));
             }
         } catch (IncorrectRequestException e) {
             log.error("Incorrect request to controller", e);

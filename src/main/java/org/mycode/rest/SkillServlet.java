@@ -1,11 +1,11 @@
-package org.mycode.servlets;
+package org.mycode.rest;
 
 import com.google.gson.Gson;
 import org.apache.log4j.Logger;
-import org.mycode.controller.DeveloperController;
+import org.mycode.controller.SkillController;
 import org.mycode.exceptions.IncorrectRequestException;
 import org.mycode.exceptions.RepoStorageException;
-import org.mycode.model.Developer;
+import org.mycode.model.Skill;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,14 +17,14 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-@WebServlet(name = "DeveloperServlet", urlPatterns = "/api/v1/developers")
-public class DeveloperServlet extends HttpServlet {
-    private static final Logger log = Logger.getLogger(DeveloperServlet.class);
+@WebServlet(name = "SkillServlet", urlPatterns = "/api/v1/skills")
+public class SkillServlet extends HttpServlet {
+    private static final Logger log = Logger.getLogger(SkillServlet.class);
     private Gson gson;
-    private DeveloperController developerController;
-    public DeveloperServlet() throws RepoStorageException {
+    private SkillController skillController;
+    public SkillServlet() throws RepoStorageException {
         gson = new Gson();
-        developerController = DeveloperController.getInstance();
+        skillController = SkillController.getInstance();
     }
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -50,22 +50,11 @@ public class DeveloperServlet extends HttpServlet {
         }
         log.debug("POST request to create");
         try {
-            if(req.getParameter("firstName")==null
-                    || req.getParameter("firstName").equals("")
-                    || req.getParameter("lastName")==null
-                    || req.getParameter("lastName").equals("")
-                    || req.getParameter("skills")==null
-                    || !req.getParameter("skills").matches("(\\d+,?)*")
-                    || req.getParameter("account")==null
-                    || !req.getParameter("account").matches("\\d+")){
-                log.warn("POST request gives invalid firstName, lastName, skills, account parameters");
-                resp.sendError(400, "Invalid parameter firstName, lastName, skills, account");
+            if(req.getParameter("name")==null || req.getParameter("name").equals("")){
+                log.warn("POST request gives invalid name parameter");
+                resp.sendError(400, "Invalid parameter name");
             } else {
-                developerController.request("c|0|"+
-                        req.getParameter("firstName")+"|"+
-                        req.getParameter("lastName")+"|"+
-                        req.getParameter("skills")+"|"+
-                        req.getParameter("account"));
+                skillController.request("c|0|"+req.getParameter("name"));
             }
         } catch (IncorrectRequestException e) {
             log.error("Incorrect request to controller", e);
@@ -75,14 +64,14 @@ public class DeveloperServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         log.debug("GET request to read");
-        List<Developer> developers = new ArrayList<>();
+        List<Skill> skills = new ArrayList<>();
         try {
             if(req.getParameter("id")==null || !req.getParameter("id").matches("\\d+")){
                 log.debug("Request to get all");
-                developers = developerController.request("g");
+                skills = skillController.request("g");
             } else {
                 log.debug("Request to get by ID");
-                developers = developerController.request("r|"+req.getParameter("id"));
+                skills = skillController.request("r|"+req.getParameter("id"));
             }
         } catch (IncorrectRequestException e) {
             log.error("Incorrect request to controller", e);
@@ -90,7 +79,7 @@ public class DeveloperServlet extends HttpServlet {
         }
         resp.setContentType("application/json");
         PrintWriter writer = resp.getWriter();
-        writer.println(gson.toJson(developers));
+        writer.println(gson.toJson(skills));
         log.debug("Sand JSON response");
     }
     @Override
@@ -99,23 +88,12 @@ public class DeveloperServlet extends HttpServlet {
         try {
             if(req.getParameter("id")==null
                     || !req.getParameter("id").matches("\\d+")
-                    || req.getParameter("firstName")==null
-                    || req.getParameter("firstName").equals("")
-                    || req.getParameter("lastName")==null
-                    || req.getParameter("lastName").equals("")
-                    || req.getParameter("skills")==null
-                    || !req.getParameter("skills").matches("(\\d+,?)*")
-                    || req.getParameter("account")==null
-                    || !req.getParameter("account").matches("\\d+")){
-                log.warn("PUT request gives invalid id, firstName, lastName, skills, account parameters");
-                resp.sendError(400, "Invalid parameters id, firstName, lastName, skills, account");
+                    || req.getParameter("name")==null
+                    || req.getParameter("name").equals("")){
+                log.warn("PUT request gives invalid id, name parameters");
+                resp.sendError(400, "Invalid parameters id, name");
             } else {
-                developerController.request("u|"+
-                        req.getParameter("id")+"|"+
-                        req.getParameter("firstName")+"|"+
-                        req.getParameter("lastName")+"|"+
-                        req.getParameter("skills")+"|"+
-                        req.getParameter("account"));
+                skillController.request("u|"+req.getParameter("id")+"|"+req.getParameter("name"));
             }
         } catch (IncorrectRequestException e) {
             log.error("Incorrect request to controller", e);
@@ -130,7 +108,7 @@ public class DeveloperServlet extends HttpServlet {
                 log.warn("DELETE request gives invalid id parameter");
                 resp.sendError(400, "Invalid parameter id");
             } else {
-                developerController.request("d|"+req.getParameter("id"));
+                skillController.request("d|"+req.getParameter("id"));
             }
         } catch (IncorrectRequestException e) {
             log.error("Incorrect request to controller", e);
