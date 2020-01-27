@@ -246,7 +246,7 @@
           <assembleDirectory>target</assembleDirectory>
           <programs>
             <program>
-              <mainClass>org.mycode.WebAppRunner</mainClass>
+              <mainClass>WebAppRunner</mainClass>
               <id>webapp</id>
             </program>
           </programs>
